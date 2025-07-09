@@ -5,8 +5,9 @@ public class Player_Movement : MonoBehaviour
 {
     // Atributos privados
     private CharacterController characterController;
-    private PlayerInputActions playerInputActions;
-    private Animator animator;
+    private PlayerAnimationHandler animationHandler;
+    private PlayerInputReader inputReader;
+    private Vector2 input;
     
     // Atributos publicos
     [Header("Velocidad")]
@@ -24,28 +25,40 @@ public class Player_Movement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        playerInputActions = new PlayerInputActions();
-        playerInputActions.Player.Enable();
-        playerInputActions.Player.Dash.performed += Dash;
+        animationHandler = GetComponent<PlayerAnimationHandler>();
+        inputReader = GetComponent<PlayerInputReader>();
+
     }
 
+    private void OnEnable()
+    {
+        inputReader.OnMove += HandleMove;
+        inputReader.OnDash += Dash;
+    }
+
+    private void OnDisable()
+    {
+        inputReader.OnMove -= HandleMove;
+        inputReader.OnDash -= Dash;
+    }
+    
     private void Start()
     {
         currentSpeed = speed;
         isDashing = false;
         canDash = true;
     }
+    
+    private void HandleMove(Vector2 newInput)
+    {
+        input = newInput;
+    }
 
     private void FixedUpdate()
     {
-        // Guardamos los inputs recibidos de movimiento
-        Vector2 input = playerInputActions.Player.Movement.ReadValue<Vector2>();
+
         
-        // Animacion entre idle y caminar
-        animator.SetFloat("movement", (input.x == 0 && input.y == 0) ? 0 : 1);
-        
-        Vector3 move = new Vector3(input.x, 0, input.y);
+        Vector3 move = new Vector3(input.x, 0, input.y).normalized;
         
         if (move.magnitude > 0.1f)
         {
@@ -57,9 +70,12 @@ public class Player_Movement : MonoBehaviour
         // Revisiones de dash
         if (isDashing)
         {
+            
             dashTimer += Time.fixedDeltaTime;
-            if(dashTimer >= dashDuration)
+            if (dashTimer >= dashDuration)
+            {
                 currentSpeed = speed;
+            }
 
             if (dashTimer >= dashCooldown)
             {
@@ -71,10 +87,11 @@ public class Player_Movement : MonoBehaviour
         
         // Movemos el personaje
         characterController.Move(new Vector3(input.x, 0, input.y) * (currentSpeed * Time.deltaTime));
+        animationHandler?.SetMovementSpeed(move.magnitude);
         
     }
     
-    public void Dash(InputAction.CallbackContext context)
+    private void Dash()
     {
         if (canDash && !isDashing)
         {
@@ -83,6 +100,7 @@ public class Player_Movement : MonoBehaviour
             canDash = false;
             currentSpeed = dashSpeed;
             dashTimer = 0f;
+            animationHandler?.PlayDash();
         }
     }
 
