@@ -49,7 +49,7 @@ public class Player_Movement : MonoBehaviour
         canDash = true;
     }
     
-    private void HandleMove(Vector2 newInput)
+    public void HandleMove(Vector2 newInput)
     {
         input = newInput;
     }
@@ -91,7 +91,7 @@ public class Player_Movement : MonoBehaviour
         
     }
     
-    private void Dash()
+    public void Dash()
     {
         if (canDash && !isDashing)
         {
