@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     {
         playerMovement = GetComponent<Player_Movement>();
         animationHandler = GetComponent<PlayerAnimationHandler>();
-        //playerInteractionHandler = GetComponent<PlayerInteractionHandler>();
         inputReader = GetComponent<PlayerInputReader>();
     }
     
