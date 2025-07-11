@@ -1,20 +1,21 @@
-using System;
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
-    [SerializeField] private PlayerController controller;
-    [SerializeField] private GameObject Hands;
+    [SerializeField] public PlayerController controller;
+    [SerializeField] public GameObject Hands;
     
-    public GameObject interableObject;
+    public bool isGrabingSomething;
+    public GameObject interactableObject;
+    private IInteractable interactableComponent;
 
     private void Start()
     {
+        isGrabingSomething = false;
         if (controller != null && controller.inputReader != null)
             controller.inputReader.OnInteract += Interact;
-        interableObject = null;
+        interactableObject = null;
+        interactableComponent = null;
     }
 
     private void OnDestroy()
@@ -26,22 +27,46 @@ public class PlayerInteractionHandler : MonoBehaviour
     public void Interact()
     {
 
-        Debug.Log("Presiono el interact");
-        if (interableObject == null)
+        if (interactableComponent == null)
             return;
+
+        InteractType type = interactableComponent.GetInteractType();
+
+        // Aquí puedes hacer cosas específicas según el tipo:
+        if (type == InteractType.Grab)
+        {
+            isGrabingSomething = true;
+            controller.animationHandler?.PlayTake();
+        }
+        else if (type == InteractType.Kill)
+        {
+            // Código específico para puertas, etc.
+        }
         
-        if (controller != null)
-            controller.playerMovement.canMove = false;
-        
+    }
+    
+    
+    public void OnGrabAnimationEvent()
+    {
+        if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Grab)
+        {
+            interactableComponent.Interact(gameObject);
+        }
     }
     
     private void OnTriggerEnter(Collider other)
     {
-        interableObject = other.gameObject;
+        interactableComponent = other.GetComponent<IInteractable>();
+        interactableObject = interactableComponent != null ? other.gameObject : null;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        interableObject = null;
+        // Si sales del trigger, limpias referencias
+        if (other.gameObject == interactableObject)
+        {
+            interactableComponent = null;
+            interactableObject = null;
+        }
     }
 }

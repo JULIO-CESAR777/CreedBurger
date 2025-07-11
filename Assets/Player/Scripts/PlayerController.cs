@@ -14,5 +14,13 @@ public class PlayerController : MonoBehaviour
         animationHandler = GetComponent<PlayerAnimationHandler>();
         inputReader = GetComponent<PlayerInputReader>();
     }
-    
+
+
+    public void GrabTrigger()
+    {
+        print("Grab");
+        playerInteractionHandler.OnGrabAnimationEvent();
+    }
+
+
 }
