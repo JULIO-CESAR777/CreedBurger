@@ -9,6 +9,9 @@ public class Player_Movement : MonoBehaviour
     private PlayerInputReader inputReader;
     private Vector2 input;
     
+    // Flags de control de movimiento (por si necesitas bloquear movimiento al interactuar)
+    public bool canMove = true;
+    
     // Atributos publicos
     [Header("Velocidad")]
     public float speed = 5.0f;
@@ -57,6 +60,12 @@ public class Player_Movement : MonoBehaviour
     private void FixedUpdate()
     {
 
+        if (!canMove)
+        {
+            // Si no se puede mover (por animación de interacción, etc.)
+            animationHandler?.SetMovementSpeed(0f);
+            return;
+        }
         
         Vector3 move = new Vector3(input.x, 0, input.y).normalized;
         
@@ -75,6 +84,7 @@ public class Player_Movement : MonoBehaviour
             if (dashTimer >= dashDuration)
             {
                 currentSpeed = speed;
+                animationHandler?.PlayDash(false);
             }
 
             if (dashTimer >= dashCooldown)
@@ -100,7 +110,7 @@ public class Player_Movement : MonoBehaviour
             canDash = false;
             currentSpeed = dashSpeed;
             dashTimer = 0f;
-            animationHandler?.PlayDash();
+            animationHandler?.PlayDash(true);
         }
     }
 
