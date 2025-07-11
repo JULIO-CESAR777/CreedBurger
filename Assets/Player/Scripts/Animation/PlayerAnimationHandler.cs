@@ -14,12 +14,17 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void SetMovementSpeed(float speed)
     {
-        animator.SetFloat("movement", Mathf.Clamp01(speed));
+        animator.SetFloat("Movement", Mathf.Clamp01(speed));
+    }
+
+    public void PlayIdle()
+    {
+        animator.SetTrigger("Drop");
     }
 
     public void PlayDash(bool condition)
     {
-        animator.SetBool("dash", condition);
+        animator.SetBool("Dash", condition);
     }
     
     // Para animaciones de interacción, puede ser bool o trigger según el Animator
@@ -33,7 +38,6 @@ public class PlayerAnimationHandler : MonoBehaviour
     public void OnTakeAnimationEnd()
     {
         controller.playerMovement.canMove = true;
-        Debug.Log("¡Terminó la animación de Take!");
     }
     
     

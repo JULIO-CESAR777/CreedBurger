@@ -152,6 +152,7 @@ MonoBehaviour:
   controller: {fileID: 205239394}
   Hands: {fileID: 781432124}
   isGrabingSomething: 0
+  GrabbedObject: {fileID: 0}
   interactableObject: {fileID: 0}
 --- !u!65 &191136065
 BoxCollider:
@@ -361,6 +362,7 @@ GameObject:
   - component: {fileID: 1150972889}
   - component: {fileID: 1150972893}
   - component: {fileID: 1150972894}
+  - component: {fileID: 1150972895}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -494,6 +496,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13832e95786545b468cbb82b43618344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGrabbed: 0
+--- !u!114 &1150972895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1150972888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc09b8a883a3ea149be3021b0dda5897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1300998951
@@ -1055,7 +1070,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7544402851835881435}
-  m_LocalEulerAnglesHint: {x: 14.499136, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.24440604, y: 0.012556553, z: -9.860096}
 --- !u!4 &1223454233266970700
 Transform:
   m_ObjectHideFlags: 0
@@ -1202,7 +1217,7 @@ Transform:
   m_Children:
   - {fileID: 781432125}
   m_Father: {fileID: 3547000324687829661}
-  m_LocalEulerAnglesHint: {x: -25.331015, y: -47.58892, z: -59.321346}
+  m_LocalEulerAnglesHint: {x: -43.723125, y: -93.9692, z: 106.36294}
 --- !u!1 &5416204028307439120
 GameObject:
   m_ObjectHideFlags: 0
@@ -1252,7 +1267,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8354156594101123817}
-  m_LocalEulerAnglesHint: {x: -14.815081, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -2.8144841, y: -6.290179, z: -13.945171}
 --- !u!137 &5820104831978568082
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -1415,7 +1430,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3547000324687829661}
-  m_LocalEulerAnglesHint: {x: -21.588078, y: 45.396984, z: 72.607124}
+  m_LocalEulerAnglesHint: {x: -41.789364, y: 93.84704, z: -92.1567}
 --- !u!1 &7531614933501084240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1448,7 +1463,7 @@ Transform:
   - {fileID: 1201661367615936447}
   - {fileID: 8528630389604936758}
   m_Father: {fileID: 3547000324687829661}
-  m_LocalEulerAnglesHint: {x: -14.279694, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.333653, y: -0.036462672, z: 9.854835}
 --- !u!4 &8354156594101123817
 Transform:
   m_ObjectHideFlags: 0
@@ -1465,7 +1480,7 @@ Transform:
   - {fileID: 9161151069036169269}
   - {fileID: 5781438564603807234}
   m_Father: {fileID: 3547000324687829661}
-  m_LocalEulerAnglesHint: {x: 14.815081, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 26.1109, y: 0, z: 0}
 --- !u!1 &8403372837633201063
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,7 +1511,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7544402851835881435}
-  m_LocalEulerAnglesHint: {x: 8.074447, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.24440604, y: 0.012556553, z: -9.860096}
 --- !u!137 &8742754795792468200
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -1586,7 +1601,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8354156594101123817}
-  m_LocalEulerAnglesHint: {x: -21.379627, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -26.1109, y: 0.0000004801589, z: 15.558138}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

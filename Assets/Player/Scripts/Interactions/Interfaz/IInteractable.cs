@@ -4,7 +4,9 @@ public enum InteractType
 {
     Grab,
     Kill,
-    Use
+    SetTraps,
+    Cook,
+    Clean
     
 }
 public interface IInteractable

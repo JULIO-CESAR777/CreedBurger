@@ -6,6 +6,10 @@ public class PlayerInteractionHandler : MonoBehaviour
     [SerializeField] public GameObject Hands;
     
     public bool isGrabingSomething;
+    
+    public GameObject GrabbedObject;
+    private IInteractable grabbedInteractableComponent;
+    
     public GameObject interactableObject;
     private IInteractable interactableComponent;
 
@@ -23,12 +27,24 @@ public class PlayerInteractionHandler : MonoBehaviour
         controller.inputReader.OnInteract -= Interact;
     }
     
-
     public void Interact()
     {
 
-        if (interactableComponent == null)
+        if (interactableComponent == null && !isGrabingSomething)
             return;
+
+        print("interact");
+        
+        if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
+        {
+            print("drop");
+            grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
+            isGrabingSomething = false;
+            GrabbedObject = null;
+            grabbedInteractableComponent = null;
+            controller.animationHandler?.PlayIdle();
+            return;
+        }
 
         InteractType type = interactableComponent.GetInteractType();
 
@@ -36,6 +52,8 @@ public class PlayerInteractionHandler : MonoBehaviour
         if (type == InteractType.Grab)
         {
             isGrabingSomething = true;
+            GrabbedObject = interactableObject;
+            grabbedInteractableComponent = interactableComponent;
             controller.animationHandler?.PlayTake();
         }
         else if (type == InteractType.Kill)

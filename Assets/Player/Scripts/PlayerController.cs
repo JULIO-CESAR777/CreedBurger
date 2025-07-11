@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 
     public void GrabTrigger()
     {
-        print("Grab");
         playerInteractionHandler.OnGrabAnimationEvent();
     }
 
