@@ -32,12 +32,9 @@ public class PlayerInteractionHandler : MonoBehaviour
 
         if (interactableComponent == null && !isGrabingSomething)
             return;
-
-        print("interact");
         
         if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
-            print("drop");
             grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
             isGrabingSomething = false;
             GrabbedObject = null;

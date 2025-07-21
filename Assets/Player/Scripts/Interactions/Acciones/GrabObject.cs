@@ -31,7 +31,6 @@ public class GrabObject : MonoBehaviour, IInteractable
         }
         else
         {
-            print("se llamo al drop dentro del grab");
             // Quitar el objeto de la mano
             transform.SetParent(null, true);
 
