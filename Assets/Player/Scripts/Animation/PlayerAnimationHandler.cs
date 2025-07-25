@@ -33,6 +33,11 @@ public class PlayerAnimationHandler : MonoBehaviour
         // Usando Trigger para asegurarte que siempre inicia la animación
         animator.SetTrigger("Take");
     }
+
+    public void PlayKill()
+    {
+        animator.SetTrigger("Kill");
+    }
     
     // Llamar esto desde un Animation Event al final de la animación de tomar/interactuar
     public void OnTakeAnimationEnd()

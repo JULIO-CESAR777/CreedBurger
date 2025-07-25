@@ -29,7 +29,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     
     public void Interact()
     {
-
+        
         if (interactableComponent == null && !isGrabingSomething)
             return;
         
@@ -45,17 +45,39 @@ public class PlayerInteractionHandler : MonoBehaviour
 
         InteractType type = interactableComponent.GetInteractType();
 
-        // Aquí puedes hacer cosas específicas según el tipo:
-        if (type == InteractType.Grab)
+        switch (type)
         {
-            isGrabingSomething = true;
-            GrabbedObject = interactableObject;
-            grabbedInteractableComponent = interactableComponent;
-            controller.animationHandler?.PlayTake();
-        }
-        else if (type == InteractType.Kill)
-        {
-            // Código específico para puertas, etc.
+            case InteractType.Grab:
+            {
+                isGrabingSomething = true;
+                GrabbedObject = interactableObject;
+                grabbedInteractableComponent = interactableComponent;
+                controller.animationHandler?.PlayTake();
+                break;
+            }
+            case InteractType.Kill:
+            {
+                controller.playerMovement.canMove = false;
+                controller.animationHandler?.PlayKill();
+                // llamo a la funcion del cliente
+                print("asesinado");
+                interactableComponent.Interact(gameObject);
+                controller.playerMovement.canMove = true;
+                break;
+            }
+            case InteractType.Cook:
+            {
+                break;
+            }
+            case InteractType.Clean:
+            {
+                break;
+            }
+            case InteractType.SetTraps:
+            {
+                break;
+            }
+                
         }
         
     }
@@ -77,7 +99,6 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        // Si sales del trigger, limpias referencias
         if (other.gameObject == interactableObject)
         {
             interactableComponent = null;
