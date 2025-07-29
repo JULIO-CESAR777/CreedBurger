@@ -40,8 +40,9 @@ public class PlayerAnimationHandler : MonoBehaviour
     }
     
     // Llamar esto desde un Animation Event al final de la animación de tomar/interactuar
-    public void OnTakeAnimationEnd()
+    public void CanMove()
     {
+        print("puede volver a moverse");
         controller.playerMovement.canMove = true;
     }
     

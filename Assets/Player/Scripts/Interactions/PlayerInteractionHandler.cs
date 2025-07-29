@@ -7,9 +7,11 @@ public class PlayerInteractionHandler : MonoBehaviour
     
     public bool isGrabingSomething;
     
+    // Objeto agarrado
     public GameObject GrabbedObject;
     private IInteractable grabbedInteractableComponent;
     
+    // Posible objeto a interactuar
     public GameObject interactableObject;
     private IInteractable interactableComponent;
 
@@ -33,6 +35,11 @@ public class PlayerInteractionHandler : MonoBehaviour
         if (interactableComponent == null && !isGrabingSomething)
             return;
         
+        /*
+         * Suceso cuando se quiere soltar una cosa
+         * ----> Es un breakpoint por que no se permiten
+         * otras acciones mientras se este sosteniendo algo
+         */
         if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
             grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
@@ -42,9 +49,11 @@ public class PlayerInteractionHandler : MonoBehaviour
             controller.animationHandler?.PlayIdle();
             return;
         }
-
+        
+        // Obtiene el tipo de accion
         InteractType type = interactableComponent.GetInteractType();
 
+        // Interactua dependiendo del tipo de accion
         switch (type)
         {
             case InteractType.Grab:
@@ -59,10 +68,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             {
                 controller.playerMovement.canMove = false;
                 controller.animationHandler?.PlayKill();
-                // llamo a la funcion del cliente
-                print("asesinado");
-                interactableComponent.Interact(gameObject);
-                controller.playerMovement.canMove = true;
                 break;
             }
             case InteractType.Cook:
@@ -82,7 +87,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         
     }
     
-    
+    // Funciones para interactuar desde las animaciones
     public void OnGrabAnimationEvent()
     {
         if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Grab)
@@ -90,7 +95,20 @@ public class PlayerInteractionHandler : MonoBehaviour
             interactableComponent.Interact(gameObject);
         }
     }
+
+    public void OnKillAnimationEvent()
+    {
+        if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Kill)
+        {
+            interactableComponent.Interact(gameObject);
+        }
+    }
     
+    
+    
+    
+    
+    // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)
     {
         interactableComponent = other.GetComponent<IInteractable>();

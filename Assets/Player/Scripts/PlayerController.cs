@@ -21,5 +21,10 @@ public class PlayerController : MonoBehaviour
         playerInteractionHandler.OnGrabAnimationEvent();
     }
 
+    public void KillTrigger()
+    {
+        playerInteractionHandler.OnKillAnimationEvent();
+    }
+
 
 }

@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
         if (cantidad == 2)
             CrearJugador("Player2", puntosDeSpawn[1].position);
         
-        Debug.Log("Cantidad de jugadores: " + cantidad);
     }
 
 
