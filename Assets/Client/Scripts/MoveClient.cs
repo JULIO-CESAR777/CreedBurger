@@ -15,7 +15,7 @@ public class MoveClient : MonoBehaviour
     public float esperaComer = 2f;
     public float esperaAleatorio = 2f;
 
-    private enum Estado { IrOrdenar, IrComer, EsperaComer, IrAleatorio, EsperaAleatorio, IrSalida, Terminado }
+    private enum Estado { IrOrdenar, Quieto, IrComer, EsperaComer, IrAleatorio, EsperaAleatorio, IrSalida, Terminado }
     private Estado estadoActual = Estado.IrOrdenar;
 
     private bool triggerOrdenar = false;
@@ -31,6 +31,12 @@ public class MoveClient : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Alto();
+        }
+
+
         switch (estadoActual)
         {
             case Estado.IrOrdenar:
@@ -108,4 +114,14 @@ public class MoveClient : MonoBehaviour
             IrAPunto(puntoSalida);
         }
     }
+
+        public void Alto()
+        {
+                estadoActual = Estado.Quieto;
+                agent.ResetPath();
+                agent.velocity = Vector3.zero;
+
+        }
+
+    
 }
