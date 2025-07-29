@@ -40,7 +40,9 @@ public class PlayerInteractionHandler : MonoBehaviour
          * ----> Es un breakpoint por que no se permiten
          * otras acciones mientras se este sosteniendo algo
          */
-        if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
+        if (isGrabingSomething && 
+            GrabbedObject != null && 
+            grabbedInteractableComponent != null)
         {
             grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
             isGrabingSomething = false;
@@ -103,10 +105,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             interactableComponent.Interact(gameObject);
         }
     }
-    
-    
-    
-    
     
     // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)
