@@ -24,6 +24,10 @@ public class MoveClient : MonoBehaviour
     public float detectionRadius = 6f;
     [Range(0f, 360f)] public float fieldOfView = 120f;
 
+    public GameObject prefabSangre;
+
+    public GameObject prefabCarne;
+
     private enum Estado
     {
         IrOrdenar,
@@ -245,6 +249,15 @@ public class MoveClient : MonoBehaviour
         estadoActual = Estado.Quieto;
         agent.ResetPath();
         agent.velocity = Vector3.zero;
+    }
+
+    public void Morir()
+    {
+        Instantiate(prefabCarne, transform.position, transform.rotation);
+
+        // (Opcional) destruir este objeto “muerto”
+        Destroy(gameObject);
+
     }
 
     void OnDrawGizmosSelected()

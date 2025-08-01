@@ -12,14 +12,16 @@ public class KillCustomer : MonoBehaviour, IInteractable
         if(moveClient == null) return;
         
         moveClient.Alto();
-        
+        moveClient.Morir();
         /*
          * TODO: todo eso deberia de ir en una funcion dentro del cliente
          * Agregar la muerte del cliente
          * Spawn de la carne
          * desaparecer al cliente
          */
-        
+
+
+
     }
     
     public InteractType GetInteractType() => InteractType.Kill;
