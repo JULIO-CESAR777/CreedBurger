@@ -1138,7 +1138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: cantidadJugadores
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: 'puntosDeSpawn.Array.data[0]'
