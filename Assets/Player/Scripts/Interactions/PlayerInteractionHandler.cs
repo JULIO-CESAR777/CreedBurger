@@ -60,6 +60,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             case InteractType.Grab:
             {
+                controller.playerMovement.canMove = false;
                 isGrabingSomething = true;
                 GrabbedObject = interactableObject;
                 grabbedInteractableComponent = interactableComponent;
