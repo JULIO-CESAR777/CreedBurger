@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ordenar
   - MAPA
+  - Knight
+  - Blood
   layers:
   - Default
   - TransparentFX

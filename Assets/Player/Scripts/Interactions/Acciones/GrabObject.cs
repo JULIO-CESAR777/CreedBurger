@@ -12,6 +12,11 @@ public class GrabObject : MonoBehaviour, IInteractable
         
         if (isGrabbed == false)
         {
+            if (gameObject.name == "Meat")
+            {
+                interactionHandler.controller.suspect = true;
+            }
+
             Transform handTransform = interactor.GetComponent<PlayerInteractionHandler>().Hands.transform;
             if (handTransform != null)
             {
@@ -77,6 +82,10 @@ public class GrabObject : MonoBehaviour, IInteractable
             // Opcional: darle un pequeño empuje al soltar
             rb.AddForce(interactor.transform.forward * 2f, ForceMode.Impulse);
             isGrabbed = false;
+            interactionHandler.controller.suspect = false;
+            
+            
+            
         }
 
 

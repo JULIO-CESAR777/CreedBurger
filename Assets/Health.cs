@@ -15,11 +15,15 @@ public class Health : MonoBehaviour
         
         /*
         controller.playerMovement.canMove = false;
+        
         if (controller.playerInteractionHandler.isGrabingSomething)
         {
             Destroy(controller.playerInteractionHandler.GrabbedObject);
+            controller.playerInteractionHandler.GrabbedObject = null;
         }
+        
         controller.animationHandler?.PlayDie();
+        
         Invoke("Respawn", 3f);
         
         */
