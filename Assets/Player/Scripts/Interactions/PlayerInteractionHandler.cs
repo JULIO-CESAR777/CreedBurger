@@ -19,7 +19,11 @@ public class PlayerInteractionHandler : MonoBehaviour
     {
         isGrabingSomething = false;
         if (controller != null && controller.inputReader != null)
+        {
             controller.inputReader.OnInteract += Interact;
+            controller.inputReader.OnTraps += SetTraps;
+        }
+        
         interactableObject = null;
         interactableComponent = null;
     }
@@ -27,6 +31,12 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void OnDestroy()
     {
         controller.inputReader.OnInteract -= Interact;
+        controller.inputReader.OnTraps -= SetTraps;
+    }
+
+    public void SetTraps()
+    {
+        print("sexo publico");        
     }
     
     public void Interact()

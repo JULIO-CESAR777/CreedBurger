@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SetTraps",
+                    "type": "Button",
+                    "id": "229fdfde-02b3-402d-8f2f-ffef2a5f98aa",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -132,6 +141,17 @@
                     "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aab28528-e082-4594-9167-858ebf6a9821",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetTraps",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -161,6 +181,15 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "45f17fab-f9a1-49a8-9540-8b95d5026ba4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SetTraps",
+                    "type": "Button",
+                    "id": "b5e62623-5093-4cac-8256-6e338fadf961",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -242,6 +271,17 @@
                     "processors": "",
                     "groups": ";Keyboard",
                     "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba0f4ec4-ba1e-46da-aa98-ee9d23427d45",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SetTraps",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
