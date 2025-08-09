@@ -38,12 +38,27 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         animator.SetTrigger("Kill");
     }
+
+    public void PlayDie()
+    {
+        animator.SetTrigger("DIE");
+    }
+
+    public void PlayClean()
+    {
+        animator.SetTrigger("Clean");
+    }
+    
+    public void PlayCut()
+    {
+        animator.SetTrigger("Cut");
+    }
     
     // Llamar esto desde un Animation Event al final de la animación de tomar/interactuar
     public void CanMove()
     {
-        print("puede volver a moverse");
         controller.playerMovement.canMove = true;
+        controller.suspect = false;
     }
     
     

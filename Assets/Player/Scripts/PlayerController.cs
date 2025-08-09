@@ -8,8 +8,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public PlayerInteractionHandler playerInteractionHandler;
     public PlayerInputReader inputReader;
 
+    [Header("Sospechoso")] public bool suspect;
+    
     private void Awake()
     {
+        suspect = false;
         playerMovement = GetComponent<Player_Movement>();
         animationHandler = GetComponent<PlayerAnimationHandler>();
         inputReader = GetComponent<PlayerInputReader>();
@@ -26,5 +29,9 @@ public class PlayerController : MonoBehaviour
         playerInteractionHandler.OnKillAnimationEvent();
     }
 
+    public void CleanTrigger()
+    {
+        playerInteractionHandler.OnCleanAnimationEvent();
+    }
 
 }

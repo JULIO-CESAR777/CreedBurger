@@ -12,6 +12,11 @@ public class GrabObject : MonoBehaviour, IInteractable
         
         if (isGrabbed == false)
         {
+            if (gameObject.name == "Meat")
+            {
+                interactionHandler.controller.suspect = true;
+            }
+
             Transform handTransform = interactor.GetComponent<PlayerInteractionHandler>().Hands.transform;
             if (handTransform != null)
             {
@@ -34,27 +39,35 @@ public class GrabObject : MonoBehaviour, IInteractable
         else
         {
 
-            // Solo interactuar con el objeto que está enfrente
+            // Solo interactuar con el objeto para cocinar
             if (interactionHandler.interactableObject != null)
             {
-                CookIngredients cookIngredients = interactionHandler.interactableObject.GetComponent<CookIngredients>();
-                Ingredient ingredient = interactionHandler.GrabbedObject.GetComponent<Ingredient>();
-                if (cookIngredients != null && ingredient != null)
+                CookIngredients targetCook = interactionHandler.interactableObject.GetComponent<CookIngredients>();
+                CookIngredients thisCook = interactionHandler.GrabbedObject.GetComponent<CookIngredients>();
+                if (targetCook != null && thisCook != null)
                 {
-                    bool added = cookIngredients.TryAddIngredient(ingredient.type);
-                    if (added)
+                    // Fusionar los ingredientes de ambos
+                    bool newIngredient = false;
+                    foreach (var ingredient in thisCook.currentIngredients)
                     {
-                        Debug.Log("Ingrediente agregado a la combinación: " + ingredient.type);
-                        // Opcional: destruye este objeto porque ya fue absorbido
+                        // Si alguno fue nuevo, hubo fusión
+                        if (targetCook.TryAddIngredient(ingredient))
+                            newIngredient = true;
+                    }
+
+                    if (newIngredient)
+                    {
+                        // Destruye este objeto (el dropeado)
                         Destroy(gameObject);
+
                         // Si se cumple la receta, cocina
-                        if (cookIngredients.CanCookSandwich())
-                            cookIngredients.Cook();
+                        if (targetCook.CanCookSandwich())
+                            targetCook.Cook();
                         return;
                     }
                     else
                     {
-                        Debug.Log("Ingrediente repetido, solo se suelta.");
+                        Debug.Log("Todos los ingredientes ya estaban, solo se suelta.");
                     }
                 }
             }
@@ -69,6 +82,10 @@ public class GrabObject : MonoBehaviour, IInteractable
             // Opcional: darle un pequeño empuje al soltar
             rb.AddForce(interactor.transform.forward * 2f, ForceMode.Impulse);
             isGrabbed = false;
+            interactionHandler.controller.suspect = false;
+            
+            
+            
         }
 
 

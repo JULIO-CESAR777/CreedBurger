@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 177345307620864110}
   - component: {fileID: 9073286270195289449}
   - component: {fileID: 4060615021624618295}
+  - component: {fileID: -3357020420739879417}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -237,7 +238,7 @@ CharacterController:
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.45
-  m_SlopeLimit: 45
+  m_SlopeLimit: 0
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
@@ -258,6 +259,7 @@ MonoBehaviour:
   animationHandler: {fileID: 0}
   playerInteractionHandler: {fileID: 1408283986150703199}
   inputReader: {fileID: 0}
+  suspect: 0
 --- !u!114 &2188627024289834801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +331,18 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-3357020420739879417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2849773209135737600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76f19d301f8499d419db92a67b04710c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3730311079872757781
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,8 +546,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.2090545, z: 1}
-  m_Center: {x: 0, y: -0.05167687, z: 0}
+  m_Size: {x: 1, y: 1.3793452, z: 1}
+  m_Center: {x: 0, y: -0.1368222, z: 0}
 --- !u!114 &1408283986150703199
 MonoBehaviour:
   m_ObjectHideFlags: 0

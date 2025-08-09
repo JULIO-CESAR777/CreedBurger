@@ -19,7 +19,11 @@ public class PlayerInteractionHandler : MonoBehaviour
     {
         isGrabingSomething = false;
         if (controller != null && controller.inputReader != null)
+        {
             controller.inputReader.OnInteract += Interact;
+            controller.inputReader.OnTraps += SetTraps;
+        }
+        
         interactableObject = null;
         interactableComponent = null;
     }
@@ -27,6 +31,12 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void OnDestroy()
     {
         controller.inputReader.OnInteract -= Interact;
+        controller.inputReader.OnTraps -= SetTraps;
+    }
+
+    public void SetTraps()
+    {
+        print("sexo publico");        
     }
     
     public void Interact()
@@ -54,12 +64,13 @@ public class PlayerInteractionHandler : MonoBehaviour
         
         // Obtiene el tipo de accion
         InteractType type = interactableComponent.GetInteractType();
-
+       
         // Interactua dependiendo del tipo de accion
         switch (type)
         {
             case InteractType.Grab:
             {
+                controller.playerMovement.canMove = false;
                 isGrabingSomething = true;
                 GrabbedObject = interactableObject;
                 grabbedInteractableComponent = interactableComponent;
@@ -69,15 +80,15 @@ public class PlayerInteractionHandler : MonoBehaviour
             case InteractType.Kill:
             {
                 controller.playerMovement.canMove = false;
+                controller.suspect = true;
                 controller.animationHandler?.PlayKill();
-                break;
-            }
-            case InteractType.Cook:
-            {
                 break;
             }
             case InteractType.Clean:
             {
+                controller.suspect = true;
+                controller.playerMovement.canMove = false;
+                controller.animationHandler?.PlayClean();
                 break;
             }
             case InteractType.SetTraps:
@@ -105,6 +116,15 @@ public class PlayerInteractionHandler : MonoBehaviour
             interactableComponent.Interact(gameObject);
         }
     }
+
+    public void OnCleanAnimationEvent()
+    {
+        if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Clean)
+        {
+            interactableComponent.Interact(gameObject);
+        }
+    }
+    
     
     // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)

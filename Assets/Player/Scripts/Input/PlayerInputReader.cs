@@ -11,10 +11,12 @@ public class PlayerInputReader : MonoBehaviour
     public event Action<Vector2> OnMove;
     public event Action OnDash;
     public event Action OnInteract;
+    public event Action OnTraps;
 
     private InputAction movementAction;
     private InputAction dashAction;
     private InputAction interactAction;
+    private InputAction setTrapsAction;
 
     private void Start()
     {
@@ -41,11 +43,13 @@ public class PlayerInputReader : MonoBehaviour
         movementAction = inputActions.asset.FindAction(mapName + "/Movement");
         dashAction = inputActions.asset.FindAction(mapName + "/Dash");
         interactAction = inputActions.asset.FindAction(mapName + "/Interact");
+        setTrapsAction = inputActions.asset.FindAction(mapName + "/SetTraps");
 
         movementAction.performed += ctx => OnMove?.Invoke(ctx.ReadValue<Vector2>());
         movementAction.canceled += ctx => OnMove?.Invoke(Vector2.zero);
         dashAction.performed += _ => OnDash?.Invoke();
         interactAction.performed += _ => OnInteract?.Invoke();
+        setTrapsAction.performed += _ => OnTraps?.Invoke();
     }
 
 
@@ -54,5 +58,6 @@ public class PlayerInputReader : MonoBehaviour
         movementAction?.Disable();
         dashAction?.Disable();
         interactAction?.Disable();
+        setTrapsAction?.Disable();
     }
 }

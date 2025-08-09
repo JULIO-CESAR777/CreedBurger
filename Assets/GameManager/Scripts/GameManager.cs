@@ -3,6 +3,24 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    
+    // --- Singleton ---
+    public static GameManager Instance { get; private set; }
+    
+    void Awake()
+    {
+        // Singleton básico
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        // Si quieres que sobreviva entre escenas, descomenta:
+        // DontDestroyOnLoad(gameObject);
+    }
+    
+    
     [Header("Configuración del juego")]
     [Range(1, 2)] public int cantidadJugadores = 1;
 
