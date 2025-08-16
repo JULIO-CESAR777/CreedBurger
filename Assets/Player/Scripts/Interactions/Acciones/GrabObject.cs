@@ -10,7 +10,7 @@ public class GrabObject : MonoBehaviour, IInteractable
 
         PlayerInteractionHandler interactionHandler = interactor.GetComponent<PlayerInteractionHandler>();
         
-        if (isGrabbed == false)
+        if (!isGrabbed)
         {
             if (gameObject.name == "Meat")
             {
@@ -30,65 +30,64 @@ public class GrabObject : MonoBehaviour, IInteractable
                 // Opcional: poner posición relativa a la mano
                 transform.localPosition = Vector3.zero;
                 isGrabbed = true;
+                return;
             }
-            else
-            {
-                Debug.LogWarning($"{interactor.name} no tiene un hijo llamado 'Manos'");
-            }    
         }
-        else
+        
+        
+        GameObject target = interactionHandler.interactableObject;
+        
+        // Solo interactuar con el objeto para cocinar
+        if (target != null && target != interactionHandler.controller.gameObject)
         {
-
-            // Solo interactuar con el objeto para cocinar
-            if (interactionHandler.interactableObject != null)
+            CookIngredients targetCook = target.GetComponent<CookIngredients>();
+            CookIngredients thisCook = GetComponent<CookIngredients>();
+            if (targetCook != null && thisCook != null)
             {
-                CookIngredients targetCook = interactionHandler.interactableObject.GetComponent<CookIngredients>();
-                CookIngredients thisCook = interactionHandler.GrabbedObject.GetComponent<CookIngredients>();
-                if (targetCook != null && thisCook != null)
+                // Fusionar los ingredientes de ambos
+                bool fused = false;
+                foreach (var ingredient in thisCook.ingredientIDs)
                 {
-                    // Fusionar los ingredientes de ambos
-                    bool newIngredient = false;
-                    foreach (var ingredient in thisCook.currentIngredients)
+                    // Si alguno fue nuevo, hubo fusión
+                    if (targetCook.TryAddIngredient(ingredient))
                     {
-                        // Si alguno fue nuevo, hubo fusión
-                        if (targetCook.TryAddIngredient(ingredient))
-                            newIngredient = true;
-                    }
-
-                    if (newIngredient)
-                    {
-                        // Destruye este objeto (el dropeado)
-                        Destroy(gameObject);
-
-                        // Si se cumple la receta, cocina
-                        if (targetCook.CanCookSandwich())
-                            targetCook.Cook();
-                        return;
-                    }
-                    else
-                    {
-                        Debug.Log("Todos los ingredientes ya estaban, solo se suelta.");
+                        fused = true;
+                        break;
                     }
                 }
+
+                if (fused)
+                {
+                    // Destruye este objeto (el dropeado)
+                    interactionHandler.controller.suspect = false;
+                    Destroy(gameObject);
+                    return;
+                }
+                else
+                {
+                    Debug.Log("Todos los ingredientes ya estaban, solo se suelta.");
+                }
             }
-            // Quitar el objeto de la mano
-            transform.SetParent(null, true);
-
-            // Activar la física si tiene Rigidbody
-            var rb = GetComponent<Rigidbody>();
-            if (rb != null)
-                rb.isKinematic = false;
-
-            // Opcional: darle un pequeño empuje al soltar
-            rb.AddForce(interactor.transform.forward * 2f, ForceMode.Impulse);
-            isGrabbed = false;
-            interactionHandler.controller.suspect = false;
-            
-            
-            
         }
+            
+        DropNormally(interactor, interactionHandler);
+        
+    }
+    
+    private void DropNormally(GameObject interactor, PlayerInteractionHandler handler)
+    {
+        // Quitar de la mano
+        transform.SetParent(null, true);
 
-
+        // Física on + empujón opcional
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.AddForce(interactor.transform.forward * 2f, ForceMode.Impulse);
+        }
+        handler.controller.suspect = false;
+        isGrabbed = false;
     }
 
     public InteractType GetInteractType() => InteractType.Grab;

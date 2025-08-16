@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce32d2bf017e16f4ab51d2082d072d9a, type: 3}
+  m_Name: Ingrendient DB
+  m_EditorClassIdentifier: 
+  entries:
+  - id: 1
+    prefab: {fileID: 6168913736434040648, guid: 55728d66e58a6fc408edb6478431a346, type: 3}
+  - id: 2
+    prefab: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
+  - id: 3
+    prefab: {fileID: 8168205731805838248, guid: 9f6d2f4c2ebb51d499d6323ade35c906, type: 3}

@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     [Header("Prefabs y spawn")]
     public GameObject jugadorPrefab;
     public Transform[] puntosDeSpawn; // tamaño 2
+    
+    [Header("Ingredient DB")]
+    public IngredientPrefabDB ingredientePrefabDB;
 
     void Start()
     {
