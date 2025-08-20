@@ -23,18 +23,25 @@ public class CookIngredients : MonoBehaviour, IInteractable
         
         if (ing != null)
         {
-            TryAddIngredient(ing.id);
+            ingredientIDs.Add(ing.id);
+            currentComboID += ing.id;
         }
         
     }
 
-    public bool TryAddIngredient(int id)
+    public bool checkForRepeatedIngredients(int id)
     {
-        // Evita duplicados
-        if (ingredientIDs.Contains(id))
-            return false;
-
-        ingredientIDs.Add(id);
+        return ingredientIDs.Contains(id)? false : true;
+    }
+    
+    
+    public void TryAddIngredient(CookIngredients cook)
+    {
+        foreach (var ids in cook.ingredientIDs)
+        {
+            print("se agrega id: " + ids);
+            ingredientIDs.Add(ids);
+        }
 
         // Recalcular la suma total (comboID)
         currentComboID = 0;
@@ -46,7 +53,6 @@ public class CookIngredients : MonoBehaviour, IInteractable
         // Intentar actualizar visual si existe en la base de datos
         UpdateVisualFromDB();
 
-        return true;
     }
 
     private void UpdateVisualFromDB()

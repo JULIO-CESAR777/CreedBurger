@@ -46,27 +46,29 @@ public class GrabObject : MonoBehaviour, IInteractable
             {
                 // Fusionar los ingredientes de ambos
                 bool fused = false;
+                
                 foreach (var ingredient in thisCook.ingredientIDs)
                 {
-                    // Si alguno fue nuevo, hubo fusión
-                    if (targetCook.TryAddIngredient(ingredient))
+                    print("ingrediente: " + ingredient);
+
+                    if (targetCook.checkForRepeatedIngredients(ingredient))
                     {
                         fused = true;
-                        break;
                     }
+                    
                 }
+                
 
                 if (fused)
                 {
+                    print("se juntaron");
+                    targetCook.TryAddIngredient(thisCook);
                     // Destruye este objeto (el dropeado)
                     interactionHandler.controller.suspect = false;
                     Destroy(gameObject);
                     return;
                 }
-                else
-                {
-                    Debug.Log("Todos los ingredientes ya estaban, solo se suelta.");
-                }
+                
             }
         }
             
