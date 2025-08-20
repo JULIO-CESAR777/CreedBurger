@@ -44,28 +44,49 @@ public class PlayerInteractionHandler : MonoBehaviour
         
         if (interactableComponent == null && !isGrabingSomething)
             return;
+
+        // Obtiene el tipo de accion
+        InteractType type = interactableComponent.GetInteractType();
         
-        /*
-         * Suceso cuando se quiere soltar una cosa
-         * ----> Es un breakpoint por que no se permiten
-         * otras acciones mientras se este sosteniendo algo
-         */
+        
         if (isGrabingSomething && 
             GrabbedObject != null && 
             grabbedInteractableComponent != null)
         {
-            grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
-            isGrabingSomething = false;
-            GrabbedObject = null;
+
+            CookMeat cookMeat = interactableObject.GetComponent<CookMeat>();
+            
+            if (interactableObject != null &&  cookMeat != null 
+                && type == InteractType.CookMeat && GrabbedObject.name == "Carne")
+            {
+                GrabbedObject.transform.SetParent(null, true);
+                // Física on + empujón opcional
+                var rb = GrabbedObject.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.isKinematic = false;
+                }
+                controller.suspect = false;
+                GrabbedObject.GetComponent<GrabObject>().isGrabbed = false;
+                GrabbedObject.transform.position = cookMeat.pinPoint.transform.position;
+                
+                
+            }
+            else
+            {
+                grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
+            }
+            isGrabingSomething = false; 
+            GrabbedObject = null; 
             grabbedInteractableComponent = null;
             controller.animationHandler?.PlayIdle();
+            
             return;
         }
         
-        // Obtiene el tipo de accion
-        InteractType type = interactableComponent.GetInteractType();
-       
-        // Interactua dependiendo del tipo de accion
+        
+        // Interactua dependiendo del tipo de accion 
+        // Acciones sin objetos en mano
         switch (type)
         {
             case InteractType.Grab:
@@ -124,7 +145,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             interactableComponent.Interact(gameObject);
         }
     }
-    
     
     // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)

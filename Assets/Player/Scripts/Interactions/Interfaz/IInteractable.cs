@@ -6,7 +6,9 @@ public enum InteractType
     Kill,
     SetTraps,
     Cook,
-    Clean
+    Clean,
+    Cut,
+    CookMeat
     
 }
 public interface IInteractable
