@@ -7,6 +7,9 @@ public class PlayerInputReader : MonoBehaviour
     private PlayerInput playerInput;
     private PlayerInputActions inputActions;
 
+    //Candado para las acciones
+    public bool IsLocked { get; private set; } = false;
+    
     // Eventos públicos que otros scripts pueden escuchar
     public event Action<Vector2> OnMove;
     public event Action OnDash;
@@ -44,20 +47,56 @@ public class PlayerInputReader : MonoBehaviour
         dashAction = inputActions.asset.FindAction(mapName + "/Dash");
         interactAction = inputActions.asset.FindAction(mapName + "/Interact");
         setTrapsAction = inputActions.asset.FindAction(mapName + "/SetTraps");
-
+        
         movementAction.performed += ctx => OnMove?.Invoke(ctx.ReadValue<Vector2>());
         movementAction.canceled += ctx => OnMove?.Invoke(Vector2.zero);
-        dashAction.performed += _ => OnDash?.Invoke();
-        interactAction.performed += _ => OnInteract?.Invoke();
-        setTrapsAction.performed += _ => OnTraps?.Invoke();
+        
+        dashAction.performed     += OnDashPerformed;
+        interactAction.performed += OnInteractPerformed;
+        setTrapsAction.performed += OnSetTrapsPerformed;
     }
-
-
+    
     private void OnDisable()
     {
         movementAction?.Disable();
-        dashAction?.Disable();
-        interactAction?.Disable();
-        setTrapsAction?.Disable();
+        if (dashAction != null)
+        {
+            dashAction.performed -= OnDashPerformed;
+            dashAction.Disable();
+        }
+        if (interactAction != null)
+        {
+            interactAction.performed -= OnInteractPerformed;
+            interactAction.Disable();
+        }
+        if (setTrapsAction != null)
+        {
+            setTrapsAction.performed -= OnSetTrapsPerformed;
+            setTrapsAction.Disable();
+        }
     }
+    
+    public void LockInputs()    => IsLocked = true;
+    public void UnlockInputs()  => IsLocked = false;
+    
+    // ---------- Callbacks que respetan el lock ----------
+    private void OnDashPerformed(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed || IsLocked) return;
+        OnDash?.Invoke();
+    }
+
+    private void OnInteractPerformed(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed || IsLocked) return;
+        OnInteract?.Invoke();
+    }
+
+    private void OnSetTrapsPerformed(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed || IsLocked) return;
+        OnTraps?.Invoke();
+    }
+    
+    
 }
