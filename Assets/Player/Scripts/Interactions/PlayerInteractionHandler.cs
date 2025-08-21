@@ -30,8 +30,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        controller.inputReader.OnInteract -= Interact;
-        controller.inputReader.OnTraps -= SetTraps;
+        if (controller != null && controller.inputReader != null)
+        {
+            controller.inputReader.OnInteract -= Interact;
+            controller.inputReader.OnTraps   -= SetTraps;
+        }
     }
 
     public void SetTraps()
@@ -41,52 +44,47 @@ public class PlayerInteractionHandler : MonoBehaviour
     
     public void Interact()
     {
-        
-        if (interactableComponent == null && !isGrabingSomething)
-            return;
-
-        // Obtiene el tipo de accion
-        InteractType type = interactableComponent.GetInteractType();
-        
-        
-        if (isGrabingSomething && 
-            GrabbedObject != null && 
-            grabbedInteractableComponent != null)
+        // 1) Si estoy agarrando algo, prioriza soltar/usar sin tocar interactableComponent
+        if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
-
-            CookMeat cookMeat = interactableObject.GetComponent<CookMeat>();
-            
-            if (interactableObject != null &&  cookMeat != null 
-                && type == InteractType.CookMeat && GrabbedObject.name == "Carne")
+            if (interactableObject != null) // hay algo enfrente
             {
-                GrabbedObject.transform.SetParent(null, true);
-                // Física on + empujón opcional
-                var rb = GrabbedObject.GetComponent<Rigidbody>();
-                if (rb != null)
+                var cookMeat = interactableObject.GetComponent<CookMeat>();
+                if (cookMeat != null && GrabbedObject != null
+                    && GrabbedObject.name == "Carne")
                 {
-                    rb.isKinematic = false;
+                    // Colocar la carne en el pinPoint
+                    GrabbedObject.transform.SetParent(null, true);
+
+                    var rb = GrabbedObject.GetComponent<Rigidbody>();
+                    if (rb != null) rb.isKinematic = false;
+
+                    controller.suspect = false;
+                    var grab = GrabbedObject.GetComponent<GrabObject>();
+                    if (grab != null) grab.isGrabbed = false;
+
+                    GrabbedObject.transform.position = cookMeat.pinPoint.transform.position;
+
+                    ResetGrabState();
+                    controller.animationHandler?.PlayIdle();
+                    return;
                 }
-                controller.suspect = false;
-                GrabbedObject.GetComponent<GrabObject>().isGrabbed = false;
-                GrabbedObject.transform.position = cookMeat.pinPoint.transform.position;
-                
-                
             }
-            else
-            {
-                grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
-            }
-            isGrabingSomething = false; 
-            GrabbedObject = null; 
-            grabbedInteractableComponent = null;
+
+            // Drop normal del objeto en mano
+            grabbedInteractableComponent.Interact(gameObject);
+            ResetGrabState();
             controller.animationHandler?.PlayIdle();
-            
             return;
         }
-        
-        
-        // Interactua dependiendo del tipo de accion 
-        // Acciones sin objetos en mano
+
+        // 2) Si no estoy agarrando nada y no hay target válido, no hay nada que hacer
+        if (interactableComponent == null) return;
+
+        // 3) Ya es seguro pedir el tipo
+        InteractType type = interactableComponent.GetInteractType();
+
+        // 4) Acciones sin objeto en mano
         switch (type)
         {
             case InteractType.Grab:
@@ -114,11 +112,17 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
             case InteractType.SetTraps:
             {
+                // ...
                 break;
             }
-                
         }
-        
+    }
+    
+    private void ResetGrabState()
+    {
+        isGrabingSomething = false;
+        GrabbedObject = null;
+        grabbedInteractableComponent = null;
     }
     
     // Funciones para interactuar desde las animaciones

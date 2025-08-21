@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Ingrendient DB
   m_EditorClassIdentifier: 
   entries:
+  - id: 0
+    prefab: {fileID: 6168913736434040648, guid: 55728d66e58a6fc408edb6478431a346, type: 3}
   - id: 1
     prefab: {fileID: 6168913736434040648, guid: 55728d66e58a6fc408edb6478431a346, type: 3}
   - id: 2
@@ -21,9 +23,17 @@ MonoBehaviour:
     prefab: {fileID: 8168205731805838248, guid: 9f6d2f4c2ebb51d499d6323ade35c906, type: 3}
   - id: 4
     prefab: {fileID: 7243099547030024798, guid: 4ec67dd1fa89e4f49ae0464e3472b807, type: 3}
+  - id: 5
+    prefab: {fileID: 4107321171544864329, guid: b9cfba5b3a6540a4e8011a6dce8b9b7e, type: 3}
   - id: 7
     prefab: {fileID: 8384464487914783705, guid: 3b161b9b98bf6cc41803eaf454e9f3b1, type: 3}
   - id: 8
     prefab: {fileID: 2228267061463373086, guid: e9e8106f50f8350439cd27ac62aa1e4a, type: 3}
+  - id: 11
+    prefab: {fileID: 3100590782944504498, guid: f5843e027b93fbe4a94b8bc75ccc99a9, type: 3}
   - id: 16
     prefab: {fileID: 8247878870281709708, guid: 8ef099d5ffc67e34abd687ab1fdf06d2, type: 3}
+  - id: 27
+    prefab: {fileID: 310554787429995794, guid: 2e00af437ea47c741abaf2566636f651, type: 3}
+  - id: 31
+    prefab: {fileID: 5670968680112172217, guid: f845c278be551104cba86e727efbfed6, type: 3}
