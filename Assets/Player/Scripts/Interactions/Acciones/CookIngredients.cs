@@ -5,39 +5,84 @@ using UnityEngine;
 public class CookIngredients : MonoBehaviour, IInteractable
 {
     
-    public List<IngredientType> currentIngredients = new List<IngredientType>();
+    [Header("Base de datos de combinaciones")]
+    public IngredientPrefabDB prefabDB; // Asigna en Inspector
+
+    [Header("IDs actuales de ingredientes")]
+    public List<int> ingredientIDs = new List<int>();
+
+    [Header("ID combinado actual")]
+    public int currentComboID;
 
     private void Start()
     {
-        TryAddIngredient(GetComponent<Ingredient>().type);
+        if (ingredientIDs != null && ingredientIDs.Count > 0) return;
+        
+        // Si este objeto nace con un solo ingrediente, lo agrega
+        Ingredient ing = GetComponent<Ingredient>();
+        
+        if (ing != null)
+        {
+            ingredientIDs.Add(ing.id);
+            currentComboID += ing.id;
+        }
+        
     }
 
-    public bool TryAddIngredient(IngredientType type)
+    public bool checkForRepeatedIngredients(int id)
     {
-        // Si ya está, no se agrega
-        if (currentIngredients.Contains(type))
-            return false;
-        currentIngredients.Add(type);
-        return true;
-    }
-
-    public bool CanCookSandwich()
-    {
-        return currentIngredients.Contains(IngredientType.Bread) &&
-               currentIngredients.Contains(IngredientType.Lettuce) &&
-               currentIngredients.Contains(IngredientType.Meat);
-    }
-
-    public void Cook()
-    {
-        Debug.Log("¡Sandwich cocinado!");
-        // Aquí tu lógica para crear el sandwich y/o destruir ingredientes
-        currentIngredients.Clear();
-    }
-
-    public void Interact(GameObject interactor)
-    {
+        return ingredientIDs.Contains(id)? false : true;
     }
     
-    public InteractType GetInteractType() => InteractType.Clean;
+    
+    public void TryAddIngredient(CookIngredients cook)
+    {
+        foreach (var ids in cook.ingredientIDs)
+        {
+            print("se agrega id: " + ids);
+            ingredientIDs.Add(ids);
+        }
+
+        // Recalcular la suma total (comboID)
+        currentComboID = 0;
+        foreach (int val in ingredientIDs)
+        {
+            currentComboID += val;
+        }
+
+        // Intentar actualizar visual si existe en la base de datos
+        UpdateVisualFromDB();
+
+    }
+
+    private void UpdateVisualFromDB()
+    {
+        if (prefabDB == null) return;
+
+        GameObject newPrefab = prefabDB.GetPrefab(currentComboID);
+        if (newPrefab != null)
+        {
+            Vector3 pos = transform.position;
+            Quaternion rot = transform.rotation;
+
+            // Instanciar primero
+            GameObject result = Instantiate(newPrefab, pos, rot);
+
+            // Copiar estado al nuevo
+            var resultCook = result.GetComponent<CookIngredients>();
+            if (resultCook != null)
+            {
+                resultCook.prefabDB = this.prefabDB; // MUY IMPORTANTE
+                resultCook.ingredientIDs = new List<int>(this.ingredientIDs);
+                resultCook.currentComboID = this.currentComboID;
+            }
+
+            // Destruir 'este' al final
+            Destroy(gameObject);
+        }
+    }
+
+    public void Interact(GameObject interactor) {}
+    
+    public InteractType GetInteractType() => InteractType.Cook;
 }

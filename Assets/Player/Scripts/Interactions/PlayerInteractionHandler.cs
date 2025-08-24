@@ -30,8 +30,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        controller.inputReader.OnInteract -= Interact;
-        controller.inputReader.OnTraps -= SetTraps;
+        if (controller != null && controller.inputReader != null)
+        {
+            controller.inputReader.OnInteract -= Interact;
+            controller.inputReader.OnTraps   -= SetTraps;
+        }
     }
 
     public void SetTraps()
@@ -41,31 +44,47 @@ public class PlayerInteractionHandler : MonoBehaviour
     
     public void Interact()
     {
-        
-        if (interactableComponent == null && !isGrabingSomething)
-            return;
-        
-        /*
-         * Suceso cuando se quiere soltar una cosa
-         * ----> Es un breakpoint por que no se permiten
-         * otras acciones mientras se este sosteniendo algo
-         */
-        if (isGrabingSomething && 
-            GrabbedObject != null && 
-            grabbedInteractableComponent != null)
+        // 1) Si estoy agarrando algo, prioriza soltar/usar sin tocar interactableComponent
+        if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
-            grabbedInteractableComponent.Interact(gameObject); // <--- así llamas al Drop
-            isGrabingSomething = false;
-            GrabbedObject = null;
-            grabbedInteractableComponent = null;
+            if (interactableObject != null) // hay algo enfrente
+            {
+                var cookMeat = interactableObject.GetComponent<CookMeat>();
+                if (cookMeat != null && GrabbedObject != null
+                    && GrabbedObject.name == "Carne")
+                {
+                    // Colocar la carne en el pinPoint
+                    GrabbedObject.transform.SetParent(null, true);
+
+                    var rb = GrabbedObject.GetComponent<Rigidbody>();
+                    if (rb != null) rb.isKinematic = false;
+
+                    controller.suspect = false;
+                    var grab = GrabbedObject.GetComponent<GrabObject>();
+                    if (grab != null) grab.isGrabbed = false;
+
+                    GrabbedObject.transform.position = cookMeat.pinPoint.transform.position;
+
+                    ResetGrabState();
+                    controller.animationHandler?.PlayIdle();
+                    return;
+                }
+            }
+
+            // Drop normal del objeto en mano
+            grabbedInteractableComponent.Interact(gameObject);
+            ResetGrabState();
             controller.animationHandler?.PlayIdle();
             return;
         }
-        
-        // Obtiene el tipo de accion
+
+        // 2) Si no estoy agarrando nada y no hay target válido, no hay nada que hacer
+        if (interactableComponent == null) return;
+
+        // 3) Ya es seguro pedir el tipo
         InteractType type = interactableComponent.GetInteractType();
-       
-        // Interactua dependiendo del tipo de accion
+
+        // 4) Acciones sin objeto en mano
         switch (type)
         {
             case InteractType.Grab:
@@ -93,11 +112,17 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
             case InteractType.SetTraps:
             {
+                // ...
                 break;
             }
-                
         }
-        
+    }
+    
+    private void ResetGrabState()
+    {
+        isGrabingSomething = false;
+        GrabbedObject = null;
+        grabbedInteractableComponent = null;
     }
     
     // Funciones para interactuar desde las animaciones
@@ -124,7 +149,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             interactableComponent.Interact(gameObject);
         }
     }
-    
     
     // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)
