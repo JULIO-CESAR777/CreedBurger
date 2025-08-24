@@ -28,7 +28,7 @@ public class MoveClient : MonoBehaviour
 
     public GameObject prefabCarne;
 
-    private enum Estado
+    public enum Estado
     {
         IrOrdenar,
         Quieto,
@@ -39,9 +39,10 @@ public class MoveClient : MonoBehaviour
         IrSalida,
         Aturdido,
         Asustado,
+        Sospechando,
         Terminado
     }
-    private Estado estadoActual = Estado.IrOrdenar;
+    public Estado estadoActual = Estado.IrOrdenar;
     private Estado estadoPrevio;
     private Vector3 destinoPrevio;
 
@@ -143,7 +144,7 @@ public class MoveClient : MonoBehaviour
 
         foreach (Collider hit in hits)
         {
-            if (hit.CompareTag("sangre"))
+            if (hit.CompareTag("Blood"))
             {
                 Vector3 dir = (hit.transform.position - transform.position).normalized;
                 float angulo = Vector3.Angle(transform.forward, dir);
@@ -164,6 +165,7 @@ public class MoveClient : MonoBehaviour
                 isFocusingBlood = true;
                 agent.isStopped = true;
             }
+            estadoActual = Estado.Sospechando;
             // Mirar lentamente hacia la sangre
             Vector3 lookDir = (targetBlood.position - transform.position).normalized;
             Quaternion lookRot = Quaternion.LookRotation(lookDir);
