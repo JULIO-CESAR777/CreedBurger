@@ -10,6 +10,7 @@ public class IngredientPrefabDB : ScriptableObject
     {
         public int id;              // ID único o suma de IDs
         public GameObject prefab;   // Prefab asociado
+        public Sprite image;
     }
 
     public List<Entry> entries = new List<Entry>();

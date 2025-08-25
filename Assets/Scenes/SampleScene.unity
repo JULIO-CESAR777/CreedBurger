@@ -1141,6 +1141,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
+      propertyPath: ingredientePrefabDB
+      value: 
+      objectReference: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
+    - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: 'puntosDeSpawn.Array.data[0]'
       value: 
       objectReference: {fileID: 617973681}
