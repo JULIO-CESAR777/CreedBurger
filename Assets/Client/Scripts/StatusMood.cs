@@ -55,9 +55,11 @@ public class StatusMood : MonoBehaviour
                 prefabToShow = prefabAlerta;
                 break;
 
-            case MoveClient.Estado.Sospechando: // asegúrate de que exista en tu enum
+            case MoveClient.Estado.Sospechando:
                 prefabToShow = prefabSospechando;
                 break;
+
+         
 
             case MoveClient.Estado.Terminado:
             default:
