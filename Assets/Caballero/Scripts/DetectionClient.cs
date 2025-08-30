@@ -10,15 +10,34 @@ public class DetectionClient : MonoBehaviour
 
     [Header("Ruta del caballero")]
     public Transform[] puntosAleatorios;     // Asigna en el Inspector
-    public Transform puntoSalida;            // Asigna en el Inspector
+    public Transform puntoSalida;
 
+    // Asigna en el Inspector
+    public int maxKnightsEnMapa = 1;
+    public bool InMap;
+
+    private void Start()
+    {
+        InMap = false;
+    }
     private void OnTriggerEnter(Collider other)
     {
+        // Si entra un knight, sólo actualiza el flag y sal
+        if (other.CompareTag("Knight"))
+        {
+            InMap = true;  // hay al menos un knight en el trigger
+            return;
+        }
+
+        // Sólo nos interesa cuando entra un cliente
         var cliente = other.GetComponent<MoveClient>();
         if (cliente == null) return;
 
-        // Solo spawnea si el cliente está "asustado"
+        // Condición de estado
         if (cliente.estadoActual != MoveClient.Estado.Asustado) return;
+
+        // LÍMITE: si ya hay suficientes knights, no instancias
+        if (GetKnightCount() >= maxKnightsEnMapa) return;
 
         // 1) Instanciar
         Vector3 spawnPos = spawnPointCaballero != null ? spawnPointCaballero.position : transform.position;
@@ -26,7 +45,7 @@ public class DetectionClient : MonoBehaviour
 
         var go = Instantiate(knightPrefab, spawnPos, spawnRot);
 
-        // 2) Asegurar que cae dentro del NavMesh
+        // 2) Ajustar al NavMesh
         if (NavMesh.SamplePosition(spawnPos, out var hit, 2f, NavMesh.AllAreas))
         {
             var agent = go.GetComponent<NavMeshAgent>();
@@ -37,7 +56,7 @@ public class DetectionClient : MonoBehaviour
             Debug.LogWarning($"{name}: No se encontró NavMesh cerca del punto de spawn.");
         }
 
-        // 3) Pasar waypoints y salida al caballero
+        // 3) Inicializar waypoints
         var mk = go.GetComponent<MoveKnight>();
         if (mk != null)
         {
@@ -47,5 +66,13 @@ public class DetectionClient : MonoBehaviour
         {
             Debug.LogError("El prefab del caballero no tiene MoveKnight.");
         }
+
+        InMap = true; // ahora seguro hay uno en el mapa
+    }
+
+    private int GetKnightCount()
+    {
+        // Asegúrate que el prefab tenga Tag "Knight"
+        return GameObject.FindGameObjectsWithTag("Knight").Length;
     }
 }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 420756378771471619}
   m_Layer: 8
   m_Name: MSH_Caballero_Final (1)
-  m_TagString: Untagged
+  m_TagString: Knight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,12 +131,15 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   puntoSalida: {fileID: 0}
-  miedoaaa: 4
+  velocityKnight: 5
+  chaseSpeed: 7
   esperaAleatorio: 2
   esperaSangreVer: 2
-  detectionRadius: 6
-  fieldOfView: 120
-  velocityKnight: 5
+  playerDetectRadius: 10
+  playerFOV: 140
+  catchDistance: 1.2
+  loseSightTime: 4
+  playerTag: Player
   maxPuntos: 5
   estadoActual: 1
 --- !u!1 &1237304935530073912
