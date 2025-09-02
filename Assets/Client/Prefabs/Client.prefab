@@ -297,6 +297,7 @@ GameObject:
   - component: {fileID: 8347478203092181530}
   - component: {fileID: 2678133660206657410}
   - component: {fileID: 6327999098943818165}
+  - component: {fileID: 2612144646477004114}
   m_Layer: 0
   m_Name: CLIENT
   m_TagString: Untagged
@@ -391,14 +392,16 @@ MonoBehaviour:
   - {fileID: 0}
   puntoSalida: {fileID: 0}
   miedoaaa: 8
+  moveSpeed: 2
   esperaComer: 2
   esperaAleatorio: 10
   esperaAturdimiento: 5
   esperaSangreVer: 5
   detectionRadius: 5
   fieldOfView: 78
-  prefabSangre: {fileID: 2429441063006619114, guid: c594ec9b20e1e5d499630d85e4bcf98c, type: 3}
+  prefabSangre: {fileID: 7290840186649797199, guid: 7c57ff7261874a246ac0620bb17bcdf9, type: 3}
   prefabCarne: {fileID: 0}
+  estadoActual: 0
 --- !u!195 &2678133660206657410
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -448,6 +451,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2612144646477004114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681940456687667927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d51f7a1fb6a685419936657dce54c52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveClient: {fileID: 8347478203092181530}
+  prefabFeliz: {fileID: 6835407260564615801, guid: 257e174efc469f648853fae09902c6f7, type: 3}
+  prefabTriste: {fileID: 5104943423773112726, guid: 5f1fc137e8f66e1459f6296e72317b40, type: 3}
+  prefabAlerta: {fileID: 1087571874800929728, guid: 35ddd01a8f8b9e546b58b377aa4351c5, type: 3}
+  prefabSospechando: {fileID: 6494973653225577183, guid: 5068f49f74b34dc42b0d0f3e2d0db696, type: 3}
+  yOffset: 2
+  spawnParent: {fileID: 0}
 --- !u!1 &4193189781342481032
 GameObject:
   m_ObjectHideFlags: 0

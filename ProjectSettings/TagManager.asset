@@ -8,6 +8,7 @@ TagManager:
   - MAPA
   - Knight
   - Blood
+  - Client
   layers:
   - Default
   - TransparentFX

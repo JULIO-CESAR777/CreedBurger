@@ -46,9 +46,7 @@ public class MoveKnight : MonoBehaviour
     private Vector3 destinoPrevio;
     private Transform aleatorioSeleccionado;
 
-    // sangre (si lo usas)
-    private float bloodTimer = 0f;
-    private bool isFocusingBlood = false;
+
 
     // persecución
     private Transform player;          // referencia viva al player detectado

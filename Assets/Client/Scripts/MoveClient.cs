@@ -255,7 +255,10 @@ public class MoveClient : MonoBehaviour
 
     public void Morir()
     {
-        Instantiate(prefabCarne, transform.position, transform.rotation);
+        Vector3 SpawnCosas = transform.position + Vector3.up * 2;
+
+        Instantiate(prefabCarne, SpawnCosas, transform.rotation);
+        Instantiate(prefabSangre , transform.position, Quaternion.Euler(90,0,0));
 
         // (Opcional) destruir este objeto “muerto”
         Destroy(gameObject);
