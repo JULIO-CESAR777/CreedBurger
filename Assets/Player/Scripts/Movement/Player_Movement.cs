@@ -23,6 +23,10 @@ public class Player_Movement : MonoBehaviour
     private float dashTimer = 0f;
     private bool isDashing;
     private bool canDash;
+    [Header("Gravedad")]
+    public float gravity = -9.81f;
+    public float groundedGravity = -2f;
+    private float verticalVelocity;
     
     
     private void Awake()
@@ -76,6 +80,18 @@ public class Player_Movement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
         }
         
+        // Gravedad
+        if (characterController.isGrounded)
+        {
+            if (verticalVelocity < 0)
+                verticalVelocity = groundedGravity;
+        }
+        else
+        {
+            verticalVelocity += gravity * Time.fixedDeltaTime;
+        }
+        
+        
         // Revisiones de dash
         if (isDashing)
         {
@@ -95,8 +111,11 @@ public class Player_Movement : MonoBehaviour
             }
         }
         
-        // Movemos el personaje
-        characterController.Move(new Vector3(input.x, 0, input.y) * (currentSpeed * Time.deltaTime));
+        // Movimiento final incluyendo gravedad
+        Vector3 velocity = new Vector3(input.x, 0, input.y).normalized * currentSpeed;
+        velocity.y = verticalVelocity;
+
+        characterController.Move(velocity * Time.fixedDeltaTime);
         animationHandler?.SetMovementSpeed(move.magnitude);
         
     }

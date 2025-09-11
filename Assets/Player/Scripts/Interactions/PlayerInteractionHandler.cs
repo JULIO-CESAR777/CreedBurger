@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
@@ -15,14 +17,22 @@ public class PlayerInteractionHandler : MonoBehaviour
     public GameObject interactableObject;
     private IInteractable interactableComponent;
 
+    [SerializeField] public Image cooldownFillImage;
+    public float trapCooldown;
+    public bool canPutTraps;
+    
     private void Start()
     {
         isGrabingSomething = false;
+        canPutTraps = true;
         if (controller != null && controller.inputReader != null)
         {
             controller.inputReader.OnInteract += Interact;
             controller.inputReader.OnTraps += SetTraps;
         }
+        
+        cooldownFillImage = GameObject.FindWithTag("TrapCoolDown").GetComponent<Image>();
+        cooldownFillImage.fillAmount = 1f;
         
         interactableObject = null;
         interactableComponent = null;
@@ -39,7 +49,27 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void SetTraps()
     {
-        print("sexo publico");        
+        if (!canPutTraps) return;
+        
+        Instantiate(controller.trapPrefab, controller.transform.position, Quaternion.Euler(0, 90, 90));
+        canPutTraps = false;
+        StartCoroutine(ChangeTrapCooldown());
+    }
+
+    IEnumerator ChangeTrapCooldown(float duration = 1f)
+    {
+        float time = 0f;
+        cooldownFillImage.fillAmount = 0f;
+
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            cooldownFillImage.fillAmount = 1f - (time / duration);
+            yield return null;
+        }
+
+        cooldownFillImage.fillAmount = 1f;
+        canPutTraps = true;
     }
     
     public void Interact()

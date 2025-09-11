@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,7 +8,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public PlayerInteractionHandler playerInteractionHandler;
     public PlayerInputReader inputReader;
 
-    [Header("Sospechoso")] public bool suspect;
+    [Header("Sospechoso")] 
+    public bool suspect;
+    
+    [Header("Trampas")]
+    [SerializeField] public GameObject trapPrefab;
+    
     
     private void Awake()
     {

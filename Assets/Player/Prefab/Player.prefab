@@ -260,6 +260,7 @@ MonoBehaviour:
   playerInteractionHandler: {fileID: 1408283986150703199}
   inputReader: {fileID: 0}
   suspect: 0
+  trapPrefab: {fileID: 5291124005924114379, guid: a8c9cfd2ca736b04aac97c95ddb86257, type: 3}
 --- !u!114 &2188627024289834801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +278,8 @@ MonoBehaviour:
   dashSpeed: 15
   dashDuration: 0.2
   dashCooldown: 0.23
+  gravity: -9.81
+  groundedGravity: -2
 --- !u!114 &177345307620864110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,6 +568,9 @@ MonoBehaviour:
   isGrabingSomething: 0
   GrabbedObject: {fileID: 0}
   interactableObject: {fileID: 0}
+  cooldownFillImage: {fileID: 0}
+  trapCooldown: 1
+  canPutTraps: 0
 --- !u!1 &4929935607027431230
 GameObject:
   m_ObjectHideFlags: 0

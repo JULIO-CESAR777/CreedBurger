@@ -9,6 +9,7 @@ TagManager:
   - Knight
   - Blood
   - Client
+  - TrapCoolDown
   layers:
   - Default
   - TransparentFX
