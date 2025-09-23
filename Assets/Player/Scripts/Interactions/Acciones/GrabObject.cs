@@ -12,6 +12,9 @@ public class GrabObject : MonoBehaviour, IInteractable
         
         if (!isGrabbed)
         {
+
+            if (gameObject.name == "Meat Machine") return;
+            
             if (gameObject.name == "Meat")
             {
                 interactionHandler.controller.suspect = true;
@@ -40,6 +43,17 @@ public class GrabObject : MonoBehaviour, IInteractable
         // Solo interactuar con el objeto para cocinar
         if (target != null && target != interactionHandler.controller.gameObject)
         {
+            // Transformacion de carne
+            if (target.name == "Meat Machine" && gameObject.name == "Carne")
+            {
+                if (target.GetComponent<SpawningMeat>().SpawnMeat())
+                {
+                    Destroy(gameObject);                    
+                }
+            }
+
+
+            // Cocina
             CookIngredients targetCook = target.GetComponent<CookIngredients>();
             CookIngredients thisCook = GetComponent<CookIngredients>();
             if (targetCook != null && thisCook != null)
@@ -49,19 +63,14 @@ public class GrabObject : MonoBehaviour, IInteractable
                 
                 foreach (var ingredient in thisCook.ingredientIDs)
                 {
-                    print("ingrediente: " + ingredient);
-
                     if (targetCook.checkForRepeatedIngredients(ingredient))
                     {
                         fused = true;
                     }
-                    
                 }
                 
-
                 if (fused)
                 {
-                    print("se juntaron");
                     targetCook.TryAddIngredient(thisCook);
                     // Destruye este objeto (el dropeado)
                     interactionHandler.controller.suspect = false;

@@ -119,6 +119,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             case InteractType.Grab:
             {
+                if (interactableObject.name == "Meat Machine" && !isGrabingSomething) return;
                 controller.playerMovement.canMove = false;
                 isGrabingSomething = true;
                 GrabbedObject = interactableObject;
