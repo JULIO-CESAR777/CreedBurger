@@ -28,6 +28,14 @@ public class MoveClient : MonoBehaviour
 
     public GameObject prefabCarne;
 
+    [Header("Cosas de la UI")]
+    public IngredientPrefabDB db;             // referencia a tu DB
+    public OrderUIController orderUI;         // referencia al UI en escena
+
+    private IngredientPrefabDB.Entry pedido;
+    private bool pedidoEnviado = false;  // <<< NUEVO
+    private bool pedidoListo = false;
+
     public enum Estado
     {
         IrOrdenar,
@@ -70,11 +78,7 @@ public class MoveClient : MonoBehaviour
         switch (estadoActual)
         {
             case Estado.IrOrdenar:
-                if (triggerOrdenar)
-                {
-                    estadoActual = Estado.IrComer;
-                    IrAPunto(puntoSecundario);
-                }
+                
                 break;
 
             case Estado.IrComer:
@@ -120,16 +124,70 @@ public class MoveClient : MonoBehaviour
         }
     }
 
+    private string GetPedidoDisplayName()
+    {
+        if (pedido.prefab != null) return pedido.prefab.name;
+        return $"Receta {pedido.id}";
+    }
+
+    void HacerPedido()
+    {
+        if (db == null || db.entries.Count == 0) return;
+
+        int index = Random.Range(0, db.entries.Count);
+        pedido = db.entries[index];
+        pedidoEnviado = true;
+
+        Debug.Log($"Cliente pidió: {GetPedidoDisplayName()} (id={pedido.id})");
+
+        if (orderUI != null)
+            orderUI.ShowOrder(pedido);
+    }
+
+
+    // Cuando llegue al punto de ordenar:
     void OnTriggerEnter(Collider other)
     {
         if (estadoActual == Estado.IrOrdenar && other.CompareTag("Ordenar"))
         {
+            HacerPedido();
             triggerOrdenar = true;
-            Debug.Log("Trigeree el Ordenar");
+        }
+    }
+
+    private void CambiarAComer()
+    {
+        estadoActual = Estado.IrComer;
+
+        // por si fue detenido al ver sangre
+        if (agent != null) agent.isStopped = false;
+
+        IrAPunto(puntoSecundario);
+        Debug.Log($"Cliente va a comer -> {GetPedidoDisplayName()} (id={pedido.id})");
+    }
+
+
+    public void RecibirPedido(int idDelChef)
+    {
+        if (!pedidoEnviado)
+        {
+            Debug.LogWarning("El cliente no ha enviado un pedido todavía, no puedo recibir.");
+            return;
+        }
+
+        if (pedido.id == idDelChef)
+        {
+            Debug.Log($"Cliente recibió SU pedido correcto: {GetPedidoDisplayName()} (id={pedido.id})");
+
+            if (orderUI != null)
+                orderUI.Hide();
+
+            CambiarAComer();
         }
         else
         {
-            Debug.Log("Trigereo pero no con el ese");
+            Debug.LogWarning($"Pedido equivocado (entregado={idDelChef}, esperado={pedido.id}).");
+            // Aquí puedes decidir qué hacer (esperar, reclamar, etc.)
         }
     }
 

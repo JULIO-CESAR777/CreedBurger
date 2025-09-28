@@ -9,6 +9,7 @@ public class IngredientPrefabDB : ScriptableObject
     public struct Entry
     {
         public int id;              // ID único o suma de IDs
+        public String title;
         public GameObject prefab;   // Prefab asociado
         public Sprite image;
     }
