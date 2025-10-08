@@ -215,6 +215,8 @@ MonoBehaviour:
   meat: {fileID: 5312991149285066982, guid: 8674f355027bd3b4e82c43411ba5594b, type: 3}
   launchForce: 2
   spawnPoint: {fileID: 4427452911480031445}
+  preparationTime: 0.6
+  meatMachine: {fileID: 6668569365127183132}
 --- !u!1 &6668569365127183132 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6522436488288372200, guid: 094eddd484ca50d4587317fb33c8a773, type: 3}

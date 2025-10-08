@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "UIInputActions",
     "maps": [
         {
@@ -88,6 +89,17 @@
                     "action": "Navigate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "a8ad0eee-660e-436c-be6c-045d8db7511e",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 },
                 {
                     "name": "",
