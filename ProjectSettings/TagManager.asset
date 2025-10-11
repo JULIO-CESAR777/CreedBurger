@@ -10,6 +10,7 @@ TagManager:
   - Blood
   - Client
   - TrapCoolDown
+  - Carne
   layers:
   - Default
   - TransparentFX

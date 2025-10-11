@@ -44,7 +44,7 @@ public class GrabObject : MonoBehaviour, IInteractable
         if (target != null && target != interactionHandler.controller.gameObject)
         {
             // Transformacion de carne
-            if (target.name == "Meat Machine" && gameObject.name == "Carne")
+            if (target.name == "Meat Machine" && gameObject.tag == "Carne")
             {
                 if (target.GetComponent<SpawningMeat>().SpawnMeat())
                 {
