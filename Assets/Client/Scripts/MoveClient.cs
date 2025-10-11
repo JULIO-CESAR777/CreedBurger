@@ -6,87 +6,98 @@ public class MoveClient : MonoBehaviour
 {
     public NavMeshAgent agent;
 
-    public Transform puntoOrdenar;
-    public Transform puntoSecundario;
-    public Transform[] puntosAleatorios;
+    [Header("Puntos")]
     public Transform puntoSalida;
+    public Transform[] puntosAleatorios;
+
+    // NUEVO: mesas del restaurante (asigna en el Inspector)
+    public Transform[] mesas;
 
     [Header("Velocidades")]
     public int miedoaaa = 4;
 
     [Header("Tiempos de espera")]
-    public float esperaComer = 2;
-    public float esperaAleatorio = 2;
-    public float esperaAturdimiento = 5;
-    public float esperaSangreVer = 5;
+    public float esperaComer = 4f;      // tiempo "comiendo"
+    public float esperaAleatorio = 2f;  // pausa en punto aleatorio
+    public float esperaSangreVer = 5f;
 
     [Header("Detección de Sangre Visual")]
     public float detectionRadius = 6f;
     [Range(0f, 360f)] public float fieldOfView = 120f;
 
     public GameObject prefabSangre;
-
     public GameObject prefabCarne;
 
     [Header("Cosas de la UI")]
-    public IngredientPrefabDB db;             // referencia a tu DB
-    public OrderUIController orderUI;         // referencia al UI en escena
+    public IngredientPrefabDB db;
+    public OrderUIController orderUI;
 
     private IngredientPrefabDB.Entry pedido;
-    private bool pedidoEnviado = false;  // <<< NUEVO
+    private bool pedidoEnviado = false;
     private bool pedidoListo = false;
 
+    // --- ESTADOS ---
     public enum Estado
     {
-        IrOrdenar,
-        Quieto,
-        IrComer,
-        EsperaComer,
+        IrMesa,         // NUEVO: ir a mesa aleatoria
+        EsperaPedido,   // NUEVO: sentado esperando que lleven el plato correcto
+        Comer,          // NUEVO: anim/comer por X segundos
         IrAleatorio,
         EsperaAleatorio,
         IrSalida,
         Aturdido,
         Asustado,
         Sospechando,
-        Terminado
+        Terminado,
+        Quieto
     }
-    public Estado estadoActual = Estado.IrOrdenar;
+    public Estado estadoActual = Estado.IrMesa;
     private Estado estadoPrevio;
     private Vector3 destinoPrevio;
 
-    private bool triggerOrdenar = false;
+    // Trabajo interno
+    private Transform mesaAsignada;
     private Transform aleatorioSeleccionado;
 
-    // Temporizador para detección visual de sangre
+    // Detección de sangre
     private float bloodTimer = 0f;
     private bool isFocusingBlood = false;
 
     void Start()
     {
-        if (agent == null)
-            agent = GetComponent<NavMeshAgent>();
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
 
-        IrAPunto(puntoOrdenar);
+        // Asignar mesa inicial
+        if (mesas != null && mesas.Length > 0)
+        {
+            mesaAsignada = mesas[Random.Range(0, mesas.Length)];
+            IrAPunto(mesaAsignada);
+            estadoActual = Estado.IrMesa;
+        }
+        else
+        {
+            Debug.LogWarning("[MoveClient] No hay mesas asignadas. Se irá directo a pasear y luego salir.");
+            PasarAPaseo();
+        }
     }
 
     void Update()
     {
-        // Detección visual de sangre
         DetectarSangreVisual();
 
-        // Comportamiento según estado
         switch (estadoActual)
         {
-            case Estado.IrOrdenar:
-                
+            case Estado.IrMesa:
+                if (HaLlegadoDestino())
+                    SentarseYOrdenar();
                 break;
 
-            case Estado.IrComer:
-                if (HaLlegadoDestino())
-                {
-                    estadoActual = Estado.EsperaComer;
-                    StartCoroutine(EsperaEnPunto(esperaComer, Estado.IrAleatorio));
-                }
+            case Estado.EsperaPedido:
+                // quieto esperando RecibirPedido(id)
+                break;
+
+            case Estado.Comer:
+                // el tiempo corrió por corrutina; aquí no hacemos nada
                 break;
 
             case Estado.IrAleatorio:
@@ -106,11 +117,9 @@ public class MoveClient : MonoBehaviour
                 break;
 
             case Estado.Aturdido:
-                // No hace nada mientras está aturdido
                 break;
 
             case Estado.Asustado:
-                // Simplemente sigue a puntoSalida
                 if (HaLlegadoDestino())
                 {
                     estadoActual = Estado.Terminado;
@@ -119,10 +128,71 @@ public class MoveClient : MonoBehaviour
                 break;
 
             case Estado.Quieto:
-                // Detenido indefinidamente
                 break;
         }
     }
+
+    // === LÓGICA PRINCIPAL ===
+
+    private void SentarseYOrdenar()
+    {
+        // Detenerse en la mesa
+        if (agent != null) agent.isStopped = true;
+
+        // Elegir receta aleatoria y mostrar UI
+        HacerPedido();
+
+        // Esperar a que se entregue con RecibirPedido(...)
+        estadoActual = Estado.EsperaPedido;
+        Debug.Log("[MoveClient] Sentado en mesa y esperando el pedido...");
+    }
+
+    private void EmpezarAComer()
+    {
+        // Ya llegó el plato correcto
+        if (orderUI != null) orderUI.Hide();
+
+        estadoActual = Estado.Comer;
+
+        // Por si veníamos parados
+        if (agent != null)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+        }
+
+        // Simular comer X segundos y luego pasear
+        StartCoroutine(EsperaEnPunto(esperaComer, Estado.IrAleatorio));
+        Debug.Log("[MoveClient] Comiendo...");
+    }
+
+    private void PasarAPaseo()
+    {
+        if (puntosAleatorios == null || puntosAleatorios.Length == 0)
+        {
+            // Si no hay puntos para pasear, ir directo a salida
+            estadoActual = Estado.IrSalida;
+            IrAPunto(puntoSalida);
+            return;
+        }
+
+        aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
+        estadoActual = Estado.IrAleatorio;
+
+        if (agent != null) agent.isStopped = false;
+        IrAPunto(aleatorioSeleccionado);
+        Debug.Log("[MoveClient] Dando una vuelta (IrAleatorio)...");
+    }
+
+    private void SalirDelLugar()
+    {
+        estadoActual = Estado.IrSalida;
+        if (agent != null) agent.isStopped = false;
+        IrAPunto(puntoSalida);
+        Debug.Log("[MoveClient] Saliendo...");
+    }
+
+    // === PEDIDOS ===
 
     private string GetPedidoDisplayName()
     {
@@ -132,64 +202,78 @@ public class MoveClient : MonoBehaviour
 
     void HacerPedido()
     {
-        if (db == null || db.entries.Count == 0) return;
-
-        int index = Random.Range(0, db.entries.Count);
-        pedido = db.entries[index];
-        pedidoEnviado = true;
-
-        Debug.Log($"Cliente pidió: {GetPedidoDisplayName()} (id={pedido.id})");
-
-        if (orderUI != null)
-            orderUI.ShowOrder(pedido);
-    }
-
-
-    // Cuando llegue al punto de ordenar:
-    void OnTriggerEnter(Collider other)
-    {
-        if (estadoActual == Estado.IrOrdenar && other.CompareTag("Ordenar"))
+        if (db == null || db.entries.Count == 0)
         {
-            HacerPedido();
-            triggerOrdenar = true;
+            Debug.LogWarning("[MoveClient] DB vacía; no se puede pedir. Simulando pedido genérico.");
+            pedido = default;
         }
+        else
+        {
+            int index = Random.Range(0, db.entries.Count);
+            pedido = db.entries[index];
+        }
+
+        pedidoEnviado = true;
+        pedidoListo = false;
+
+        if (orderUI != null) orderUI.ShowOrder(pedido);
+        Debug.Log($"[MoveClient] Cliente pidió: {GetPedidoDisplayName()} (id={pedido.id})");
     }
 
-    private void CambiarAComer()
-    {
-        estadoActual = Estado.IrComer;
-
-        // por si fue detenido al ver sangre
-        if (agent != null) agent.isStopped = false;
-
-        IrAPunto(puntoSecundario);
-        Debug.Log($"Cliente va a comer -> {GetPedidoDisplayName()} (id={pedido.id})");
-    }
-
-
+    // Llama tu "mesero/chef" cuando deje el plato en la mesa del cliente
     public void RecibirPedido(int idDelChef)
     {
         if (!pedidoEnviado)
         {
-            Debug.LogWarning("El cliente no ha enviado un pedido todavía, no puedo recibir.");
+            Debug.LogWarning("[MoveClient] Aún no envía pedido; no puede recibir.");
             return;
         }
 
         if (pedido.id == idDelChef)
         {
-            Debug.Log($"Cliente recibió SU pedido correcto: {GetPedidoDisplayName()} (id={pedido.id})");
+            pedidoListo = true;
+            Debug.Log($"[MoveClient] Recibió el pedido correcto: {GetPedidoDisplayName()}");
 
-            if (orderUI != null)
-                orderUI.Hide();
-
-            CambiarAComer();
+            if (estadoActual == Estado.EsperaPedido)
+                EmpezarAComer();
         }
         else
         {
-            Debug.LogWarning($"Pedido equivocado (entregado={idDelChef}, esperado={pedido.id}).");
-            // Aquí puedes decidir qué hacer (esperar, reclamar, etc.)
+            Debug.LogWarning($"[MoveClient] Pedido equivocado (entregado={idDelChef}, esperado={pedido.id}).");
+            // aquí puedes: ignorar, esperar otro intento, enojarse, etc.
         }
     }
+
+    // === UTILIDADES DE MOVIMIENTO/ESTADO ===
+
+    IEnumerator EsperaEnPunto(float segundos, Estado siguiente)
+    {
+        yield return new WaitForSeconds(segundos);
+
+        if (siguiente == Estado.IrAleatorio)
+        {
+            PasarAPaseo();
+        }
+        else if (siguiente == Estado.IrSalida)
+        {
+            SalirDelLugar();
+        }
+    }
+
+    bool HaLlegadoDestino()
+    {
+        return !agent.pathPending &&
+               agent.remainingDistance <= agent.stoppingDistance &&
+               (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
+    }
+
+    void IrAPunto(Transform punto)
+    {
+        if (punto != null && agent != null)
+            agent.SetDestination(punto.position);
+    }
+
+    // === REACCIONES / EVENTOS ===
 
     private void DetectarSangreVisual()
     {
@@ -219,12 +303,11 @@ public class MoveClient : MonoBehaviour
         {
             if (!isFocusingBlood)
             {
-                // Primer frame de detección: detener al agente
                 isFocusingBlood = true;
-                agent.isStopped = true;
+                if (agent != null) agent.isStopped = true;
             }
             estadoActual = Estado.Sospechando;
-            // Mirar lentamente hacia la sangre
+
             Vector3 lookDir = (targetBlood.position - transform.position).normalized;
             Quaternion lookRot = Quaternion.LookRotation(lookDir);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 2f);
@@ -235,10 +318,9 @@ public class MoveClient : MonoBehaviour
         }
         else if (isFocusingBlood)
         {
-            // Se interrumpe la visión antes de completar el timer
             isFocusingBlood = false;
             bloodTimer = 0f;
-            agent.isStopped = false;
+            if (agent != null) agent.isStopped = false;
         }
         else
         {
@@ -251,49 +333,18 @@ public class MoveClient : MonoBehaviour
         estadoActual = Estado.Asustado;
         agent.ResetPath();
         agent.speed = miedoaaa;
-       agent.SetDestination(puntoSalida.position);
-    }
-
-    IEnumerator EsperaEnPunto(float segundos, Estado siguienteEstado)
-    {
-        if (siguienteEstado == Estado.IrAleatorio)
-        {
-            aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
-            yield return new WaitForSeconds(segundos);
-            estadoActual = Estado.IrAleatorio;
-            IrAPunto(aleatorioSeleccionado);
-        }
-        else if (siguienteEstado == Estado.IrSalida)
-        {
-            yield return new WaitForSeconds(segundos);
-            estadoActual = Estado.IrSalida;
-            IrAPunto(puntoSalida);
-        }
-    }
-
-    bool HaLlegadoDestino()
-    {
-        return !agent.pathPending &&
-               agent.remainingDistance <= agent.stoppingDistance &&
-               (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
-    }
-
-    void IrAPunto(Transform punto)
-    {
-        if (punto != null && agent != null)
-            agent.SetDestination(punto.position);
+        agent.SetDestination(puntoSalida.position);
     }
 
     public void Aturdir(float duracion)
     {
-        if (estadoActual == Estado.Aturdido)
-            return;
+        if (estadoActual == Estado.Aturdido) return;
 
         estadoPrevio = estadoActual;
         destinoPrevio = agent.destination;
         estadoActual = Estado.Aturdido;
-        agent.ResetPath();
 
+        agent.ResetPath();
         StartCoroutine(RecuperarDeAturdimiento(duracion));
     }
 
@@ -301,7 +352,16 @@ public class MoveClient : MonoBehaviour
     {
         yield return new WaitForSeconds(segundos);
         estadoActual = estadoPrevio;
-        agent.SetDestination(destinoPrevio);
+
+        // Si estaba sentado esperando/comiendo, seguir sentado (no retomar path)
+        if (estadoActual == Estado.EsperaPedido || estadoActual == Estado.Comer)
+        {
+            agent.isStopped = true;
+        }
+        else
+        {
+            agent.SetDestination(destinoPrevio);
+        }
     }
 
     public void Alto()
@@ -313,14 +373,10 @@ public class MoveClient : MonoBehaviour
 
     public void Morir()
     {
-        Vector3 SpawnCosas = transform.position + Vector3.up * 2;
-
-        Instantiate(prefabCarne, SpawnCosas, transform.rotation);
-        Instantiate(prefabSangre , transform.position, Quaternion.Euler(90,0,0));
-
-        // (Opcional) destruir este objeto “muerto”
+        Vector3 spawnCosas = transform.position + Vector3.up * 2;
+        Instantiate(prefabCarne, spawnCosas, transform.rotation);
+        Instantiate(prefabSangre, transform.position, Quaternion.Euler(90, 0, 0));
         Destroy(gameObject);
-
     }
 
     void OnDrawGizmosSelected()

@@ -37,9 +37,9 @@ public class StatusMood : MonoBehaviour
         GameObject prefabToShow = null;
         switch (state)
         {
-            case MoveClient.Estado.IrOrdenar:
-            case MoveClient.Estado.IrComer:
-            case MoveClient.Estado.EsperaComer:
+            case MoveClient.Estado.IrMesa:
+            case MoveClient.Estado.Comer:
+            case MoveClient.Estado.EsperaPedido:
             case MoveClient.Estado.IrAleatorio:
             case MoveClient.Estado.EsperaAleatorio:
             case MoveClient.Estado.IrSalida:
