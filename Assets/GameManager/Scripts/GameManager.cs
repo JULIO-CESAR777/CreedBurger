@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Prefabs y spawn")]
     public GameObject jugadorPrefab;
+    public GameObject cameraPrefab;
     public Transform[] puntosDeSpawn;
     
     [Header("Ingredient DB")]
@@ -33,38 +34,65 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        int cantidad = GameSettings.Instance != null ? GameSettings.Instance.cantidadJugadores : 1;
+        int cantidad = GameSettings.Instance != null ? GameSettings.Instance.cantidadJugadores : cantidadJugadores;
 
         if (cantidad >= 1)
-            CrearJugador("Player", puntosDeSpawn[0].position);
+            CrearJugador("Player", puntosDeSpawn[0].position, 0);
 
         if (cantidad == 2)
-            CrearJugador("Player2", puntosDeSpawn[1].position);
+            CrearJugador("Player2", puntosDeSpawn[1].position, 1);
         
     }
 
 
-    void CrearJugador(string actionMap, Vector3 posicion)
+    void CrearJugador(string actionMap, Vector3 posicion, int index)
     {
+        //Spawn del jugador
         GameObject obj = Instantiate(jugadorPrefab, posicion, Quaternion.identity);
+        obj.name = actionMap;
         var input = obj.GetComponent<PlayerInput>();
         input.SwitchCurrentActionMap(actionMap);
-
-        // Obtener cámara del jugador
-        Camera cam = obj.GetComponentInChildren<Camera>();
-
-        // Activar cámara y configurar viewport
-        if (cantidadJugadores == 1)
+        
+        // Spawnear la camara
+        GameObject cameraInstance = Instantiate(cameraPrefab, posicion, Quaternion.Euler(48, 0, 0));
+        
+        // Cambiarle el nombre por temas de debug
+        cameraInstance.name = actionMap + "_Camera";
+        
+        // Mandar a llamar al script y darle un target
+        var followScript = cameraInstance.GetComponent<SmoothCameraFollow>();
+        if (followScript != null)
         {
-            cam.rect = new Rect(0, 0, 1, 1); // pantalla completa
+            followScript.target = obj.transform;
         }
-        else if (actionMap == "Player") // Jugador 1
+        
+        // Asignar viewport para pantalla dividida
+        Camera cam = cameraInstance.GetComponentInChildren<Camera>();
+        
+        if (cam != null)
         {
-            cam.rect = new Rect(0, 0.5f, 1, 0.5f); // parte superior
+            if (cantidadJugadores == 1)
+            {
+                cam.rect = new Rect(0f, 0f, 1f, 1f); // pantalla completa
+            }
+            else
+            {
+                // Pantalla dividida horizontal (uno arriba, otro abajo)
+                //if (index == 0)
+                    //cam.rect = new Rect(0f, 0.5f, 1f, 0.5f); // Player 1 arriba
+                //else
+                    //cam.rect = new Rect(0f, 0f, 1f, 0.5f);   // Player 2 abajo
+
+                // Si prefieres pantalla dividida vertical (lado a lado):
+                 if (index == 0)
+                     cam.rect = new Rect(0f, 0f, 0.5f, 1f); // izquierda
+                 else
+                     cam.rect = new Rect(0.5f, 0f, 0.5f, 1f); // derecha
+            }
         }
-        else if (actionMap == "Player2") // Jugador 2
+        else
         {
-            cam.rect = new Rect(0, 0, 1, 0.5f); // parte inferior
+            Debug.LogWarning("No se encontró una cámara en el prefab del jugador.");
         }
     }
 }

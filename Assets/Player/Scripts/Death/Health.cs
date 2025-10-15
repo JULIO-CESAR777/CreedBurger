@@ -26,9 +26,6 @@ public class Health : MonoBehaviour
             controller.playerInteractionHandler.GrabbedObject = null;
         }
         
-        // Animacion de morir
-        controller.animationHandler?.PlayDie();
-        
         controller.playerMesh.SetActive(false);
         
         // 5. Instanciar splash effect
@@ -36,7 +33,6 @@ public class Health : MonoBehaviour
         {
             Instantiate(splashEffectPrefab, transform.position, Quaternion.identity);
         }
-        
         
         // Reaparicion
         Invoke("Respawn", 3f);

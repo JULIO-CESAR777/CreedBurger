@@ -39,11 +39,6 @@ public class PlayerAnimationHandler : MonoBehaviour
         animator.SetTrigger("Kill");
     }
 
-    public void PlayDie()
-    {
-        animator.SetTrigger("DIE");
-    }
-
     public void PlayClean()
     {
         animator.SetTrigger("Clean");
