@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public PlayerAnimationHandler animationHandler;
     [SerializeField] public PlayerInteractionHandler playerInteractionHandler;
     public PlayerInputReader inputReader;
+    public GameObject playerMesh;
 
     [Header("Sospechoso")] 
     public bool suspect;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = GetComponent<Player_Movement>();
         animationHandler = GetComponent<PlayerAnimationHandler>();
         inputReader = GetComponent<PlayerInputReader>();
+        playerMesh = transform.GetChild(0).gameObject;
     }
 
 
