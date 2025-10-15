@@ -21,7 +21,7 @@ public class MoveClient : MonoBehaviour
     public float esperaAleatorio = 2f;  // pausa en punto aleatorio
     public float esperaSangreVer = 5f;
 
-    [Header("Detección de Sangre Visual")]
+    [Header("Detecciï¿½n de Sangre Visual")]
     public float detectionRadius = 6f;
     [Range(0f, 360f)] public float fieldOfView = 120f;
 
@@ -59,7 +59,7 @@ public class MoveClient : MonoBehaviour
     private Transform mesaAsignada;
     private Transform aleatorioSeleccionado;
 
-    // Detección de sangre
+    // Detecciï¿½n de sangre
     private float bloodTimer = 0f;
     private bool isFocusingBlood = false;
 
@@ -76,7 +76,7 @@ public class MoveClient : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[MoveClient] No hay mesas asignadas. Se irá directo a pasear y luego salir.");
+            Debug.LogWarning("[MoveClient] No hay mesas asignadas. Se irï¿½ directo a pasear y luego salir.");
             PasarAPaseo();
         }
     }
@@ -97,7 +97,7 @@ public class MoveClient : MonoBehaviour
                 break;
 
             case Estado.Comer:
-                // el tiempo corrió por corrutina; aquí no hacemos nada
+                // el tiempo corriï¿½ por corrutina; aquï¿½ no hacemos nada
                 break;
 
             case Estado.IrAleatorio:
@@ -132,7 +132,7 @@ public class MoveClient : MonoBehaviour
         }
     }
 
-    // === LÓGICA PRINCIPAL ===
+    // === Lï¿½GICA PRINCIPAL ===
 
     private void SentarseYOrdenar()
     {
@@ -149,12 +149,12 @@ public class MoveClient : MonoBehaviour
 
     private void EmpezarAComer()
     {
-        // Ya llegó el plato correcto
+        // Ya llegï¿½ el plato correcto
         if (orderUI != null) orderUI.Hide();
 
         estadoActual = Estado.Comer;
 
-        // Por si veníamos parados
+        // Por si venï¿½amos parados
         if (agent != null)
         {
             agent.isStopped = true;
@@ -204,20 +204,20 @@ public class MoveClient : MonoBehaviour
     {
         if (db == null || db.entries.Count == 0)
         {
-            Debug.LogWarning("[MoveClient] DB vacía; no se puede pedir. Simulando pedido genérico.");
+            Debug.LogWarning("[MoveClient] DB vacï¿½a; no se puede pedir. Simulando pedido genï¿½rico.");
             pedido = default;
         }
         else
         {
-            int index = Random.Range(0, db.entries.Count);
-            pedido = db.entries[index];
+            //int index = Random.Range(0, db.entries.Count);
+            pedido = db.entries[7];
         }
 
         pedidoEnviado = true;
         pedidoListo = false;
 
         if (orderUI != null) orderUI.ShowOrder(pedido);
-        Debug.Log($"[MoveClient] Cliente pidió: {GetPedidoDisplayName()} (id={pedido.id})");
+        Debug.Log($"[MoveClient] Cliente pidiï¿½: {GetPedidoDisplayName()} (id={pedido.id})");
     }
 
     // Llama tu "mesero/chef" cuando deje el plato en la mesa del cliente
@@ -225,14 +225,14 @@ public class MoveClient : MonoBehaviour
     {
         if (!pedidoEnviado)
         {
-            Debug.LogWarning("[MoveClient] Aún no envía pedido; no puede recibir.");
+            Debug.LogWarning("[MoveClient] Aï¿½n no envï¿½a pedido; no puede recibir.");
             return;
         }
 
         if (pedido.id == idDelChef)
         {
             pedidoListo = true;
-            Debug.Log($"[MoveClient] Recibió el pedido correcto: {GetPedidoDisplayName()}");
+            Debug.Log($"[MoveClient] Recibiï¿½ el pedido correcto: {GetPedidoDisplayName()}");
 
             if (estadoActual == Estado.EsperaPedido)
                 EmpezarAComer();
@@ -240,7 +240,7 @@ public class MoveClient : MonoBehaviour
         else
         {
             Debug.LogWarning($"[MoveClient] Pedido equivocado (entregado={idDelChef}, esperado={pedido.id}).");
-            // aquí puedes: ignorar, esperar otro intento, enojarse, etc.
+            // aquï¿½ puedes: ignorar, esperar otro intento, enojarse, etc.
         }
     }
 

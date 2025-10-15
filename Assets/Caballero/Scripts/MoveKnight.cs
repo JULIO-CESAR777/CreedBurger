@@ -212,7 +212,7 @@ public class MoveKnight : MonoBehaviour
         // - Reproducir animación/sonido
         // - Cargar escena, restar vida, etc.
         Debug.Log($"{name} atrapó a {target.name}");
-
+        Destroy(this);
         // ejemplo: volver a patrullar o ir a salida
         AbortChase();
     }

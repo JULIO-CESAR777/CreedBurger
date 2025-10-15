@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
         // 5. Instanciar splash effect
         if (splashEffectPrefab != null)
         {
-            Instantiate(splashEffectPrefab, transform.position, Quaternion.identity);
+            Instantiate(splashEffectPrefab, transform.position, Quaternion.Euler(90,0,0));
         }
         
         // Reaparicion
