@@ -259,6 +259,7 @@ MonoBehaviour:
   animationHandler: {fileID: 0}
   playerInteractionHandler: {fileID: 1408283986150703199}
   inputReader: {fileID: 0}
+  playerMesh: {fileID: 0}
   suspect: 0
   trapPrefab: {fileID: 5291124005924114379, guid: a8c9cfd2ca736b04aac97c95ddb86257, type: 3}
 --- !u!114 &2188627024289834801
@@ -346,6 +347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f19d301f8499d419db92a67b04710c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  splashEffectPrefab: {fileID: 1582062450047922138, guid: 9c171c9bfa66ae64b9dd7c1368936fb3, type: 3}
 --- !u!1 &3730311079872757781
 GameObject:
   m_ObjectHideFlags: 0

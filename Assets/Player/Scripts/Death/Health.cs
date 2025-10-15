@@ -5,6 +5,9 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     private PlayerController controller;
+    
+    [Header("Visual Effects")]
+    public GameObject splashEffectPrefab;
     private void Start()
     {
         controller = gameObject.GetComponent<PlayerController>();
@@ -13,29 +16,27 @@ public class Health : MonoBehaviour
     public void Die()
     {
         
-        /*
+        // Restringir movimiento - Listo
         controller.playerMovement.canMove = false;
         
+        // Dropear objetos si es que carga algo - Listo
         if (controller.playerInteractionHandler.isGrabingSomething)
         {
             Destroy(controller.playerInteractionHandler.GrabbedObject);
             controller.playerInteractionHandler.GrabbedObject = null;
         }
         
-        controller.animationHandler?.PlayDie();
+        controller.playerMesh.SetActive(false);
         
+        // 5. Instanciar splash effect
+        if (splashEffectPrefab != null)
+        {
+            Instantiate(splashEffectPrefab, transform.position, Quaternion.identity);
+        }
+        
+        // Reaparicion
         Invoke("Respawn", 3f);
         
-        */
-        
-        /*
-         TODO:
-         Restringir movimiento - Listo
-         Dropear objetos si es que carga algo - Listo
-         Animacion de morir
-         Si se desea poner un tiempo de espera
-         Reaparicion
-         */ 
     }
 
     public void Respawn()
@@ -48,11 +49,12 @@ public class Health : MonoBehaviour
         {
             transform.position = GameManager.Instance.puntosDeSpawn[1].transform.position;
         }
+        
+        controller.playerMesh.SetActive(true);
 
         controller.playerMovement.canMove = true;
 
     }
-    
     
     private void OnCollisionEnter(Collision other)
     {
