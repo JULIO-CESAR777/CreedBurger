@@ -76,7 +76,7 @@ public class MoveClient : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[MoveClient] No hay mesas asignadas. Se ir� directo a pasear y luego salir.");
+            //Debug.LogWarning("[MoveClient] No hay mesas asignadas. Se ir� directo a pasear y luego salir.");
             PasarAPaseo();
         }
     }
@@ -144,7 +144,7 @@ public class MoveClient : MonoBehaviour
 
         // Esperar a que se entregue con RecibirPedido(...)
         estadoActual = Estado.EsperaPedido;
-        Debug.Log("[MoveClient] Sentado en mesa y esperando el pedido...");
+        //Debug.Log("[MoveClient] Sentado en mesa y esperando el pedido...");
     }
 
     private void EmpezarAComer()
@@ -163,7 +163,7 @@ public class MoveClient : MonoBehaviour
 
         // Simular comer X segundos y luego pasear
         StartCoroutine(EsperaEnPunto(esperaComer, Estado.IrAleatorio));
-        Debug.Log("[MoveClient] Comiendo...");
+        //Debug.Log("[MoveClient] Comiendo...");
     }
 
     private void PasarAPaseo()
@@ -181,7 +181,7 @@ public class MoveClient : MonoBehaviour
 
         if (agent != null) agent.isStopped = false;
         IrAPunto(aleatorioSeleccionado);
-        Debug.Log("[MoveClient] Dando una vuelta (IrAleatorio)...");
+        //Debug.Log("[MoveClient] Dando una vuelta (IrAleatorio)...");
     }
 
     private void SalirDelLugar()
@@ -189,7 +189,7 @@ public class MoveClient : MonoBehaviour
         estadoActual = Estado.IrSalida;
         if (agent != null) agent.isStopped = false;
         IrAPunto(puntoSalida);
-        Debug.Log("[MoveClient] Saliendo...");
+        //Debug.Log("[MoveClient] Saliendo...");
     }
 
     // === PEDIDOS ===
@@ -204,7 +204,7 @@ public class MoveClient : MonoBehaviour
     {
         if (db == null || db.entries.Count == 0)
         {
-            Debug.LogWarning("[MoveClient] DB vac�a; no se puede pedir. Simulando pedido gen�rico.");
+            //Debug.LogWarning("[MoveClient] DB vac�a; no se puede pedir. Simulando pedido gen�rico.");
             pedido = default;
         }
         else
@@ -217,7 +217,7 @@ public class MoveClient : MonoBehaviour
         pedidoListo = false;
 
         if (orderUI != null) orderUI.ShowOrder(pedido);
-        Debug.Log($"[MoveClient] Cliente pidi�: {GetPedidoDisplayName()} (id={pedido.id})");
+        //Debug.Log($"[MoveClient] Cliente pidi�: {GetPedidoDisplayName()} (id={pedido.id})");
     }
 
     // Llama tu "mesero/chef" cuando deje el plato en la mesa del cliente
@@ -225,21 +225,21 @@ public class MoveClient : MonoBehaviour
     {
         if (!pedidoEnviado)
         {
-            Debug.LogWarning("[MoveClient] A�n no env�a pedido; no puede recibir.");
+            //Debug.LogWarning("[MoveClient] A�n no env�a pedido; no puede recibir.");
             return;
         }
 
         if (pedido.id == idDelChef)
         {
             pedidoListo = true;
-            Debug.Log($"[MoveClient] Recibi� el pedido correcto: {GetPedidoDisplayName()}");
+            //Debug.Log($"[MoveClient] Recibi� el pedido correcto: {GetPedidoDisplayName()}");
 
             if (estadoActual == Estado.EsperaPedido)
                 EmpezarAComer();
         }
         else
         {
-            Debug.LogWarning($"[MoveClient] Pedido equivocado (entregado={idDelChef}, esperado={pedido.id}).");
+            //Debug.LogWarning($"[MoveClient] Pedido equivocado (entregado={idDelChef}, esperado={pedido.id}).");
             // aqu� puedes: ignorar, esperar otro intento, enojarse, etc.
         }
     }

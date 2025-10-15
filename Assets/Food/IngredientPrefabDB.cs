@@ -42,7 +42,7 @@ public class IngredientPrefabDB : ScriptableObject
         foreach (var e in entries)
         {
             if (e.id == 0)
-                Debug.LogWarning($"[DB] Entrada con ID 0 (no recomendado).", this);
+                //Debug.LogWarning($"[DB] Entrada con ID 0 (no recomendado).", this);
             if (e.prefab == null)
                 Debug.LogWarning($"[DB] Entrada {e.id} sin prefab.", this);
             if (!seen.Add(e.id))

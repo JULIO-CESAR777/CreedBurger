@@ -167,7 +167,7 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void OnKillAnimationEvent()
     {
-        if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Kill)
+        if (GrabbedObject == null && interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Kill)
         {
             interactableComponent.Interact(gameObject);
         }
@@ -175,7 +175,7 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void OnCleanAnimationEvent()
     {
-        if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Clean)
+        if (GrabbedObject == null && interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Clean)
         {
             interactableComponent.Interact(gameObject);
         }

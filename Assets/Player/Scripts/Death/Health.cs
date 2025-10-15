@@ -35,25 +35,31 @@ public class Health : MonoBehaviour
         }
         
         // Reaparicion
-        Invoke("Respawn", 3f);
+        Invoke("Respawn", 0.5f);
         
     }
 
     public void Respawn()
     {
+        
+        controller.playerMovement.characterController.enabled = false;
+        
+        
         if (gameObject.name == "Player")
         {
-            transform.position = GameManager.Instance.puntosDeSpawn[0].transform.position;
+            gameObject.transform.position = GameManager.Instance.puntosDeSpawn[0].position;
+            print("primer spawn");
         }
         else
         {
-            transform.position = GameManager.Instance.puntosDeSpawn[1].transform.position;
+            gameObject.transform.position = GameManager.Instance.puntosDeSpawn[1].position;
         }
         
-        controller.playerMesh.SetActive(true);
-
+        controller.playerMovement.characterController.enabled = true;
         controller.playerMovement.canMove = true;
-
+        
+        controller.playerMesh.SetActive(true);
+        
     }
     
     private void OnCollisionEnter(Collision other)
