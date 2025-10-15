@@ -10,9 +10,9 @@ public class StatusMood : MonoBehaviour
     public GameObject prefabAlerta;
     public GameObject prefabSospechando;
 
-    [Header("Colocación")]
+    [Header("Colocaciï¿½n")]
     public float yOffset = 2f;          // altura sobre el cliente
-    public Transform spawnParent;       // opcional (si lo dejas vacío, usa este transform)
+    public Transform spawnParent;       // opcional (si lo dejas vacï¿½o, usa este transform)
 
     private GameObject currentInstance;
     private MoveClient.Estado lastState = (MoveClient.Estado)(-1);
@@ -23,7 +23,7 @@ public class StatusMood : MonoBehaviour
             moveClient = GetComponent<MoveClient>();
 
         if (spawnParent == null)
-            spawnParent = transform;    // por defecto, cuélgalo de este objeto
+            spawnParent = transform;    // por defecto, cuï¿½lgalo de este objeto
     }
 
     void Update()
@@ -31,9 +31,9 @@ public class StatusMood : MonoBehaviour
         if (moveClient == null) return;
 
         var state = moveClient.estadoActual;
-        if (state == lastState) return; // solo actúa cuando cambie el estado
+        if (state == lastState) return; // solo actï¿½a cuando cambie el estado
 
-        // Elegir prefab según estado
+        // Elegir prefab segï¿½n estado
         GameObject prefabToShow = null;
         switch (state)
         {

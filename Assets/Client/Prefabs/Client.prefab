@@ -298,9 +298,10 @@ GameObject:
   - component: {fileID: 2678133660206657410}
   - component: {fileID: 6327999098943818165}
   - component: {fileID: 2612144646477004114}
+  - component: {fileID: 7716396005709783515}
   m_Layer: 0
   m_Name: CLIENT
-  m_TagString: Untagged
+  m_TagString: Client
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -320,6 +321,7 @@ Transform:
   m_Children:
   - {fileID: 7088332047611820526}
   - {fileID: 4469977865097980803}
+  - {fileID: 5607771899823436620}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &4297133536953736510
@@ -380,8 +382,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
-  puntoOrdenar: {fileID: 0}
-  puntoSecundario: {fileID: 0}
+  puntoSalida: {fileID: 0}
   puntosAleatorios:
   - {fileID: 0}
   - {fileID: 0}
@@ -390,17 +391,22 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  puntoSalida: {fileID: 0}
+  mesas:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   miedoaaa: 8
-  moveSpeed: 2
   esperaComer: 2
   esperaAleatorio: 10
-  esperaAturdimiento: 5
   esperaSangreVer: 5
   detectionRadius: 5
   fieldOfView: 78
   prefabSangre: {fileID: 7290840186649797199, guid: 7c57ff7261874a246ac0620bb17bcdf9, type: 3}
-  prefabCarne: {fileID: 0}
+  prefabCarne: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
+  db: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
+  orderUI: {fileID: 0}
   estadoActual: 0
 --- !u!195 &2678133660206657410
 NavMeshAgent:
@@ -470,6 +476,18 @@ MonoBehaviour:
   prefabSospechando: {fileID: 6494973653225577183, guid: 5068f49f74b34dc42b0d0f3e2d0db696, type: 3}
   yOffset: 2
   spawnParent: {fileID: 0}
+--- !u!114 &7716396005709783515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681940456687667927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9acdc4c1e3e176349b6d4cc49b8a795f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4193189781342481032
 GameObject:
   m_ObjectHideFlags: 0
@@ -838,6 +856,76 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5014212962764177270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9094658694241879311
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5607771899823436620}
+  - component: {fileID: 3253492264727076268}
+  - component: {fileID: 5005210883053007350}
+  m_Layer: 0
+  m_Name: EntregaTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5607771899823436620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9094658694241879311}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.065, y: 0.884, z: 0.89}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2822243749781055168}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3253492264727076268
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9094658694241879311}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.76051, y: 1, z: 0.84158325}
+  m_Center: {x: -0.11932111, y: 0, z: -0.079208374}
+--- !u!114 &5005210883053007350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9094658694241879311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dfa415bd7bcb534bbd7332fe98d8e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  client: {fileID: 0}
+  requireInteractKey: 1
+  interactKey: 101
+  destroyIngredientOnSuccess: 1
 --- !u!1 &9180167470545861319
 GameObject:
   m_ObjectHideFlags: 0
