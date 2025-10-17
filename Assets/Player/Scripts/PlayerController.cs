@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     public void KillTrigger()
     {
+        AudioManager.I.Play("vfx_dieclient");
         playerInteractionHandler.OnKillAnimationEvent();
     }
 

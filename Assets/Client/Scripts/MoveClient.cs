@@ -160,7 +160,7 @@ public class MoveClient : MonoBehaviour
             agent.isStopped = true;
             agent.ResetPath();
         }
-
+        AudioManager.I.Play("vfx_comiendo");
         // Simular comer X segundos y luego pasear
         StartCoroutine(EsperaEnPunto(esperaComer, Estado.IrAleatorio));
         Debug.Log("[MoveClient] Comiendo...");

@@ -33,7 +33,8 @@ public class Health : MonoBehaviour
         {
             Instantiate(splashEffectPrefab, transform.position, Quaternion.Euler(90,0,0));
         }
-        
+        AudioManager.I.Play("vfx_dieplayer");
+
         // Reaparicion
         Invoke("Respawn", 3f);
         
