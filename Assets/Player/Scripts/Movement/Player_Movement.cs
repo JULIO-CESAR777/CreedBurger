@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class Player_Movement : MonoBehaviour
 {
     // Atributos privados
-    private CharacterController characterController;
+    public CharacterController characterController;
     private PlayerAnimationHandler animationHandler;
     private PlayerInputReader inputReader;
     private Vector2 input;
@@ -124,7 +124,6 @@ public class Player_Movement : MonoBehaviour
     {
         if (canDash && !isDashing)
         {
-            Debug.Log("Dash");
             isDashing = true;
             canDash = false;
             currentSpeed = dashSpeed;
