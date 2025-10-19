@@ -398,7 +398,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   miedoaaa: 8
-  esperaComer: 2
+  esperaComer: 4
   esperaAleatorio: 10
   esperaSangreVer: 5
   detectionRadius: 5
@@ -406,7 +406,8 @@ MonoBehaviour:
   prefabSangre: {fileID: 7290840186649797199, guid: 7c57ff7261874a246ac0620bb17bcdf9, type: 3}
   prefabCarne: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
   db: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
-  orderUI: {fileID: 0}
+  idPedidoForzado: -1
+  pedirAlEntrar: 1
   estadoActual: 0
 --- !u!195 &2678133660206657410
 NavMeshAgent:
@@ -474,6 +475,7 @@ MonoBehaviour:
   prefabTriste: {fileID: 5104943423773112726, guid: 5f1fc137e8f66e1459f6296e72317b40, type: 3}
   prefabAlerta: {fileID: 1087571874800929728, guid: 35ddd01a8f8b9e546b58b377aa4351c5, type: 3}
   prefabSospechando: {fileID: 6494973653225577183, guid: 5068f49f74b34dc42b0d0f3e2d0db696, type: 3}
+  prefabComiendo: {fileID: 5272144588490370994, guid: 8c9efa55bc33c934f9fe5ff435acb438, type: 3}
   yOffset: 2
   spawnParent: {fileID: 0}
 --- !u!114 &7716396005709783515
