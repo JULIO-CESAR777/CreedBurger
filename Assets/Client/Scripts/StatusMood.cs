@@ -9,6 +9,7 @@ public class StatusMood : MonoBehaviour
     public GameObject prefabTriste;
     public GameObject prefabAlerta;
     public GameObject prefabSospechando;
+     public GameObject prefabComiendo;
 
     [Header("Colocaci�n")]
     public float yOffset = 2f;          // altura sobre el cliente
@@ -38,7 +39,6 @@ public class StatusMood : MonoBehaviour
         switch (state)
         {
             case MoveClient.Estado.IrMesa:
-            case MoveClient.Estado.Comer:
             case MoveClient.Estado.EsperaPedido:
             case MoveClient.Estado.IrAleatorio:
             case MoveClient.Estado.EsperaAleatorio:
@@ -57,6 +57,10 @@ public class StatusMood : MonoBehaviour
 
             case MoveClient.Estado.Sospechando:
                 prefabToShow = prefabSospechando;
+                break;
+            
+            case MoveClient.Estado.Comer:
+                prefabToShow = prefabComiendo;
                 break;
 
          

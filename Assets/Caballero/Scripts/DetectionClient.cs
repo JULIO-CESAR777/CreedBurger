@@ -5,7 +5,7 @@ public class DetectionClient : MonoBehaviour
 {
     [Header("Spawn")]
     public GameObject knightPrefab;          // Prefab del caballero a instanciar
-    public Transform spawnPointCaballero;    // Dónde aparecerá
+    public Transform spawnPointCaballero;    // Dï¿½nde aparecerï¿½
     public int maxPuntosAntesDeSalir = 5;
 
     [Header("Ruta del caballero")]
@@ -22,21 +22,21 @@ public class DetectionClient : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        // Si entra un knight, sólo actualiza el flag y sal
+        // Si entra un knight, sï¿½lo actualiza el flag y sal
         if (other.CompareTag("Knight"))
         {
             InMap = true;  // hay al menos un knight en el trigger
             return;
         }
 
-        // Sólo nos interesa cuando entra un cliente
+        // Sï¿½lo nos interesa cuando entra un cliente
         var cliente = other.GetComponent<MoveClient>();
         if (cliente == null) return;
 
-        // Condición de estado
+        // Condiciï¿½n de estado
         if (cliente.estadoActual != MoveClient.Estado.Asustado) return;
 
-        // LÍMITE: si ya hay suficientes knights, no instancias
+        // Lï¿½MITE: si ya hay suficientes knights, no instancias
         if (GetKnightCount() >= maxKnightsEnMapa) return;
 
         // 1) Instanciar
@@ -53,7 +53,7 @@ public class DetectionClient : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{name}: No se encontró NavMesh cerca del punto de spawn.");
+            Debug.LogWarning($"{name}: No se encontrï¿½ NavMesh cerca del punto de spawn.");
         }
 
         // 3) Inicializar waypoints
@@ -66,13 +66,13 @@ public class DetectionClient : MonoBehaviour
         {
             Debug.LogError("El prefab del caballero no tiene MoveKnight.");
         }
-
+        AudioManager.I.PlayMusic("music_alarm");
         InMap = true; // ahora seguro hay uno en el mapa
     }
 
     private int GetKnightCount()
     {
-        // Asegúrate que el prefab tenga Tag "Knight"
+        // Asegï¿½rate que el prefab tenga Tag "Knight"
         return GameObject.FindGameObjectsWithTag("Knight").Length;
     }
 }
