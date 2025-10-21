@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,22 +12,14 @@ public class ClienteEntregaTrigger : MonoBehaviour
     public KeyCode interactKey = KeyCode.E;
     public bool destroyIngredientOnSuccess = true;
 
-    // Para evitar múltiples llamadas con el mismo objeto al permanecer dentro del trigger
-    private readonly HashSet<Ingredient> attempted = new();
+    // Evitar múltiples llamadas con el mismo objeto al permanecer dentro
+    private readonly HashSet<Object> attempted = new HashSet<Object>();
 
-
-    private void Start()
+    void Start()
     {
-        client = GetComponentInParent<MoveClient>();    
-    }
-
-    void Reset()
-    {
-        // Auto-asignaciones útiles
+        if (!client) client = GetComponentInParent<MoveClient>();
         var col = GetComponent<BoxCollider>();
         col.isTrigger = true;
-
-        if (!client) client = GetComponentInParent<MoveClient>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -45,31 +35,63 @@ public class ClienteEntregaTrigger : MonoBehaviour
             TryDeliver(other);
     }
 
+    void OnTriggerExit(Collider other)
+    {
+        // Limpia “attempted” al salir para permitir reintentos con el mismo objeto
+        attempted.Remove(other);
+        var ing = other.GetComponentInParent<Ingredient>();
+        if (ing) attempted.Remove(ing);
+        var cook = other.GetComponentInParent<CookIngredients>();
+        if (cook) attempted.Remove(cook);
+    }
+
     private void TryDeliver(Collider other)
     {
         if (!client) return;
-        if (client.estadoActual != MoveClient.Estado.EsperaPedido) return;
 
-        // El plato puede estar en el collider o en un padre (si lo trae el jugador/mesero en la mano)
-        Ingredient ing = other.GetComponent<Ingredient>();
-        if (!ing) return;
-
-        // Evita reintentos mientras el mismo objeto permanece en el área
-        if (!attempted.Add(ing)) return;
-
-        // Guardamos estado previo para detectar si aceptó
-        var prevState = client.estadoActual;
-
-        // ¡Aquí se hace la magia! -> usa tu comparación existente
-        client.RecibirPedido(ing.id);
-
-        // Si cambió a "Comer", el ID fue correcto.
-        if (destroyIngredientOnSuccess && client.estadoActual == MoveClient.Estado.Comer)
+        if (client.estadoActual != MoveClient.Estado.EsperaPedido)
         {
-            Destroy(ing.gameObject);
+            // Útil para ver por qué no avanza
+            Debug.Log($"[EntregaTrigger] Cliente aún no está esperando pedido (estado={client.estadoActual}).");
+            return;
         }
 
-        // Si quieres permitir reintentos con el mismo objeto (por ejemplo, si fue incorrecto y sales/entras):
-        // attempted.Remove(ing);  // descomenta esta línea
+        // 1) ¿Trae un Ingredient en este collider, en su padre o en sus hijos?
+        Ingredient ing = other.GetComponentInParent<Ingredient>();
+        if (!ing) ing = other.GetComponentInChildren<Ingredient>(true);
+
+        // 2) ¿O es un CookIngredients (combo)?
+        CookIngredients cook = null;
+        if (!ing)
+        {
+            cook = other.GetComponentInParent<CookIngredients>();
+            if (!cook) cook = other.GetComponentInChildren<CookIngredients>(true);
+        }
+
+        if (!ing && !cook) return; // no trae nada “comible”
+
+        // Evitar spam con el mismo objeto mientras está dentro
+        Object key = (Object)ing ?? (Object)cook;
+        if (!attempted.Add(key)) return;
+
+        int deliveredId = ing ? ing.id : cook.currentComboID;
+        Debug.Log($"[EntregaTrigger] Intentando entregar ID={deliveredId} al cliente {client.name}");
+
+        var prevState = client.estadoActual;
+
+        client.RecibirPedido(deliveredId);
+
+        // Si cambió a Comer, fue correcto
+        if (destroyIngredientOnSuccess && client.estadoActual == MoveClient.Estado.Comer)
+        {
+            if (ing) Destroy(ing.gameObject);
+            else if (cook) Destroy(cook.gameObject);
+        }
+        else
+        {
+            // Permite reintentos con el mismo objeto si fue incorrecto
+            attempted.Remove(key);
+            Debug.Log($"[EntregaTrigger] Pedido incorrecto. Esperado != {deliveredId}");
+        }
     }
 }
