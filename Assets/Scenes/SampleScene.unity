@@ -202,6 +202,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Picadora_Msh
       objectReference: {fileID: 0}
+    - target: {fileID: 778757962587014053, guid: 5552f2da1b5ca0c4b9dd12196f7002ac, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -227,7 +231,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &843686275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,6 +373,10 @@ PrefabInstance:
     - target: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
       propertyPath: m_Name
       value: Carne
+      objectReference: {fileID: 0}
+    - target: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5838781752120638194, guid: ee38085ef4635634a87eaa147b973778, type: 3}
       propertyPath: m_LocalPosition.x
@@ -615,6 +623,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Carne
       objectReference: {fileID: 0}
+    - target: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5838781752120638194, guid: ee38085ef4635634a87eaa147b973778, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.965799
@@ -792,6 +804,10 @@ PrefabInstance:
     - target: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
       propertyPath: m_Name
       value: Carne
+      objectReference: {fileID: 0}
+    - target: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5838781752120638194, guid: ee38085ef4635634a87eaa147b973778, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1123,6 +1139,10 @@ PrefabInstance:
     - target: {fileID: 2021768420893863602, guid: 4968c082a1b68f048bcf7de636f841f7, type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2021768420893863602, guid: 4968c082a1b68f048bcf7de636f841f7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7161830346855373695, guid: 4968c082a1b68f048bcf7de636f841f7, type: 3}
       propertyPath: m_Pivot.x

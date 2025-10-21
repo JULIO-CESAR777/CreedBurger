@@ -41,11 +41,5 @@ public class PlayerController : MonoBehaviour
     {
         playerInteractionHandler.OnCleanAnimationEvent();
     }
-
-    public void CookMeat()
-    {
-        
-    }
     
-
 }

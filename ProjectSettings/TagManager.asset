@@ -11,6 +11,7 @@ TagManager:
   - Client
   - TrapCoolDown
   - Carne
+  - Spawner
   layers:
   - Default
   - TransparentFX

@@ -121,8 +121,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             {
                 if (interactableObject.name == "Meat Machine" && !isGrabingSomething) return;
                 controller.playerMovement.canMove = false;
-                isGrabingSomething = true;
-                GrabbedObject = interactableObject;
                 grabbedInteractableComponent = interactableComponent;
                 controller.animationHandler?.PlayTake();
                 break;
