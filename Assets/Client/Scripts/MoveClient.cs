@@ -13,6 +13,12 @@ public class MoveClient : MonoBehaviour
     [Header("Mesas del restaurante")]
     public Transform[] mesas;
 
+    // --- Control de Mesa ---
+    private MesaSeat mesaSeat;                         // componente de la mesa elegida
+    [SerializeField] private float retryMesaSeconds = 1.0f; // cada cuánto reintentar si no hay mesas
+    private Coroutine esperarMesaCR;
+    private Transform mesaAsignada;
+
     [Header("Velocidades")]
     public int miedoaaa = 4;
 
@@ -40,13 +46,26 @@ public class MoveClient : MonoBehaviour
     private bool pedidoEnviado = false;
     private bool pedidoListo = false;
 
-    // Estados
+    // ====== Plan de comportamiento ======
+    public enum Plan { ComerPaseoSalir, PaseoComerPaseoSalir }
+    [Header("Plan de comportamiento")]
+    public Plan plan = Plan.ComerPaseoSalir;
+
+    [Header("Plan aleatorio al aparecer")]
+    public bool randomizePlanOnSpawn = true;
+    [Range(0f, 1f)] public float probPaseoComerPaseoSalir = 0.5f;
+
+    private enum StepType { Aleatorio, Comer, Salir }
+    private StepType[] steps;
+    private int stepIndex = 0;
+    private StepType CurrentStep => (steps != null && stepIndex >= 0 && stepIndex < steps.Length) ? steps[stepIndex] : StepType.Salir;
+
+    // ====== Estados ======
     public enum Estado { IrMesa, EsperaPedido, Comer, IrAleatorio, EsperaAleatorio, IrSalida, Aturdido, Asustado, Sospechando, Terminado, Quieto }
     public Estado estadoActual = Estado.IrMesa;
     private Estado estadoPrevio;
     private Vector3 destinoPrevio;
 
-    private Transform mesaAsignada;
     private Transform aleatorioSeleccionado;
 
     private float bloodTimer = 0f;
@@ -56,28 +75,35 @@ public class MoveClient : MonoBehaviour
     {
         if (agent == null) agent = GetComponent<NavMeshAgent>();
 
-        // Asignar mesa inicial o paseo
-        if (mesas != null && mesas.Length > 0)
+        // Elegir plan al aparecer
+        if (randomizePlanOnSpawn)
         {
-            mesaAsignada = mesas[Random.Range(0, mesas.Length)];
-            IrAPunto(mesaAsignada);
-            estadoActual = Estado.IrMesa;
-        }
-        else
-        {
-            PasarAPaseo();
+            plan = (Random.value < probPaseoComerPaseoSalir)
+                ? Plan.PaseoComerPaseoSalir
+                : Plan.ComerPaseoSalir;
         }
 
-        // Pide receta al entrar (opcional)
+        // Construir el itinerario con el plan ya decidido
+        BuildPlan();
+
         if (pedirAlEntrar)
             HacerPedidoInicial();
+
+        BeginCurrentStep();
     }
 
     void OnDestroy()
     {
-        // Quita su icono del panel si sigue ahí
         if (OrderUIController.Instance != null)
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
+
+        CancelarEsperaMesa();
+        if (mesaSeat != null)
+        {
+            mesaSeat.Release(GetInstanceID());
+            mesaSeat = null;
+            mesaAsignada = null;
+        }
     }
 
     void Update()
@@ -87,22 +113,24 @@ public class MoveClient : MonoBehaviour
         switch (estadoActual)
         {
             case Estado.IrMesa:
-                if (HaLlegadoDestino()) SentarseYOrdenar();
+                if (HaLlegadoDestino())
+                    SentarseYOrdenar();
                 break;
 
             case Estado.EsperaPedido:
-                // esperando RecibirPedido(...)
+                // Espera a RecibirPedido(...)
                 break;
 
             case Estado.Comer:
-                // lo maneja la corrutina
+                // Manejado por corrutina que termina el paso Comer
                 break;
 
             case Estado.IrAleatorio:
                 if (HaLlegadoDestino())
                 {
                     estadoActual = Estado.EsperaAleatorio;
-                    StartCoroutine(EsperaEnPunto(esperaAleatorio, Estado.IrSalida));
+                    // Espera en el punto y AVANZA al siguiente paso del plan
+                    StartCoroutine(EsperaEnPunto(esperaAleatorio, StepComplete));
                 }
                 break;
 
@@ -124,10 +152,99 @@ public class MoveClient : MonoBehaviour
         }
     }
 
+    // ====== Planner ======
+    private void BuildPlan()
+    {
+        switch (plan)
+        {
+            case Plan.PaseoComerPaseoSalir:
+                steps = new StepType[] { StepType.Aleatorio, StepType.Comer, StepType.Aleatorio, StepType.Salir };
+                break;
+            case Plan.ComerPaseoSalir:
+            default:
+                steps = new StepType[] { StepType.Comer, StepType.Aleatorio, StepType.Salir };
+                break;
+        }
+        stepIndex = 0;
+    }
+
+    private void BeginCurrentStep()
+    {
+        if (steps == null || steps.Length == 0) { SalirDelLugar(); return; }
+
+        switch (CurrentStep)
+        {
+            case StepType.Aleatorio:
+                PasarAPaseo(); // setea estadoActual = IrAleatorio y camina a un punto
+                break;
+
+            case StepType.Comer:
+            {
+                if (mesas == null || mesas.Length == 0)
+                {
+                    Debug.LogWarning("[MoveClient] No hay mesas; se salta 'Comer'.");
+                    StepComplete();
+                    return;
+                }
+
+                // Buscar una mesa reservable
+                mesaSeat = GetReservableMesa();
+                if (mesaSeat == null)
+                {
+                    // No hay mesas disponibles: esperar y reintentar (sin avanzar de paso)
+                    if (esperarMesaCR == null)
+                        esperarMesaCR = StartCoroutine(EsperarMesaDisponible());
+                    // Quédate en un estado neutro (quieto) o haz una animación de "espera"
+                    estadoActual = Estado.Quieto;
+                    return;
+                }
+
+                mesaAsignada = mesaSeat.transform;
+                if (agent != null) agent.isStopped = false;
+                IrAPunto(mesaAsignada);
+                estadoActual = Estado.IrMesa;
+                break;
+            }
+
+            case StepType.Salir:
+                SalirDelLugar();
+                break;
+        }
+    }
+
+    private void StepComplete()
+    {
+        stepIndex++;
+        if (steps == null || stepIndex >= steps.Length)
+        {
+            // Plan terminado => salir si no se fue aún
+            SalirDelLugar();
+            return;
+        }
+        BeginCurrentStep();
+    }
+
     // --- LÓGICA ---
     private void SentarseYOrdenar()
     {
         if (agent != null) agent.isStopped = true;
+
+        // Ocupar la mesa al llegar
+        if (mesaSeat != null)
+        {
+            bool ok = mesaSeat.Sit(GetInstanceID());
+            if (!ok)
+            {
+                // La perdimos (alguien se adelantó). Volver a intentar.
+                Debug.Log("[MoveClient] La mesa reservada fue ocupada por otro. Reintentando...");
+                mesaSeat = null;
+                mesaAsignada = null;
+                if (esperarMesaCR == null)
+                    esperarMesaCR = StartCoroutine(EsperarMesaDisponible());
+                estadoActual = Estado.Quieto;
+                return;
+            }
+        }
 
         // Si no pidió al entrar, pedir ahora
         if (!pedirAlEntrar || !pedidoEnviado)
@@ -135,31 +252,44 @@ public class MoveClient : MonoBehaviour
 
         estadoActual = Estado.EsperaPedido;
     }
-    
+
     private void EmpezarAComer()
     {
-        // Ya lleg� el plato correcto
+        // Quitar icono en UI
         if (OrderUIController.Instance != null)
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
 
         estadoActual = Estado.Comer;
 
-        // Por si ven�amos parados
         if (agent != null)
         {
             agent.isStopped = true;
             agent.ResetPath();
         }
+
         AudioManager.I.Play("vfx_comiendo");
-        // Simular comer X segundos y luego pasear
-        StartCoroutine(EsperaEnPunto(esperaComer, Estado.IrAleatorio));
-        //Debug.Log("[MoveClient] Comiendo...");
+
+        // Comer es un PASO del plan; al terminar, avanzar
+        StartCoroutine(EsperaEnPunto(esperaComer, OnComerFinished));
+    }
+
+    private void OnComerFinished()
+    {
+        // Liberar mesa antes de continuar con el plan
+        if (mesaSeat != null)
+        {
+            mesaSeat.Release(GetInstanceID());
+            mesaSeat = null;
+            mesaAsignada = null;
+        }
+        StepComplete();
     }
 
     private void PasarAPaseo()
     {
         if (puntosAleatorios == null || puntosAleatorios.Length == 0)
         {
+            // Sin puntos aleatorios => saltar a salir
             estadoActual = Estado.IrSalida;
             IrAPunto(puntoSalida);
             return;
@@ -174,13 +304,24 @@ public class MoveClient : MonoBehaviour
 
     private void SalirDelLugar()
     {
+        CancelarEsperaMesa();
+
+        // Liberar mesa si la tenemos
+        if (mesaSeat != null)
+        {
+            mesaSeat.Release(GetInstanceID());
+            mesaSeat = null;
+            mesaAsignada = null;
+        }
+
         estadoActual = Estado.IrSalida;
         if (agent != null) agent.isStopped = false;
         IrAPunto(puntoSalida);
     }
+
     public int GetPedidoId() => pedido.id;
 
-// --- PEDIDOS (usa la misma lógica en ambos) ---
+    // --- PEDIDOS ---
     private void HacerPedidoInicial()
     {
         if (db == null || db.entries.Count == 0) return;
@@ -234,14 +375,11 @@ public class MoveClient : MonoBehaviour
         }
     }
 
-
     // --- MOV/ESTADO ---
-    IEnumerator EsperaEnPunto(float segundos, Estado siguiente)
+    IEnumerator EsperaEnPunto(float segundos, System.Action onDone)
     {
         yield return new WaitForSeconds(segundos);
-
-        if (siguiente == Estado.IrAleatorio)      PasarAPaseo();
-        else if (siguiente == Estado.IrSalida)    SalirDelLugar();
+        onDone?.Invoke();
     }
 
     bool HaLlegadoDestino()
@@ -255,6 +393,15 @@ public class MoveClient : MonoBehaviour
     {
         if (punto != null && agent != null)
             agent.SetDestination(punto.position);
+    }
+
+    private void CancelarEsperaMesa()
+    {
+        if (esperarMesaCR != null)
+        {
+            StopCoroutine(esperarMesaCR);
+            esperarMesaCR = null;
+        }
     }
 
     // --- REACCIONES ---
@@ -272,6 +419,7 @@ public class MoveClient : MonoBehaviour
             {
                 Vector3 dir = (hit.transform.position - transform.position).normalized;
                 float angulo = Vector3.Angle(transform.forward, dir);
+
                 if (angulo <= fieldOfView * 0.5f)
                 {
                     sangreVisible = true;
@@ -312,6 +460,16 @@ public class MoveClient : MonoBehaviour
 
     private void EntrarEnMiedo()
     {
+        CancelarEsperaMesa();
+
+        // Liberar mesa si aplica
+        if (mesaSeat != null)
+        {
+            mesaSeat.Release(GetInstanceID());
+            mesaSeat = null;
+            mesaAsignada = null;
+        }
+
         estadoActual = Estado.Asustado;
         agent.ResetPath();
         agent.speed = miedoaaa;
@@ -372,5 +530,44 @@ public class MoveClient : MonoBehaviour
         Vector3 dirB = Quaternion.Euler(0, -fieldOfView * 0.5f, 0) * transform.forward;
         Gizmos.DrawLine(transform.position, transform.position + dirA * detectionRadius);
         Gizmos.DrawLine(transform.position, transform.position + dirB * detectionRadius);
+    }
+
+    // ====== MESAS: reserva, espera y selección ======
+    private MesaSeat GetReservableMesa()
+    {
+        if (mesas == null || mesas.Length == 0) return null;
+
+        // Empezar en índice aleatorio para distribuir mejor
+        int start = UnityEngine.Random.Range(0, mesas.Length);
+        for (int i = 0; i < mesas.Length; i++)
+        {
+            var t = mesas[(start + i) % mesas.Length];
+            if (t == null) continue;
+            var seat = t.GetComponent<MesaSeat>();
+            if (seat == null) continue;
+
+            if (seat.TryReserve(GetInstanceID()))
+                return seat;
+        }
+        return null;
+    }
+
+    private IEnumerator EsperarMesaDisponible()
+    {
+        while (true)
+        {
+            var seat = GetReservableMesa();
+            if (seat != null)
+            {
+                mesaSeat = seat;
+                mesaAsignada = seat.transform;
+                if (agent != null) agent.isStopped = false;
+                IrAPunto(mesaAsignada);
+                estadoActual = Estado.IrMesa;
+                esperarMesaCR = null;
+                yield break;
+            }
+            yield return new WaitForSeconds(retryMesaSeconds);
+        }
     }
 }
