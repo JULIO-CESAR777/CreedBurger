@@ -20,6 +20,9 @@ public class MainMenuTransition : MonoBehaviour
 
     private Vector3[] newButtonOriginalPos;
     
+    
+    public MainMenuSelector selector;
+    
     void Start()
     {
         // Desactivar el nuevo menú al inicio
@@ -36,9 +39,8 @@ public class MainMenuTransition : MonoBehaviour
     
     public void OnStartButtonPressed()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        //EventSystem.current.SetSelectedGameObject(null);
         StartCoroutine(AnimateMenuTransition());
-        EventSystem.current.SetSelectedGameObject(newButtons[0].gameObject);
     }
 
     private IEnumerator AnimateMenuTransition()
@@ -63,7 +65,5 @@ public class MainMenuTransition : MonoBehaviour
         }
         
     }
-    
-    
     
 }

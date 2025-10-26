@@ -49,7 +49,7 @@ public class IngredientPrefabDB : ScriptableObject
         foreach (var e in entries)
         {
             if (e.image == null)
-                Debug.LogWarning($"[DB] Entrada {e.id} no tiene image (UI mostrará vacío).", this);
+                //Debug.LogWarning($"[DB] Entrada {e.id} no tiene image (UI mostrará vacío).", this);
             if (!seen.Add(e.id))
                 Debug.LogError($"[DB] ID duplicado: {e.id}", this);
         }

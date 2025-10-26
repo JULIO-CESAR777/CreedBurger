@@ -21804,10 +21804,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07d42163bb2cc1841829d5e209ca42dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  group: {fileID: 917238080}
-  recipeImage: {fileID: 4100080}
-  titleText: {fileID: 640269625}
-  fallbackDesdePrefab: 1
 --- !u!225 &917238080
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -47358,7 +47354,7 @@ PrefabInstance:
       objectReference: {fileID: 3863150983513876738, guid: 34e5df1d67ce68b49967f40725f84d2d, type: 3}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: cantidadJugadores
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: ingredientePrefabDB

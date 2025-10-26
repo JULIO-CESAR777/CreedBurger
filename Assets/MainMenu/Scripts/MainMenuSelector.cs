@@ -8,6 +8,7 @@ public class MainMenuSelector : MonoBehaviour
 {
     // Primer boton a seleccionar
     public Button defaultButton;
+    public Button PlayDefaultButton;
     
     [Header("Offset de movimiento")]
     public float offsetXRight = 50f;
@@ -30,8 +31,8 @@ public class MainMenuSelector : MonoBehaviour
         }
         
         // Forzar la selección del primer botón
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(defaultButton.gameObject);
+        //EventSystem.current.SetSelectedGameObject(null);
+        //EventSystem.current.SetSelectedGameObject(defaultButton.gameObject);
     }
     
     /*
@@ -66,6 +67,12 @@ public class MainMenuSelector : MonoBehaviour
             }
         }
     }
-    
+
+
+    public void ChangeSelectedButton(Button btn)
+    {
+        //EventSystem.current.SetSelectedGameObject(null);
+        //EventSystem.current.SetSelectedGameObject(btn.gameObject);
+    }
     
 }
