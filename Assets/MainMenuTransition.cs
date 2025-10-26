@@ -39,7 +39,6 @@ public class MainMenuTransition : MonoBehaviour
     
     public void OnStartButtonPressed()
     {
-        //EventSystem.current.SetSelectedGameObject(null);
         StartCoroutine(AnimateMenuTransition());
     }
 

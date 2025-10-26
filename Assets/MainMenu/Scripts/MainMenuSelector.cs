@@ -30,24 +30,7 @@ public class MainMenuSelector : MonoBehaviour
             originalPositions[btn] = btn.anchoredPosition3D;
         }
         
-        // Forzar la selección del primer botón
-        //EventSystem.current.SetSelectedGameObject(null);
-        //EventSystem.current.SetSelectedGameObject(defaultButton.gameObject);
     }
-    
-    /*
-    void Update()
-    {
-        GameObject selected = EventSystem.current.currentSelectedGameObject;
-
-        if (selected == null || selected == currentSelected)
-            return;
-
-        currentSelected = selected;
-
-        AnimateButtons();
-    }
-    */
     
     void AnimateButtons()
     {
@@ -68,11 +51,13 @@ public class MainMenuSelector : MonoBehaviour
         }
     }
 
-
-    public void ChangeSelectedButton(Button btn)
+    public void ExitGame()
     {
-        //EventSystem.current.SetSelectedGameObject(null);
-        //EventSystem.current.SetSelectedGameObject(btn.gameObject);
+        Application.Quit();
     }
+    
+    
+    
+    
     
 }
