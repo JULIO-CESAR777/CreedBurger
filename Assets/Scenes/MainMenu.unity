@@ -276,8 +276,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 108}
-  m_SizeDelta: {x: 270.4219, y: 68.3823}
+  m_AnchoredPosition: {x: 0.0000076293945, y: 124}
+  m_SizeDelta: {x: 495.6403, y: 195.0111}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &464894085
 MonoBehaviour:
@@ -301,9 +301,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.6886792, g: 0.63053226, b: 0.029236369, a: 1}
-    m_PressedColor: {r: 0.764151, g: 0.73134255, b: 0.09011213, a: 1}
-    m_SelectedColor: {r: 0.6509434, g: 0.6095942, b: 0.14431292, a: 1}
+    m_HighlightedColor: {r: 0.59607846, g: 0.22745098, b: 0, a: 1}
+    m_PressedColor: {r: 0.59607846, g: 0.22745098, b: 0, a: 1}
+    m_SelectedColor: {r: 0.5943396, g: 0.22618255, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -355,8 +355,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -1902544459, guid: 069a14b11d8e6fa4c95374172ff9876c, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -817,10 +817,10 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.4716981, g: 0.2882476, b: 0.05562477, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0, g: 1, b: 0.052033424, a: 1}
+    m_SelectedColor: {r: 0.6698113, g: 0.46991923, b: 0.10426309, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.01
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -972,8 +972,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4293519849
+  m_fontColor: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -990,12 +990,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 75
+  m_fontSizeBase: 75
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
-  m_fontSizeMax: 0
+  m_fontSizeMax: 150
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1078,8 +1078,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -45}
-  m_SizeDelta: {x: 270.4219, y: 68.3823}
+  m_AnchoredPosition: {x: 0.0000076293945, y: -183}
+  m_SizeDelta: {x: 495.64, y: 184.0631}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1245197560
 MonoBehaviour:
@@ -1103,9 +1103,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.7830189, g: 0.16620687, b: 0.16620687, a: 1}
-    m_PressedColor: {r: 0.8018868, g: 0.08699717, b: 0.08699717, a: 1}
-    m_SelectedColor: {r: 0.8962264, g: 0.1986917, b: 0.1986917, a: 1}
+    m_HighlightedColor: {r: 0.59607846, g: 0.22745098, b: 0, a: 1}
+    m_PressedColor: {r: 0.59607846, g: 0.22745098, b: 0, a: 1}
+    m_SelectedColor: {r: 0.59607846, g: 0.22745098, b: 0, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1157,8 +1157,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -1902544459, guid: 069a14b11d8e6fa4c95374172ff9876c, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1241,8 +1241,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1259,8 +1259,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -1415,6 +1415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultButton: {fileID: 988780247}
+  PlayDefaultButton: {fileID: 464894085}
   offsetXRight: 50
   offsetXLeft: -50
   animationTime: 0.3
@@ -1448,6 +1449,7 @@ MonoBehaviour:
   newButtons:
   - {fileID: 464894084}
   - {fileID: 1245197559}
+  selector: {fileID: 0}
 --- !u!1 &1739505700
 GameObject:
   m_ObjectHideFlags: 0
@@ -1586,7 +1588,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.4745098, g: 0.2901961, b: 0.05882353, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0, g: 1, b: 0.052033424, a: 1}
+    m_SelectedColor: {r: 0.67058825, g: 0.47058824, b: 0.105882354, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1605,7 +1607,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1742598060}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1665317828}
+        m_TargetAssemblyTypeName: MainMenuSelector, Assembly-CSharp
+        m_MethodName: ExitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1742598060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1807,11 +1821,11 @@ MonoBehaviour:
   m_MoveRepeatRate: 0.1
   m_XRTrackingOrigin: {fileID: 0}
   m_ActionsAsset: {fileID: -944628639613478452, guid: 91777259b52c87b4ca38699bc3c3efc8, type: 3}
-  m_PointAction: {fileID: 0}
+  m_PointAction: {fileID: 323672900118826610, guid: 91777259b52c87b4ca38699bc3c3efc8, type: 3}
   m_MoveAction: {fileID: 323672900118826610, guid: 91777259b52c87b4ca38699bc3c3efc8, type: 3}
   m_SubmitAction: {fileID: -1638343353856564964, guid: 91777259b52c87b4ca38699bc3c3efc8, type: 3}
   m_CancelAction: {fileID: 940662758405102304, guid: 91777259b52c87b4ca38699bc3c3efc8, type: 3}
-  m_LeftClickAction: {fileID: 0}
+  m_LeftClickAction: {fileID: -1638343353856564964, guid: 91777259b52c87b4ca38699bc3c3efc8, type: 3}
   m_MiddleClickAction: {fileID: 0}
   m_RightClickAction: {fileID: 0}
   m_ScrollWheelAction: {fileID: 0}
@@ -1879,7 +1893,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.4745098, g: 0.2901961, b: 0.05882353, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0, g: 1, b: 0.052033424, a: 1}
+    m_SelectedColor: {r: 0.67058825, g: 0.47058824, b: 0.105882354, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1999,7 +2013,7 @@ MonoBehaviour:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.4745098, g: 0.2901961, b: 0.05882353, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0, g: 1, b: 0.052033424, a: 1}
+    m_SelectedColor: {r: 0.67058825, g: 0.47058824, b: 0.105882354, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1

@@ -32,18 +32,17 @@ public class GameManager : MonoBehaviour
     [Header("Ingredient DB")]
     public IngredientPrefabDB ingredientePrefabDB;
 
+    private int cantidad;
+
     void Start()
     {
-        int cantidad = GameSettings.Instance != null ? GameSettings.Instance.cantidadJugadores : cantidadJugadores;
+        cantidad = GameSettings.Instance != null ? GameSettings.Instance.cantidadJugadores : cantidadJugadores;
 
         if (cantidad >= 1)
             CrearJugador("Player", puntosDeSpawn[0].position, 0);
 
         if (cantidad == 2)
             CrearJugador("Player2", puntosDeSpawn[1].position, 1);
-        
-        
-        
     }
 
 
@@ -73,8 +72,12 @@ public class GameManager : MonoBehaviour
         
         if (cam != null)
         {
-            if (cantidadJugadores == 1)
+            
+            print("de perdida entro aqui?");
+            
+            if (cantidad == 1)
             {
+                print("se metio aqui?");
                 cam.rect = new Rect(0f, 0f, 1f, 1f); // pantalla completa
             }
             else

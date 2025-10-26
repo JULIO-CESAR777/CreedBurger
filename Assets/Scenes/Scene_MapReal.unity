@@ -47236,7 +47236,7 @@ PrefabInstance:
       objectReference: {fileID: 3863150983513876738, guid: 34e5df1d67ce68b49967f40725f84d2d, type: 3}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: cantidadJugadores
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: ingredientePrefabDB
