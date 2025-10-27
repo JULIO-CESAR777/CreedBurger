@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,6 +6,7 @@ public class GameManager : MonoBehaviour
 {
     
     // --- Singleton ---
+    #region Singleton
     public static GameManager Instance { get; private set; }
     
     void Awake()
@@ -16,9 +18,25 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
-        // Si quieres que sobreviva entre escenas, descomenta:
-        // DontDestroyOnLoad(gameObject);
     }
+    
+    public static GameManager GetInstance() => Instance;
+    
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+    
+    #endregion
+    // ------ Fin del singleton  ---------
+    
+    [Header("Pause Options")]
+    public GameState gameState;
+    public Action<GameState> onChangeGameState;
+    public bool canPause;
     
     
     [Header("Configuración del juego")]
@@ -43,6 +61,9 @@ public class GameManager : MonoBehaviour
 
         if (cantidad == 2)
             CrearJugador("Player2", puntosDeSpawn[1].position, 1);
+        
+        gameState = GameState.Play;
+        canPause = true;
     }
 
 
@@ -100,4 +121,34 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning("No se encontró una cámara en el prefab del jugador.");
         }
     }
+    
+    
+    public void PauseGame()
+    {
+        if (canPause)
+        {
+            if (gameState == GameState.Pause)
+            {
+                ChangeGameState(GameState.Play);
+            }
+            else if (gameState == GameState.Play)
+            {
+                ChangeGameState(GameState.Pause);
+            }
+        }
+    }
+    
+    public void ChangeGameState(GameState newGameState)
+    {
+        gameState = newGameState;
+        onChangeGameState?.Invoke(gameState);
+    }
+    
+}
+
+public enum GameState
+{
+    Play,
+    Pause,
+    GameOver
 }

@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Health : MonoBehaviour
@@ -15,7 +14,7 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
-        
+        if(controller.isPaused) return;
         // Restringir movimiento - Listo
         controller.playerMovement.canMove = false;
         
@@ -42,7 +41,6 @@ public class Health : MonoBehaviour
 
     public void Respawn()
     {
-        
         controller.playerMovement.characterController.enabled = false;
         
         
@@ -64,6 +62,14 @@ public class Health : MonoBehaviour
     }
     
     private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Knight"))
+        {
+            Die();
+        }
+    }
+
+    private void OnCollisionStay(Collision other)
     {
         if (other.gameObject.CompareTag("Knight"))
         {

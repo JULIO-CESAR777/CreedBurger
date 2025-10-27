@@ -14,6 +14,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void SetMovementSpeed(float speed)
     {
+        
         animator.SetFloat("Movement", Mathf.Clamp01(speed));
     }
 

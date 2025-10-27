@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -14,7 +15,8 @@ public class PlayerController : MonoBehaviour
     
     [Header("Trampas")]
     [SerializeField] public GameObject trapPrefab;
-    
+
+    public bool isPaused;
     
     private void Awake()
     {
@@ -25,20 +27,34 @@ public class PlayerController : MonoBehaviour
         playerMesh = transform.GetChild(0).gameObject;
     }
 
+    private void Start()
+    {
+        // Sistema de pausa
+        GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
+        if(GameManager.GetInstance().gameState ==  GameState.Pause) isPaused = true;
+    }
+    
+    public void OnChangeGameStateCallback(GameState newState)
+    {
+        isPaused = newState != GameState.Play;
+    }
 
     public void GrabTrigger()
     {
+        if(isPaused) return;
         playerInteractionHandler.OnGrabAnimationEvent();
     }
 
     public void KillTrigger()
     {
+        if(isPaused) return;
         AudioManager.I.Play("vfx_dieclient");
         playerInteractionHandler.OnKillAnimationEvent();
     }
 
     public void CleanTrigger()
     {
+        if(isPaused) return;
         playerInteractionHandler.OnCleanAnimationEvent();
     }
     

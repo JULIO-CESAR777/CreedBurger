@@ -6,6 +6,7 @@ public class PlayerInputReader : MonoBehaviour
 {
     private PlayerInput playerInput;
     private PlayerInputActions inputActions;
+    private PlayerController controller;
 
     //Candado para las acciones
     public bool IsLocked { get; private set; } = false;
@@ -23,6 +24,7 @@ public class PlayerInputReader : MonoBehaviour
 
     private void Start()
     {
+        controller = GetComponent<PlayerController>();
         playerInput = GetComponent<PlayerInput>();
 
         if (playerInput == null)
@@ -83,18 +85,21 @@ public class PlayerInputReader : MonoBehaviour
     private void OnDashPerformed(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed || IsLocked) return;
+        if(controller.isPaused) return;
         OnDash?.Invoke();
     }
 
     private void OnInteractPerformed(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed || IsLocked) return;
+        if(controller.isPaused) return;
         OnInteract?.Invoke();
     }
 
     private void OnSetTrapsPerformed(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed || IsLocked) return;
+        if(controller.isPaused) return;
         OnTraps?.Invoke();
     }
     

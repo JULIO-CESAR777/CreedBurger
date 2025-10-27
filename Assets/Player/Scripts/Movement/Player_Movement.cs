@@ -8,6 +8,7 @@ public class Player_Movement : MonoBehaviour
     private PlayerAnimationHandler animationHandler;
     private PlayerInputReader inputReader;
     private Vector2 input;
+    private PlayerController controller;
     
     // Flags de control de movimiento (por si necesitas bloquear movimiento al interactuar)
     public bool canMove = true;
@@ -34,6 +35,7 @@ public class Player_Movement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animationHandler = GetComponent<PlayerAnimationHandler>();
         inputReader = GetComponent<PlayerInputReader>();
+        controller = GetComponent<PlayerController>();
 
     }
 
@@ -64,6 +66,8 @@ public class Player_Movement : MonoBehaviour
     private void FixedUpdate()
     {
 
+        if (controller.isPaused) return;
+        
         if (!canMove)
         {
             // Si no se puede mover (por animación de interacción, etc.)

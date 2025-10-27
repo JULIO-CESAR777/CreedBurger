@@ -50,6 +50,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     public void SetTraps()
     {
         if (!canPutTraps) return;
+        if (controller.isPaused) return;
         
         Instantiate(controller.trapPrefab, controller.transform.position, Quaternion.Euler(0, 90, 90));
         canPutTraps = false;
@@ -74,6 +75,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     
     public void Interact()
     {
+        if (controller.isPaused) return;
         // 1) Si estoy agarrando algo, prioriza soltar/usar sin tocar interactableComponent
         if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
@@ -157,6 +159,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     // Funciones para interactuar desde las animaciones
     public void OnGrabAnimationEvent()
     {
+        if (controller.isPaused) return;
         if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Grab)
         {
             interactableComponent.Interact(gameObject);
@@ -165,6 +168,7 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void OnKillAnimationEvent()
     {
+        if (controller.isPaused) return;
         if (GrabbedObject == null && interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Kill)
         {
             interactableComponent.Interact(gameObject);
@@ -173,6 +177,7 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void OnCleanAnimationEvent()
     {
+        if (controller.isPaused) return;
         if (GrabbedObject == null && interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Clean)
         {
             interactableComponent.Interact(gameObject);
