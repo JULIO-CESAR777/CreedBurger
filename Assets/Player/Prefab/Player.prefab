@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6568972132980182924}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body_Jn_Scuash_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5391144660004619766}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Left_Hand_Jn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8482732043660919285}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Jn_Grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1033684854892038542}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Head_Jn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 9073286270195289449}
   - component: {fileID: 4060615021624618295}
   - component: {fileID: -3357020420739879417}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -262,6 +262,7 @@ MonoBehaviour:
   playerMesh: {fileID: 0}
   suspect: 0
   trapPrefab: {fileID: 5291124005924114379, guid: a8c9cfd2ca736b04aac97c95ddb86257, type: 3}
+  isPaused: 0
 --- !u!114 &2188627024289834801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -358,7 +359,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 866667574720215910}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Head_Jn_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -390,7 +391,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4471964901789378997}
   - component: {fileID: 7657868948485084670}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Right_Hand_Msh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -478,7 +479,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 504117639208147813}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Manos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +512,7 @@ GameObject:
   - component: {fileID: 357017300958911263}
   - component: {fileID: 686837300257229782}
   - component: {fileID: 1408283986150703199}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Interact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -583,7 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4529811251372361042}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body_Jn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,7 +617,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 755551405964205858}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Head_Jn_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -647,7 +648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6566720964601349967}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body_Jn_Scuash_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -679,7 +680,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5533400337145991372}
   - component: {fileID: 7609943563075480779}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Head_Msh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -769,7 +770,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5300111907218250735}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Geo_Grp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -805,7 +806,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2653045525136484028}
   - component: {fileID: 4156082508875397957}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Left_Hand_Msh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -893,7 +894,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4189494755684261775}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Right_Hant_Jn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -926,7 +927,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3343627034613187986}
   - component: {fileID: 8740059923101283084}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Body_Msh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
