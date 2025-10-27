@@ -4,42 +4,47 @@ using DG.Tweening;
 
 public class SpawningMeat : MonoBehaviour
 {
+    [Header("Configuración")]
     public GameObject meat;
-    public float launchForce = 5f;
     public Transform spawnPoint;
-    
+    public float launchForce = 5f;
     public float preparationTime = 0.6f;
-    private bool isWorking;
+
+    [Header("Referencias")]
     [SerializeField] private GameObject meatMachine;
 
-    public bool SpawnMeat()
+    private bool isWorking;
+
+    public void SpawnMeat()
     {
-        if (isWorking) return false;
+        if (isWorking) return;
+
         if (meat == null)
         {
-            Debug.LogWarning("No se asignó prefab de carne");
-            return false;
+            Debug.LogWarning("⚠️ No se asignó prefab de carne en SpawningMeat");
+            return;
         }
 
         StartCoroutine(SpawnMeatRoutine());
-        return true;
     }
-    
+
     private IEnumerator SpawnMeatRoutine()
     {
         isWorking = true;
 
-        // 1. Preparación con animación DOTween (temblor)
-        meatMachine.transform.DOKill(); // Cancela tweens activos si los hay
-        meatMachine.transform.localScale = Vector3.one; // Reset por si se quedó escalado
+        meatMachine.transform.DOKill();
+        meatMachine.transform.localScale = Vector3.one;
 
-        // Shake durante "preparationTime"
-        meatMachine.transform.DOShakeScale(preparationTime, strength: 0.3f, vibrato: 10, randomness: 90f, fadeOut: true);
+        meatMachine.transform.DOShakeScale(
+            preparationTime,
+            strength: 0.3f,
+            vibrato: 10,
+            randomness: 90f,
+            fadeOut: true
+        );
 
-        // 2. Esperar a que termine la animación
         yield return new WaitForSeconds(preparationTime);
 
-        // 3. Instanciar la carne y lanzarla
         GameObject spawnedMeat = Instantiate(meat, spawnPoint.position, Quaternion.Euler(-90f, 0f, 0f));
 
         Rigidbody rb = spawnedMeat.GetComponent<Rigidbody>();
@@ -51,5 +56,4 @@ public class SpawningMeat : MonoBehaviour
 
         isWorking = false;
     }
-
 }
