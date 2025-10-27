@@ -64,6 +64,21 @@ public class GameManager : MonoBehaviour
         
         gameState = GameState.Play;
         canPause = true;
+        
+        //COSA JULIO PARA QUE SE REINICIEN LAS MONEDAS AL INICIAR
+
+        if (ScoreSystem.Instance != null)
+        {
+
+            ScoreSystem.Instance.ResetRun();
+        }
+
+
+        if (GameTimer.Instance != null)
+        {
+
+            GameTimer.Instance.ResetTimer(); // con tu script, esto basta para que empiece a bajar
+        }
     }
 
 
