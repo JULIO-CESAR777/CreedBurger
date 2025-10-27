@@ -74,21 +74,34 @@ public class PlayerInteractionHandler : MonoBehaviour
         canPutTraps = true;
     }
     
-    public void Interact()
-    {
+   public void Interact()
+   {
         if (controller.isPaused) return;
-        // 1) Si estoy agarrando algo, prioriza soltar/usar sin tocar interactableComponent
+
+        // Si estoy agarrando algo
         if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
-            if (interactableObject != null) // hay algo enfrente
+            if (interactableObject != null)
             {
-                var cookMeat = interactableObject.GetComponent<CookMeat>();
-                if (cookMeat != null && GrabbedObject != null
-                    && GrabbedObject.name == "Carne")
+                // ✅ USAR MEAT MACHINE
+                if (interactableObject.name.Contains("Meat Machine") && GrabbedObject.CompareTag("Carne"))
                 {
-                    // Colocar la carne en el pinPoint
-                    GrabbedObject.transform.SetParent(null, true);
+                    var spawner = interactableObject.GetComponent<SpawningMeat>();
+                    if (spawner != null)
+                    {
+                        spawner.SpawnMeat();
+                        Destroy(GrabbedObject);
+                        ResetGrabState();
+                        controller.animationHandler?.PlayIdle();
+                        return;
+                    }
+                }
 
+                // 🍖 COCINAR EN PINPOINT
+                var cookMeat = interactableObject.GetComponent<CookMeat>();
+                if (cookMeat != null && GrabbedObject.name == "Carne")
+                {
+                    GrabbedObject.transform.SetParent(null, true);
                     var rb = GrabbedObject.GetComponent<Rigidbody>();
                     if (rb != null) rb.isKinematic = false;
 
@@ -102,53 +115,69 @@ public class PlayerInteractionHandler : MonoBehaviour
                     controller.animationHandler?.PlayIdle();
                     return;
                 }
+
+                // 🍳 COCINA DE COMBINACIÓN
+                var targetCook = interactableObject.GetComponent<CookIngredients>();
+                var thisCook = GrabbedObject.GetComponent<CookIngredients>();
+                if (targetCook != null && thisCook != null)
+                {
+                    bool fused = false;
+                    foreach (var ingredient in thisCook.ingredientIDs)
+                    {
+                        if (targetCook.checkForRepeatedIngredients(ingredient))
+                        {
+                            fused = true;
+                            break;
+                        }
+                    }
+
+                    if (fused)
+                    {
+                        targetCook.TryAddIngredient(thisCook);
+                        controller.suspect = false;
+                        Destroy(GrabbedObject);
+                        ResetGrabState();
+                        controller.animationHandler?.PlayIdle();
+                        return;
+                    }
+                }
             }
 
-            // Drop normal del objeto en mano
+            // 🔻 Drop normal si no hay nada especial que hacer
             grabbedInteractableComponent.Interact(gameObject);
             ResetGrabState();
             controller.animationHandler?.PlayIdle();
             return;
         }
 
-        // 2) Si no estoy agarrando nada y no hay target válido, no hay nada que hacer
+        // Si no tengo nada en la mano, y hay un objeto válido
         if (interactableComponent == null) return;
 
-        // 3) Ya es seguro pedir el tipo
         InteractType type = interactableComponent.GetInteractType();
 
-        // 4) Acciones sin objeto en mano
         switch (type)
         {
             case InteractType.Grab:
-            {
-                if (interactableObject.name == "Meat Machine" && !isGrabingSomething) return;
+                if (interactableObject.name == "Meat Machine" && isGrabingSomething) return;
                 controller.playerMovement.canMove = false;
                 grabbedInteractableComponent = interactableComponent;
                 controller.animationHandler?.PlayTake();
                 break;
-            }
             case InteractType.Kill:
-            {
                 controller.playerMovement.canMove = false;
                 controller.suspect = true;
                 controller.animationHandler?.PlayKill();
                 break;
-            }
             case InteractType.Clean:
-            {
                 controller.suspect = true;
                 controller.playerMovement.canMove = false;
                 controller.animationHandler?.PlayClean();
                 break;
-            }
             case InteractType.SetTraps:
-            {
-                // ...
                 break;
-            }
         }
-    }
+   }
+
     
     private void ResetGrabState()
     {
