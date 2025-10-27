@@ -14,7 +14,7 @@ public class KillCustomer : MonoBehaviour, IInteractable
         moveClient.Alto();
         moveClient.Morir();
         
-
+        ScoreSystem.Instance?.AwardKillCustomer();
 
 
     }

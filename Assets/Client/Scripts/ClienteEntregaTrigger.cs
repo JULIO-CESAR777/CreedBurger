@@ -84,6 +84,9 @@ public class ClienteEntregaTrigger : MonoBehaviour
         // Si cambió a Comer, fue correcto
         if (destroyIngredientOnSuccess && client.estadoActual == MoveClient.Estado.Comer)
         {
+            
+            ScoreSystem.Instance?.AwardDeliverySuccess();
+            
             if (ing) Destroy(ing.gameObject);
             else if (cook) Destroy(cook.gameObject);
         }

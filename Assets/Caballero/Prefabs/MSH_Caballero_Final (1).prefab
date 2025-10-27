@@ -140,7 +140,7 @@ MonoBehaviour:
   catchDistance: 1.2
   loseSightTime: 4
   playerTag: Player
-  maxPuntos: 5
+  maxPuntos: 1
   estadoActual: 1
 --- !u!1 &1237304935530073912
 GameObject:

@@ -43,6 +43,22 @@ public class GameManager : MonoBehaviour
 
         if (cantidad == 2)
             CrearJugador("Player2", puntosDeSpawn[1].position, 1);
+        
+        
+        //COSA JULIO PARA QUE SE REINICIEN LAS MONEDAS AL INICIAR
+        
+        if (ScoreSystem.Instance != null)
+        {
+           
+            ScoreSystem.Instance.ResetRun();
+        }
+       
+        
+        if (GameTimer.Instance != null)
+        {
+           
+            GameTimer.Instance.ResetTimer(); // con tu script, esto basta para que empiece a bajar
+        }
     }
 
 

@@ -407,7 +407,7 @@ MonoBehaviour:
   prefabSangre: {fileID: 7290840186649797199, guid: 7c57ff7261874a246ac0620bb17bcdf9, type: 3}
   prefabCarne: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
   db: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
-  idPedidoForzado: -5
+  idPedidoForzado: -1
   pedirAlEntrar: 0
   plan: 0
   randomizePlanOnSpawn: 1
