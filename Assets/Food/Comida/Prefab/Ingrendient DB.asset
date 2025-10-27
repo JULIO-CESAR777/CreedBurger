@@ -33,6 +33,10 @@ MonoBehaviour:
     title: 
     prefab: {fileID: 4107321171544864329, guid: b9cfba5b3a6540a4e8011a6dce8b9b7e, type: 3}
     image: {fileID: -1218539882, guid: bbb6d67ef0e4eb448a2529c7bf0e63fd, type: 3}
+  - id: 6
+    title: Carne-Tomate
+    prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
+    image: {fileID: -831693691, guid: e74327103d2d69c4c8d2f46271d34a9d, type: 3}
   - id: 8
     title: 
     prefab: {fileID: 2228267061463373086, guid: e9e8106f50f8350439cd27ac62aa1e4a, type: 3}
@@ -85,6 +89,10 @@ MonoBehaviour:
     title: Carne-Lechuga-Tomate
     prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
     image: {fileID: 1754062980, guid: 66cc03f5c9db9534fb274553fedc4fed, type: 3}
+  - id: 18
+    title: Carne-Queso
+    prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
+    image: {fileID: -1970444679, guid: 4963b75c91235f040b817e4179260b68, type: 3}
   - id: 10
     title: Carne Lechuga
     prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
@@ -93,14 +101,6 @@ MonoBehaviour:
     title: Carne-Queso-Tomate
     prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
     image: {fileID: 396985634, guid: 6fec323b4ce628341921d081d8d96fbb, type: 3}
-  - id: 18
-    title: Carne-Queso
-    prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
-    image: {fileID: -1970444679, guid: 4963b75c91235f040b817e4179260b68, type: 3}
-  - id: 6
-    title: Carne-Tomate
-    prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
-    image: {fileID: -831693691, guid: e74327103d2d69c4c8d2f46271d34a9d, type: 3}
   - id: 28
     title: Lechuga-queso-tomate
     prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
