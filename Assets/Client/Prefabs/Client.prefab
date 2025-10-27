@@ -397,6 +397,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  retryMesaSeconds: 1
   miedoaaa: 8
   esperaComer: 4
   esperaAleatorio: 10
@@ -407,7 +408,10 @@ MonoBehaviour:
   prefabCarne: {fileID: 21401574399474015, guid: ee38085ef4635634a87eaa147b973778, type: 3}
   db: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
   idPedidoForzado: -1
-  pedirAlEntrar: 1
+  pedirAlEntrar: 0
+  plan: 0
+  randomizePlanOnSpawn: 1
+  probPaseoComerPaseoSalir: 0.5
   estadoActual: 0
 --- !u!195 &2678133660206657410
 NavMeshAgent:

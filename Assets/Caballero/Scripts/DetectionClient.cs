@@ -22,53 +22,55 @@ public class DetectionClient : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        // Si entra un knight, s�lo actualiza el flag y sal
         if (other.CompareTag("Knight"))
         {
-            InMap = true;  // hay al menos un knight en el trigger
+            InMap = true;
             return;
         }
 
-        // S�lo nos interesa cuando entra un cliente
         var cliente = other.GetComponent<MoveClient>();
         if (cliente == null) return;
-
-        // Condici�n de estado
         if (cliente.estadoActual != MoveClient.Estado.Asustado) return;
 
-        // L�MITE: si ya hay suficientes knights, no instancias
+        // Límite de caballeros
         if (GetKnightCount() >= maxKnightsEnMapa) return;
 
+        // --- clave: contar ANTES de instanciar ---
+        int preCount = GetKnightCount();
+
         // 1) Instanciar
-        Vector3 spawnPos = spawnPointCaballero != null ? spawnPointCaballero.position : transform.position;
-        Quaternion spawnRot = spawnPointCaballero != null ? spawnPointCaballero.rotation : Quaternion.identity;
+        Vector3 spawnPos = spawnPointCaballero ? spawnPointCaballero.position : transform.position;
+        Quaternion spawnRot = spawnPointCaballero ? spawnPointCaballero.rotation : Quaternion.identity;
 
         var go = Instantiate(knightPrefab, spawnPos, spawnRot);
+
+        // Música: si antes no había ninguno, acaba de entrar el primero
+        if (preCount == 0)
+        {
+            AudioManager.I.PlayMusic("music_alarm");
+        }
 
         // 2) Ajustar al NavMesh
         if (NavMesh.SamplePosition(spawnPos, out var hit, 2f, NavMesh.AllAreas))
         {
             var agent = go.GetComponent<NavMeshAgent>();
-            if (agent != null) agent.Warp(hit.position);
+            if (agent) agent.Warp(hit.position);
         }
         else
         {
-            Debug.LogWarning($"{name}: No se encontr� NavMesh cerca del punto de spawn.");
+            Debug.LogWarning($"{name}: No se encontró NavMesh cerca del punto de spawn.");
         }
 
         // 3) Inicializar waypoints
         var mk = go.GetComponent<MoveKnight>();
-        if (mk != null)
-        {
+        if (mk)
             mk.Initialize(puntosAleatorios, puntoSalida, maxPuntosAntesDeSalir);
-        }
         else
-        {
             Debug.LogError("El prefab del caballero no tiene MoveKnight.");
-        }
-        AudioManager.I.PlayMusic("music_alarm");
-        InMap = true; // ahora seguro hay uno en el mapa
+
+        InMap = true;
     }
+
 
     private int GetKnightCount()
     {

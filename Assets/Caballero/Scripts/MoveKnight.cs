@@ -255,6 +255,17 @@ public class MoveKnight : MonoBehaviour
         if (punto != null && agent != null)
             agent.SetDestination(punto.position);
     }
+    
+    void OnDestroy()
+    {
+        // Cuenta incluye a este mismo, así que <=1 => soy el último que queda
+        int remaining = GameObject.FindGameObjectsWithTag("Knight").Length;
+        if (remaining <= 1)
+        {
+            AudioManager.I.PlayMusic("music_background");
+        }
+    }
+
 
     // (Aturdir y otros métodos pueden quedarse igual)
 }
