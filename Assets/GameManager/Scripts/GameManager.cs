@@ -81,6 +81,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            PauseGame();
+        }
+    }
+
 
     void CrearJugador(string actionMap, Vector3 posicion, int index)
     {
@@ -140,6 +148,7 @@ public class GameManager : MonoBehaviour
     
     public void PauseGame()
     {
+        print("Se pauso");
         if (canPause)
         {
             if (gameState == GameState.Pause)
