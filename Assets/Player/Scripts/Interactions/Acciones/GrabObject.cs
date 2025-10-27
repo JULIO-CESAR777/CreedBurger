@@ -123,6 +123,7 @@ public class GrabObject : MonoBehaviour, IInteractable
             CookIngredients thisCook = GetComponent<CookIngredients>();
             if (targetCook != null && thisCook != null)
             {
+                print("Se esta intentando cocinar algo");
                 // Fusionar los ingredientes de ambos
                 bool fused = false;
                 
@@ -130,12 +131,14 @@ public class GrabObject : MonoBehaviour, IInteractable
                 {
                     if (targetCook.checkForRepeatedIngredients(ingredient))
                     {
+                        print("Se fusiono");
                         fused = true;
                     }
                 }
                 
                 if (fused)
                 {
+                    print("la ptm");
                     targetCook.TryAddIngredient(thisCook);
                     // Destruye este objeto (el dropeado)
                     interactionHandler.controller.suspect = false;

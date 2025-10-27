@@ -64,21 +64,6 @@ public class GameManager : MonoBehaviour
         
         gameState = GameState.Play;
         canPause = true;
-        
-        //COSA JULIO PARA QUE SE REINICIEN LAS MONEDAS AL INICIAR
-
-        if (ScoreSystem.Instance != null)
-        {
-
-            ScoreSystem.Instance.ResetRun();
-        }
-
-
-        if (GameTimer.Instance != null)
-        {
-
-            GameTimer.Instance.ResetTimer(); // con tu script, esto basta para que empiece a bajar
-        }
     }
 
     private void FixedUpdate()
@@ -117,11 +102,8 @@ public class GameManager : MonoBehaviour
         if (cam != null)
         {
             
-            print("de perdida entro aqui?");
-            
             if (cantidad == 1)
             {
-                print("se metio aqui?");
                 cam.rect = new Rect(0f, 0f, 1f, 1f); // pantalla completa
             }
             else
@@ -148,7 +130,6 @@ public class GameManager : MonoBehaviour
     
     public void PauseGame()
     {
-        print("Se pauso");
         if (canPause)
         {
             if (gameState == GameState.Pause)

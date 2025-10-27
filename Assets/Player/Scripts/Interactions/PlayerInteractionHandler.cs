@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -184,6 +185,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
     }
     
+
     // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)
     {
