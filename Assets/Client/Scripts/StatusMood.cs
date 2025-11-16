@@ -49,6 +49,8 @@ public class StatusMood : MonoBehaviour
         if (!built) BuildOnce();
     }
 
+   
+
     private void BuildOnce()
     {
         if (built) return; // <— candado

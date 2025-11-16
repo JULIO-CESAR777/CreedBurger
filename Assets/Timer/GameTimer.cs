@@ -14,6 +14,7 @@ public class GameTimer : MonoBehaviour
     public event Action<float> OnTick;     // notifica tiempo restante cada frame
     public event Action OnTimesUp;         // notifica cuando llega a 0
 
+    public bool isPaused = false;
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -34,8 +35,19 @@ public class GameTimer : MonoBehaviour
        
     }
 
+    private void Start()
+    {
+        GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
+        if(GameManager.GetInstance().gameState ==  GameState.Pause) isPaused = true;
+    }
+
+    public void OnChangeGameStateCallback(GameState newState)
+    {
+        isPaused = newState != GameState.Play;
+    }
     void Update()
     {
+        if(isPaused) return;
         if (IsOver) return;
 
         Remaining -= Time.deltaTime;

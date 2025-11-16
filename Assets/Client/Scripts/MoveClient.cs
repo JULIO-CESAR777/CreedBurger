@@ -14,8 +14,8 @@ public class MoveClient : MonoBehaviour
     public Transform[] mesas;
 
     // --- Control de Mesa ---
-    private MesaSeat mesaSeat;                         // componente de la mesa elegida
-    [SerializeField] private float retryMesaSeconds = 1.0f; // cada cuánto reintentar si no hay mesas
+    private MesaSeat mesaSeat;                         
+    [SerializeField] private float retryMesaSeconds = 1.0f; 
     private Coroutine esperarMesaCR;
     private Transform mesaAsignada;
 
@@ -70,10 +70,33 @@ public class MoveClient : MonoBehaviour
 
     private float bloodTimer = 0f;
     private bool isFocusingBlood = false;
+    
+    public bool isPaused;
+
+    // ==== Pausa: cacheo de estado del agente/anim ====
+    private Vector3 _prevDestination;
+    private bool _prevHadPath;
+    private bool _prevStopped;
+    private bool _pauseCached;      // <- solo restauramos si esto es true
+    private float _baseSpeed;       // <- speed de arranque (por si acaso)
+    private Animator _anim;
+
+    void Awake()
+    {
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        _anim = GetComponentInChildren<Animator>();
+        _baseSpeed = (agent != null) ? agent.speed : 3.5f; // valor típico por defecto
+    }
 
     void Start()
     {
-        if (agent == null) agent = GetComponent<NavMeshAgent>();
+        GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
+
+        // Estado inicial según tu manager:
+        isPaused = (GameManager.GetInstance().gameState == GameState.Pause);
+
+        // No alteramos speed si no hay pausa cacheada aún:
+        ApplyPauseState();
 
         // Elegir plan al aparecer
         if (randomizePlanOnSpawn)
@@ -83,7 +106,6 @@ public class MoveClient : MonoBehaviour
                 : Plan.ComerPaseoSalir;
         }
 
-        // Construir el itinerario con el plan ya decidido
         BuildPlan();
 
         if (pedirAlEntrar)
@@ -92,8 +114,60 @@ public class MoveClient : MonoBehaviour
         BeginCurrentStep();
     }
 
+    public void OnChangeGameStateCallback(GameState newState)
+    {
+        isPaused = (newState == GameState.Pause);
+        ApplyPauseState();
+    }
+
+    private void ApplyPauseState()
+    {
+        if (agent == null) return;
+
+        if (isPaused)
+        {
+            // Cachear estado SOLO cuando entramos a pausa
+            _prevStopped = agent.isStopped;
+            _prevHadPath = agent.hasPath;
+            _prevDestination = _prevHadPath ? agent.destination : transform.position;
+            _pauseCached = true;
+
+            // Congelar
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+
+            if (_anim) _anim.speed = 0f;
+        }
+        else
+        {
+            // Reanudar
+            if (_anim) _anim.speed = 1f;
+
+            if (_pauseCached)
+            {
+                agent.isStopped = _prevStopped;
+
+                // Si teníamos destino y no estábamos parados, retomar
+                if (!_prevStopped && _prevHadPath)
+                    agent.SetDestination(_prevDestination);
+            }
+            else
+            {
+                // No había estado cacheado (por ejemplo, arranque en Play): solo asegurar que no esté parado
+                agent.isStopped = false;
+            }
+
+            // Si por algún motivo el speed quedó en 0 (ediciones en runtime, etc.), recuperarlo
+            if (agent.speed <= 0.001f)
+                agent.speed = _baseSpeed;
+        }
+    }
+
     void OnDestroy()
     {
+        if (GameManager.GetInstance() != null)
+            GameManager.GetInstance().onChangeGameState -= OnChangeGameStateCallback;
+
         if (OrderUIController.Instance != null)
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
 
@@ -108,6 +182,8 @@ public class MoveClient : MonoBehaviour
 
     void Update()
     {
+        if (isPaused) return;
+
         DetectarSangreVisual();
 
         switch (estadoActual)
@@ -118,18 +194,15 @@ public class MoveClient : MonoBehaviour
                 break;
 
             case Estado.EsperaPedido:
-                // Espera a RecibirPedido(...)
                 break;
 
             case Estado.Comer:
-                // Manejado por corrutina que termina el paso Comer
                 break;
 
             case Estado.IrAleatorio:
                 if (HaLlegadoDestino())
                 {
                     estadoActual = Estado.EsperaAleatorio;
-                    // Espera en el punto y AVANZA al siguiente paso del plan
                     StartCoroutine(EsperaEnPunto(esperaAleatorio, StepComplete));
                 }
                 break;
@@ -175,7 +248,7 @@ public class MoveClient : MonoBehaviour
         switch (CurrentStep)
         {
             case StepType.Aleatorio:
-                PasarAPaseo(); // setea estadoActual = IrAleatorio y camina a un punto
+                PasarAPaseo();
                 break;
 
             case StepType.Comer:
@@ -187,14 +260,11 @@ public class MoveClient : MonoBehaviour
                     return;
                 }
 
-                // Buscar una mesa reservable
                 mesaSeat = GetReservableMesa();
                 if (mesaSeat == null)
                 {
-                    // No hay mesas disponibles: esperar y reintentar (sin avanzar de paso)
                     if (esperarMesaCR == null)
                         esperarMesaCR = StartCoroutine(EsperarMesaDisponible());
-                    // Quédate en un estado neutro (quieto) o haz una animación de "espera"
                     estadoActual = Estado.Quieto;
                     return;
                 }
@@ -217,7 +287,6 @@ public class MoveClient : MonoBehaviour
         stepIndex++;
         if (steps == null || stepIndex >= steps.Length)
         {
-            // Plan terminado => salir si no se fue aún
             SalirDelLugar();
             return;
         }
@@ -229,13 +298,11 @@ public class MoveClient : MonoBehaviour
     {
         if (agent != null) agent.isStopped = true;
 
-        // Ocupar la mesa al llegar
         if (mesaSeat != null)
         {
             bool ok = mesaSeat.Sit(GetInstanceID());
             if (!ok)
             {
-                // La perdimos (alguien se adelantó). Volver a intentar.
                 Debug.Log("[MoveClient] La mesa reservada fue ocupada por otro. Reintentando...");
                 mesaSeat = null;
                 mesaAsignada = null;
@@ -246,7 +313,6 @@ public class MoveClient : MonoBehaviour
             }
         }
 
-        // Si no pidió al entrar, pedir ahora
         if (!pedirAlEntrar || !pedidoEnviado)
             HacerPedido();
 
@@ -255,7 +321,6 @@ public class MoveClient : MonoBehaviour
 
     private void EmpezarAComer()
     {
-        // Quitar icono en UI
         if (OrderUIController.Instance != null)
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
 
@@ -269,13 +334,11 @@ public class MoveClient : MonoBehaviour
 
         AudioManager.I.Play("vfx_comiendo");
 
-        // Comer es un PASO del plan; al terminar, avanzar
         StartCoroutine(EsperaEnPunto(esperaComer, OnComerFinished));
     }
 
     private void OnComerFinished()
     {
-        // Liberar mesa antes de continuar con el plan
         if (mesaSeat != null)
         {
             mesaSeat.Release(GetInstanceID());
@@ -289,7 +352,6 @@ public class MoveClient : MonoBehaviour
     {
         if (puntosAleatorios == null || puntosAleatorios.Length == 0)
         {
-            // Sin puntos aleatorios => saltar a salir
             estadoActual = Estado.IrSalida;
             IrAPunto(puntoSalida);
             return;
@@ -306,7 +368,6 @@ public class MoveClient : MonoBehaviour
     {
         CancelarEsperaMesa();
 
-        // Liberar mesa si la tenemos
         if (mesaSeat != null)
         {
             mesaSeat.Release(GetInstanceID());
@@ -358,7 +419,6 @@ public class MoveClient : MonoBehaviour
         Debug.Log($"[MoveClient] Pedido en mesa ID={pedido.id} (cliente {name})");
     }
 
-    // El chef/mesero llama esto cuando entrega el plato
     public void RecibirPedido(int idDelChef)
     {
         if (!pedidoEnviado) return;
@@ -375,10 +435,20 @@ public class MoveClient : MonoBehaviour
         }
     }
 
-    // --- MOV/ESTADO ---
+    // --- Corrutinas: pausable por variable ---
+    private IEnumerator PausableWait(float seconds)
+    {
+        float t = 0f;
+        while (t < seconds)
+        {
+            if (!isPaused) t += Time.deltaTime;
+            yield return null;
+        }
+    }
+
     IEnumerator EsperaEnPunto(float segundos, System.Action onDone)
     {
-        yield return new WaitForSeconds(segundos);
+        yield return PausableWait(segundos);
         onDone?.Invoke();
     }
 
@@ -462,7 +532,6 @@ public class MoveClient : MonoBehaviour
     {
         CancelarEsperaMesa();
 
-        // Liberar mesa si aplica
         if (mesaSeat != null)
         {
             mesaSeat.Release(GetInstanceID());
@@ -491,7 +560,7 @@ public class MoveClient : MonoBehaviour
 
     private IEnumerator RecuperarDeAturdimiento(float segundos)
     {
-        yield return new WaitForSeconds(segundos);
+        yield return PausableWait(segundos);
         estadoActual = estadoPrevio;
 
         if (estadoActual == Estado.EsperaPedido || estadoActual == Estado.Comer)
@@ -537,7 +606,6 @@ public class MoveClient : MonoBehaviour
     {
         if (mesas == null || mesas.Length == 0) return null;
 
-        // Empezar en índice aleatorio para distribuir mejor
         int start = UnityEngine.Random.Range(0, mesas.Length);
         for (int i = 0; i < mesas.Length; i++)
         {
@@ -567,7 +635,7 @@ public class MoveClient : MonoBehaviour
                 esperarMesaCR = null;
                 yield break;
             }
-            yield return new WaitForSeconds(retryMesaSeconds);
+            yield return PausableWait(retryMesaSeconds);
         }
     }
 }

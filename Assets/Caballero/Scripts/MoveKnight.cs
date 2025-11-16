@@ -24,6 +24,8 @@ public class MoveKnight : MonoBehaviour
     public float loseSightTime = 2f;        // tiempo sin ver al player para desistir
      
     public string playerTag = "Player";     // o usa LayerMask solamente
+    
+    public bool isPaused = false;
 
     // patrulla limitada
     private int puntosVisitados = 0;
@@ -58,13 +60,21 @@ public class MoveKnight : MonoBehaviour
         if (agent == null) agent = GetComponent<NavMeshAgent>();
         agent.speed = velocityKnight;
 
+        GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
+        if(GameManager.GetInstance().gameState ==  GameState.Pause) isPaused = true;
         // arranque patrulla
         puntoaleatorio();
         IrAPunto(aleatorioSeleccionado);
     }
+    
+    public void OnChangeGameStateCallback(GameState newState)
+    {
+        isPaused = newState != GameState.Play;
+    }
 
     void Update()
     {
+        if(isPaused) return;
         // 1) intentar detectar player (si lo ves, saltas a Perseguir)
         DetectarPlayer();
 
