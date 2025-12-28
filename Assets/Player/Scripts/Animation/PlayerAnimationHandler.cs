@@ -55,6 +55,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         controller.playerMovement.canMove = true;
         controller.suspect = false;
+        controller.inputReader.isDoingSomething = false;
     }
     
     

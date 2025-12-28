@@ -83,7 +83,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             if (interactableObject != null)
             {
-                // ✅ USAR MEAT MACHINE
+                // USAR MEAT MACHINE
                 if (interactableObject.name.Contains("Meat Machine") && GrabbedObject.CompareTag("Carne"))
                 {
                     var spawner = interactableObject.GetComponent<SpawningMeat>();
@@ -97,7 +97,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                     }
                 }
 
-                // 🍖 COCINAR EN PINPOINT
+                // COCINAR EN PINPOINT
                 var cookMeat = interactableObject.GetComponent<CookMeat>();
                 if (cookMeat != null && GrabbedObject.name == "Carne")
                 {
@@ -116,7 +116,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                     return;
                 }
 
-                // 🍳 COCINA DE COMBINACIÓN
+                // COCINA DE COMBINACIÓN
                 var targetCook = interactableObject.GetComponent<CookIngredients>();
                 var thisCook = GrabbedObject.GetComponent<CookIngredients>();
                 if (targetCook != null && thisCook != null)
@@ -143,7 +143,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 }
             }
 
-            // 🔻 Drop normal si no hay nada especial que hacer
+            // Drop normal si no hay nada especial que hacer
             grabbedInteractableComponent.Interact(gameObject);
             ResetGrabState();
             controller.animationHandler?.PlayIdle();
@@ -169,6 +169,9 @@ public class PlayerInteractionHandler : MonoBehaviour
                 controller.animationHandler?.PlayKill();
                 break;
             case InteractType.Clean:
+                // "Esta haciendo algo" -> Para que no pueda interactuar hasta que acabe
+                controller.inputReader.isDoingSomething = true;
+                // "Sospechoso" -> Detectable por los clientes
                 controller.suspect = true;
                 controller.playerMovement.canMove = false;
                 controller.animationHandler?.PlayClean();

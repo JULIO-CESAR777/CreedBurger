@@ -300,7 +300,7 @@ GameObject:
   - component: {fileID: 2612144646477004114}
   - component: {fileID: 7716396005709783515}
   m_Layer: 0
-  m_Name: CLIENT
+  m_Name: Client
   m_TagString: Client
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -413,6 +413,7 @@ MonoBehaviour:
   randomizePlanOnSpawn: 1
   probPaseoComerPaseoSalir: 0.5
   estadoActual: 0
+  isPaused: 0
 --- !u!195 &2678133660206657410
 NavMeshAgent:
   m_ObjectHideFlags: 0

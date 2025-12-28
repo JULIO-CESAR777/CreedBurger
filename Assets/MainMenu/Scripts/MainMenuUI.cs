@@ -14,4 +14,9 @@ public class MainMenuUI : MonoBehaviour
         GameSettings.Instance.cantidadJugadores = 2;
         SceneManager.LoadScene("Scene_MapReal");
     }
+    
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

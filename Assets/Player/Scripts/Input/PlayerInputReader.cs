@@ -15,6 +15,7 @@ public class PlayerInputReader : MonoBehaviour
     public event Action<Vector2> OnMove;
     public event Action OnDash;
     public event Action OnInteract;
+    public bool isDoingSomething = false;
     public event Action OnTraps;
 
     private InputAction movementAction;
@@ -92,7 +93,7 @@ public class PlayerInputReader : MonoBehaviour
     private void OnInteractPerformed(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed || IsLocked) return;
-        if(controller.isPaused) return;
+        if(controller.isPaused || isDoingSomething) return;
         OnInteract?.Invoke();
     }
 
