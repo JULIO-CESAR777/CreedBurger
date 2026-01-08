@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8726260349407084401}
   - component: {fileID: 6479806726293912768}
   - component: {fileID: 7204858353305870534}
+  - component: {fileID: 1675994883209052313}
   - component: {fileID: 7723757371668243634}
   - component: {fileID: 4615493953586205916}
-  - component: {fileID: 1675994883209052313}
   m_Layer: 0
   m_Name: 25_Hamburguesa_P_L_Q
   m_TagString: Untagged
@@ -139,6 +139,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1675994883209052313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190860711520465340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13832e95786545b468cbb82b43618344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGrabbed: 0
 --- !u!114 &7723757371668243634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,16 +180,3 @@ MonoBehaviour:
   prefabDB: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
   ingredientIDs: 
   currentComboID: 0
---- !u!114 &1675994883209052313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 190860711520465340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13832e95786545b468cbb82b43618344, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGrabbed: 0

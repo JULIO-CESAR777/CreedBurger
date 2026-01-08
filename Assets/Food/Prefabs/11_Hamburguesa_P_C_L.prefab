@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 2331177750250473954}
   - component: {fileID: 1801090638504439731}
   - component: {fileID: 6085047439771933533}
+  - component: {fileID: -8710877250939667241}
+  - component: {fileID: 3675161677086869797}
   - component: {fileID: 9152043401547912607}
   - component: {fileID: 2990010952943409695}
   - component: {fileID: 6910482521580373299}
-  - component: {fileID: -8710877250939667241}
-  - component: {fileID: 3675161677086869797}
   m_Layer: 0
   m_Name: 11_Hamburguesa_P_C_L
   m_TagString: Untagged
@@ -91,47 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &9152043401547912607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3100590782944504498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13832e95786545b468cbb82b43618344, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isGrabbed: 0
---- !u!114 &2990010952943409695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3100590782944504498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e518536f651402b4094b89e90ada11a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 11
---- !u!114 &6910482521580373299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3100590782944504498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7590633aabc3a7240957a039311fc917, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefabDB: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
-  ingredientIDs: 
-  currentComboID: 0
 --- !u!65 &-8710877250939667241
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -180,3 +139,44 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &9152043401547912607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100590782944504498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13832e95786545b468cbb82b43618344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGrabbed: 0
+--- !u!114 &2990010952943409695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100590782944504498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e518536f651402b4094b89e90ada11a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 11
+--- !u!114 &6910482521580373299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100590782944504498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7590633aabc3a7240957a039311fc917, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabDB: {fileID: 11400000, guid: 7d1512158065a04489e1a16012e8d0e5, type: 2}
+  ingredientIDs: 
+  currentComboID: 0
