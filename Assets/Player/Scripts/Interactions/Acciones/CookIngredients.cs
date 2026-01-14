@@ -37,15 +37,30 @@ public class CookIngredients : MonoBehaviour, IInteractable
     
     public void TryAddIngredient(CookIngredients cook)
     {
-        foreach (var ids in cook.ingredientIDs)
+        // TODO: Revisar si tiene ingredientes repetidos, solo aceptando los IDs: 1 2 4 8 16
+        // No es necesario revisar los IDs especificos dado que siempre van a comenzar con esos IDs
+        foreach (var IDs in cook.ingredientIDs)
         {
-            print("se agrega id: " + ids);
-            ingredientIDs.Add(ids);
+            foreach (var OwnIDs in ingredientIDs)
+            {
+                if (IDs == OwnIDs)
+                {
+                    //print("Hay un ID repetido");
+                    return;
+                }
+            }
         }
-
-        // Recalcular la suma total (comboID)
+        
+        // TODO: Agregar numeros a la lista de IDs
+        foreach (var IDs in cook.ingredientIDs)
+        {
+            //print("Se agregan los IDs: " + IDs);
+            ingredientIDs.Add(IDs);
+        }
+        
+        // TODO: Suma el combo de IDs
         currentComboID = 0;
-        foreach (int val in ingredientIDs)
+        foreach (var val in ingredientIDs)
         {
             currentComboID += val;
         }

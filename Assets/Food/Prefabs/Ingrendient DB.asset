@@ -35,7 +35,7 @@ MonoBehaviour:
     image: {fileID: -1218539882, guid: bbb6d67ef0e4eb448a2529c7bf0e63fd, type: 3}
   - id: 6
     title: Carne y jitomate
-    prefab: {fileID: 0}
+    prefab: {fileID: 1008761947794574467, guid: 33bbaefbe2c15f9478675e4ea535d00a, type: 3}
     image: {fileID: -831693691, guid: e74327103d2d69c4c8d2f46271d34a9d, type: 3}
   - id: 7
     title: 'Pan, Carne y Jitomate '
@@ -51,7 +51,7 @@ MonoBehaviour:
     image: {fileID: 1310155765, guid: b324e1ce476c1e24c8228e452ac8608a, type: 3}
   - id: 10
     title: Carne y Lechuga
-    prefab: {fileID: 0}
+    prefab: {fileID: 91294392592181043, guid: f856c03dad8b0384bb915104089833c4, type: 3}
     image: {fileID: -4981583, guid: 7430a15ec9342d246afa042183b175a5, type: 3}
   - id: 11
     title: Pan, carne y lechuga
@@ -67,7 +67,7 @@ MonoBehaviour:
     image: {fileID: 929144767, guid: 2179f1ae45e0fa94e8e97c476f28629f, type: 3}
   - id: 14
     title: Carne-Lechuga-Tomate
-    prefab: {fileID: 0}
+    prefab: {fileID: 8505627028194527967, guid: e432172a8e0c5854b973cf32e084598f, type: 3}
     image: {fileID: 1754062980, guid: 66cc03f5c9db9534fb274553fedc4fed, type: 3}
   - id: 15
     title: Pan carne jitomate lechuga
@@ -83,7 +83,7 @@ MonoBehaviour:
     image: {fileID: 825525815, guid: 1d786b80070593f4ebb05989dcb24eaf, type: 3}
   - id: 18
     title: Carne-Queso
-    prefab: {fileID: 0}
+    prefab: {fileID: 4044520237515660008, guid: babeff4bd7299dc44a993c1a77a75f33, type: 3}
     image: {fileID: -1970444679, guid: 4963b75c91235f040b817e4179260b68, type: 3}
   - id: 19
     title: Pan carne y Queso
@@ -99,7 +99,7 @@ MonoBehaviour:
     image: {fileID: -2143004419, guid: 86989403ce9b1b243b26927d545de1c7, type: 3}
   - id: 22
     title: Carne-Queso-Tomate
-    prefab: {fileID: 0}
+    prefab: {fileID: 4963601530871475664, guid: 5a3da35d8cd318e499b4289a3b416bbf, type: 3}
     image: {fileID: 396985634, guid: 6fec323b4ce628341921d081d8d96fbb, type: 3}
   - id: 23
     title: Pan carne jitomate y queso
@@ -115,7 +115,7 @@ MonoBehaviour:
     image: {fileID: 1200257444, guid: d388cfc3f7964d14e874ebdc07314bc1, type: 3}
   - id: 26
     title: Carne lechuga y queso
-    prefab: {fileID: 0}
+    prefab: {fileID: 761626030717822832, guid: 6e0c4721f1730ec469ba9a76d06e2395, type: 3}
     image: {fileID: -2083542307, guid: e7c6ae8a15a4bd94c9990556d76bc63f, type: 3}
   - id: 27
     title: Pan, Carne, Lechuga y Queso
@@ -131,7 +131,7 @@ MonoBehaviour:
     image: {fileID: -1913600246, guid: 7eacd4b94a8b32d4cb5d490285efe522, type: 3}
   - id: 30
     title: Carne, Jitomate, Lechuga y Queso
-    prefab: {fileID: 0}
+    prefab: {fileID: 6089225866846711488, guid: 14ba1a16c61fb0647ad1811cfcc2b614, type: 3}
     image: {fileID: 4044190, guid: 9ef274d1a3bf0584dadcaae9c12c0eae, type: 3}
   - id: 31
     title: Pan, Carne, Jitomate, Lechuga y Queso
