@@ -18,7 +18,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     public GameObject interactableObject;
     private IInteractable interactableComponent;
 
-    [SerializeField] public Image cooldownFillImage;
+    //[SerializeField] public Image cooldownFillImage;
     public float trapCooldown;
     public bool canPutTraps;
     
@@ -32,8 +32,8 @@ public class PlayerInteractionHandler : MonoBehaviour
             controller.inputReader.OnTraps += SetTraps;
         }
         
-        cooldownFillImage = GameObject.FindWithTag("TrapCoolDown").GetComponent<Image>();
-        cooldownFillImage.fillAmount = 1f;
+        //cooldownFillImage = GameObject.FindWithTag("TrapCoolDown").GetComponent<Image>();
+        //cooldownFillImage.fillAmount = 1f;
         
         interactableObject = null;
         interactableComponent = null;
@@ -61,16 +61,16 @@ public class PlayerInteractionHandler : MonoBehaviour
     IEnumerator ChangeTrapCooldown(float duration = 1f)
     {
         float time = 0f;
-        cooldownFillImage.fillAmount = 0f;
+        //cooldownFillImage.fillAmount = 0f;
 
         while (time < duration)
         {
             time += Time.deltaTime;
-            cooldownFillImage.fillAmount = 1f - (time / duration);
+            //cooldownFillImage.fillAmount = 1f - (time / duration);
             yield return null;
         }
 
-        cooldownFillImage.fillAmount = 1f;
+        //cooldownFillImage.fillAmount = 1f;
         canPutTraps = true;
     }
     

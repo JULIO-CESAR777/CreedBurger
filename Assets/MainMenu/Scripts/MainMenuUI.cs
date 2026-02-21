@@ -3,6 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuUI : MonoBehaviour
 {
+    
+    public void JugarTutorial()
+    {
+        GameSettings.Instance.cantidadJugadores = 1;
+        SceneManager.LoadScene("TutorialScene");
+    }
     public void JugarConUnJugador()
     {
         GameSettings.Instance.cantidadJugadores = 1;
