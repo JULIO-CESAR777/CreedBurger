@@ -5,6 +5,8 @@ using System.Collections;
 public class MoveClient : MonoBehaviour
 {
     public NavMeshAgent agent;
+    
+    private ClientOrderIndicator indicator;
 
     [Header("Puntos")]
     public Transform puntoSalida;
@@ -86,6 +88,7 @@ public class MoveClient : MonoBehaviour
         if (agent == null) agent = GetComponent<NavMeshAgent>();
         _anim = GetComponentInChildren<Animator>();
         _baseSpeed = (agent != null) ? agent.speed : 3.5f; // valor típico por defecto
+        indicator = GetComponent<ClientOrderIndicator>();
     }
 
     void Start()
@@ -331,7 +334,8 @@ public class MoveClient : MonoBehaviour
             agent.isStopped = true;
             agent.ResetPath();
         }
-
+        if (indicator != null)
+            indicator.Hide();
         AudioManager.I.Play("vfx_comiendo");
 
         StartCoroutine(EsperaEnPunto(esperaComer, OnComerFinished));
@@ -417,15 +421,24 @@ public class MoveClient : MonoBehaviour
             OrderUIController.Instance.AddOrder(GetInstanceID(), pedido.image);
 
         Debug.Log($"[MoveClient] Pedido en mesa ID={pedido.id} (cliente {name})");
+
+        // ✅ mostrar el icono porque está esperando
+        if (indicator != null && pedido.image != null)
+            indicator.Show(pedido.image);
     }
 
     public void RecibirPedido(int idDelChef)
     {
-        if (!pedidoEnviado) return;
+        if (!pedidoEnviado || pedidoListo) return;
 
         if (pedido.id == idDelChef)
         {
             pedidoListo = true;
+
+            // ✅ ya no está esperando => ocultar
+            if (indicator != null)
+                indicator.Hide();
+
             if (estadoActual == Estado.EsperaPedido)
                 EmpezarAComer();
         }

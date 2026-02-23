@@ -87,6 +87,8 @@ public class StatusMood : MonoBehaviour
         if (moveClient == null) return;
         var mood = MapState(moveClient.estadoActual);
         if (mood != lastMood) SetMood(mood);
+        
+        
     }
 
     void OnDestroy()
