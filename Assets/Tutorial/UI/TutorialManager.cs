@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class TutorialManager : MonoBehaviour
         public GameObject[] enableOnEnter;
 
         [Header("Markers / Objetos a apagar (opcional)")]
-        public GameObject[] disableOnEnter;  // si quieres apagar cosas específicas al entrar
+        public GameObject[] disableOnEnter;
 
         [Header("Si true, apaga automáticamente los enableOnEnter del step anterior")]
         public bool autoDisablePreviousMarkers = true;
@@ -35,10 +36,15 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private float findPlayerEvery = 0.25f;
 
+    [Header("Fin del tutorial")]
+    [SerializeField] private string nextSceneName = "MainMenu";
+    [SerializeField] private float loadNextSceneDelay = 3f;
+
     private PlayerTutorial player;
     private int i;
     private bool waiting;
     private Coroutine findPlayerCR;
+    private bool ending;
 
     void OnEnable()
     {
@@ -57,7 +63,6 @@ public class TutorialManager : MonoBehaviour
             findPlayerCR = null;
         }
 
-        // Apagar markers del step actual por si se desactiva el tutorial
         DisableStepMarkers(i);
     }
 
@@ -108,25 +113,24 @@ public class TutorialManager : MonoBehaviour
         if (i >= steps.Length)
         {
             ui.Show("¡Tutorial terminado!", null);
-
-            // Apaga los markers del último step
             DisableStepMarkers(i - 1);
+
+            if (!ending)
+            {
+                ending = true;
+                StartCoroutine(LoadNextSceneAfterDelay());
+            }
             return;
         }
 
         var s = steps[i];
 
-        // Apagar markers del step anterior (si aplica)
         if (s.autoDisablePreviousMarkers)
             DisableStepMarkers(i - 1);
 
-        // Apagar lo que quieras al entrar (opcional)
         SetActiveSafe(s.disableOnEnter, false);
-
-        // Prender markers del step actual
         SetActiveSafe(s.enableOnEnter, true);
 
-        // UI / estado
         ui.Show(s.text, s.icon);
         waiting = true;
 
@@ -164,10 +168,7 @@ public class TutorialManager : MonoBehaviour
     void Next()
     {
         waiting = false;
-
-        // Apaga markers del step actual al salir (por si el siguiente step no auto-apaga)
         DisableStepMarkers(i);
-
         i++;
         RunCurrentStep();
     }
@@ -189,15 +190,15 @@ public class TutorialManager : MonoBehaviour
 
         var s = steps[i];
         if (s.type != StepType.GiveRecipeToClient) return;
-        if (s.client != client) return;
-        if (s.recipeId != recipeId) return;
+
+        // Si asignas client en inspector lo valida, si lo dejas null acepta cualquiera:
+        if (s.client != null && s.client != client) return;
+
+        // Si recipeId >= 0 lo valida, si pones -1 acepta cualquiera:
+        if (s.recipeId >= 0 && s.recipeId != recipeId) return;
 
         Next();
     }
-
-    // =========================
-    // Helpers
-    // =========================
 
     void DisableStepMarkers(int stepIndex)
     {
@@ -215,5 +216,11 @@ public class TutorialManager : MonoBehaviour
             if (go == null) continue;
             go.SetActive(value);
         }
+    }
+
+    IEnumerator LoadNextSceneAfterDelay()
+    {
+        yield return new WaitForSeconds(loadNextSceneDelay);
+        SceneManager.LoadScene(nextSceneName);
     }
 }
