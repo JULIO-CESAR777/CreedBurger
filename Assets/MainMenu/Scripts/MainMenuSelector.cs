@@ -51,24 +51,29 @@ public class MenuManager : MonoBehaviour
 
     public void OnMenuButtonClicked(MenuVinculo vinculoSeleccionado)
     {
-        // 1. Si está animando, ignorar.
-        // 2. Si pulsamos el botón del menú que YA está abierto, ignorar.
-        if (isAnimating || menuActivo == vinculoSeleccionado) return;
-
-        Debug.Log($"Abriendo: {vinculoSeleccionado.nombre}");
+        if (isAnimating) return;
 
         isAnimating = true;
 
-        // Ocultar el anterior (si hay uno activo)
+        // Si presionamos el mismo menú activo → lo cerramos
+        if (menuActivo == vinculoSeleccionado)
+        {
+            OcultarSubmenu(menuActivo.submenu);
+            menuActivo = null;
+
+            // Liberamos el bloqueo al terminar animación
+            DOVirtual.DelayedCall(animationDuration, () => isAnimating = false);
+            return;
+        }
+
+        // Si hay otro activo → lo cerramos primero
         if (menuActivo != null)
         {
             OcultarSubmenu(menuActivo.submenu);
         }
 
-        // Mostrar el nuevo
+        // Abrimos el nuevo
         MostrarSubmenu(vinculoSeleccionado.submenu);
-        
-        // Actualizar la referencia
         menuActivo = vinculoSeleccionado;
     }
 
