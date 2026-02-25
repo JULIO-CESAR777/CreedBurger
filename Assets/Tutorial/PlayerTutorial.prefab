@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 9073286270195289449}
   - component: {fileID: 4060615021624618295}
   - component: {fileID: -3357020420739879417}
+  - component: {fileID: 1046639483301766990}
   m_Layer: 3
   m_Name: PlayerTutorial
   m_TagString: Player
@@ -351,6 +352,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splashEffectPrefab: {fileID: 1582062450047922138, guid: 9c171c9bfa66ae64b9dd7c1368936fb3, type: 3}
+--- !u!114 &1046639483301766990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2849773209135737600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22c42a2dee048a840befff5b20867c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reachDistance: 1.2
 --- !u!1 &3730311079872757781
 GameObject:
   m_ObjectHideFlags: 0

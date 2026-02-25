@@ -11,8 +11,7 @@ public class TutorialManager : MonoBehaviour
     {
         public StepType type;
         [TextArea] public string text;
-
-        public Sprite icon;   // 👈 NUEVO
+        public Sprite icon;
 
         public Transform point;
         public MoveClientTutorial client;
@@ -23,28 +22,81 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private TutorialUi ui;
     [SerializeField] private Step[] steps;
 
+    [Header("Player auto-detect")]
+    [SerializeField] private string playerTag = "Player";
+    [SerializeField] private float findPlayerEvery = 0.25f;
+
+    private PlayerTutorial player;
     private int i;
     private bool waiting;
 
-    // dependencias (tu player, etc.)
-    [SerializeField] private PlayerTutorial player; // o tu script real
+    private Coroutine findPlayerCR;
 
     void OnEnable()
     {
-        if (player) player.OnReachedTutorialPoint += OnPlayerReachedPoint;
-        MoveClientTutorial.OnClientReceivedRecipe += OnClientReceivedRecipe; // evento estático (lo agregamos abajo)
+        // eventos del cliente (no dependen del player)
+        MoveClientTutorial.OnClientReceivedRecipe += OnClientReceivedRecipe;
+
+        // empezar a buscar player
+        findPlayerCR = StartCoroutine(FindAndBindPlayerLoop());
     }
 
     void OnDisable()
     {
-        if (player) player.OnReachedTutorialPoint -= OnPlayerReachedPoint;
         MoveClientTutorial.OnClientReceivedRecipe -= OnClientReceivedRecipe;
+
+        UnbindPlayer();
+
+        if (findPlayerCR != null)
+        {
+            StopCoroutine(findPlayerCR);
+            findPlayerCR = null;
+        }
     }
 
     void Start()
     {
         i = 0;
         RunCurrentStep();
+    }
+
+    IEnumerator FindAndBindPlayerLoop()
+    {
+        while (true)
+        {
+            // Si no hay player o se destruyó, busca otro
+            if (player == null)
+            {
+                var go = GameObject.FindGameObjectWithTag(playerTag);
+                if (go != null)
+                {
+                    var newPlayer = go.GetComponent<PlayerTutorial>();
+                    if (newPlayer != null)
+                        BindPlayer(newPlayer);
+                }
+            }
+
+            yield return new WaitForSeconds(findPlayerEvery);
+        }
+    }
+
+    void BindPlayer(PlayerTutorial newPlayer)
+    {
+        UnbindPlayer();
+
+        player = newPlayer;
+        player.OnReachedTutorialPoint += OnPlayerReachedPoint;
+
+        // Re-aplicar el target del paso actual (por si el player respawneó a mitad)
+        ApplyStepTargetToPlayer();
+    }
+
+    void UnbindPlayer()
+    {
+        if (player != null)
+            player.OnReachedTutorialPoint -= OnPlayerReachedPoint;
+
+        player = null;
     }
 
     void RunCurrentStep()
@@ -59,21 +111,27 @@ public class TutorialManager : MonoBehaviour
         ui.Show(s.text, s.icon);
         waiting = true;
 
-        // Activación del paso
+        ApplyStepTargetToPlayer();
+
+        if (s.type == StepType.WaitSeconds)
+            StartCoroutine(WaitThenNext(s.seconds));
+    }
+
+    void ApplyStepTargetToPlayer()
+    {
+        if (player == null) return;
+
+        var s = steps[i];
+
         switch (s.type)
         {
             case StepType.GoToPoint:
-                // opcional: resaltar punto, poner marker, etc.
                 player.SetTutorialTarget(s.point);
                 break;
 
             case StepType.GiveRecipeToClient:
-                player.SetTutorialTarget(null);
-                break;
-
             case StepType.WaitSeconds:
                 player.SetTutorialTarget(null);
-                StartCoroutine(WaitThenNext(s.seconds));
                 break;
         }
     }
@@ -91,8 +149,6 @@ public class TutorialManager : MonoBehaviour
         RunCurrentStep();
     }
 
-    // ====== “Condiciones” que completan pasos ======
-
     void OnPlayerReachedPoint(Transform point)
     {
         if (!waiting) return;
@@ -104,7 +160,7 @@ public class TutorialManager : MonoBehaviour
         Next();
     }
 
-    private void OnClientReceivedRecipe(MoveClientTutorial client, int recipeId)
+    void OnClientReceivedRecipe(MoveClientTutorial client, int recipeId)
     {
         if (!waiting) return;
 
