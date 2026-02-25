@@ -12,10 +12,12 @@ public class TutorialManager : MonoBehaviour
         public StepType type;
         [TextArea] public string text;
 
-        public Transform point;     // GoToPoint
-        public MoveClient client;   // GiveRecipeToClient
-        public int recipeId;        // GiveRecipeToClient
-        public float seconds;       // WaitSeconds
+        public Sprite icon;   // 👈 NUEVO
+
+        public Transform point;
+        public MoveClientTutorial client;
+        public int recipeId;
+        public float seconds;
     }
 
     [SerializeField] private TutorialUi ui;
@@ -49,12 +51,12 @@ public class TutorialManager : MonoBehaviour
     {
         if (i >= steps.Length)
         {
-            ui.Show("¡Tutorial terminado!");
+            ui.Show("¡Tutorial terminado!", null);
             return;
         }
 
         var s = steps[i];
-        ui.Show(s.text);
+        ui.Show(s.text, s.icon);
         waiting = true;
 
         // Activación del paso
@@ -66,11 +68,11 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case StepType.GiveRecipeToClient:
-                // opcional: resaltar cliente / UI receta
-                // aquí solo esperamos el evento de “entregué receta correcta”
+                player.SetTutorialTarget(null);
                 break;
 
             case StepType.WaitSeconds:
+                player.SetTutorialTarget(null);
                 StartCoroutine(WaitThenNext(s.seconds));
                 break;
         }
