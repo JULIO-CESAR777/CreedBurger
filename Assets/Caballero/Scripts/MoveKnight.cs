@@ -217,13 +217,10 @@ public class MoveKnight : MonoBehaviour
 
     void OnCatchPlayer(Transform target)
     {
-        // Aquí define qué pasa al atrapar:
-        // - Desactivar movimiento del player
-        // - Reproducir animación/sonido
-        // - Cargar escena, restar vida, etc.
+     
         Debug.Log($"{name} atrapó a {target.name}");
-        Destroy(this);
-        // ejemplo: volver a patrullar o ir a salida
+      
+        
         AbortChase();
     }
 

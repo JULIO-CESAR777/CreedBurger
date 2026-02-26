@@ -16,7 +16,7 @@ public class TutorialManager : MonoBehaviour
 
         public Transform point;
         public MoveClientTutorial client;
-        public int recipeId;
+        public int recipeId;   // usa -1 para aceptar cualquier receta
         public float seconds;
 
         [Header("Markers / Objetos a prender")]
@@ -37,14 +37,14 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private float findPlayerEvery = 0.25f;
 
     [Header("Fin del tutorial")]
-    [SerializeField] private string nextSceneName = "MainMenu";
-    [SerializeField] private float loadNextSceneDelay = 3f;
+    [SerializeField] private GameObject tutorialFinishedPanel;
 
     private PlayerTutorial player;
     private int i;
     private bool waiting;
     private Coroutine findPlayerCR;
-    private bool ending;
+
+    private bool tutorialFinished;
 
     void OnEnable()
     {
@@ -68,6 +68,9 @@ public class TutorialManager : MonoBehaviour
 
     void Start()
     {
+        if (tutorialFinishedPanel != null)
+            tutorialFinishedPanel.SetActive(false);
+
         i = 0;
         RunCurrentStep();
     }
@@ -110,16 +113,23 @@ public class TutorialManager : MonoBehaviour
 
     void RunCurrentStep()
     {
+        if (tutorialFinished) return;
+
         if (i >= steps.Length)
         {
+            tutorialFinished = true;
+
             ui.Show("¡Tutorial terminado!", null);
             DisableStepMarkers(i - 1);
 
-            if (!ending)
-            {
-                ending = true;
-                StartCoroutine(LoadNextSceneAfterDelay());
-            }
+            if (tutorialFinishedPanel != null)
+                tutorialFinishedPanel.SetActive(true);
+
+            waiting = false;
+
+            // Opcional: limpiar target del player si existe
+            if (player != null) player.SetTutorialTarget(null);
+
             return;
         }
 
@@ -142,7 +152,7 @@ public class TutorialManager : MonoBehaviour
 
     void ApplyStepTargetToPlayer()
     {
-        if (player == null) return;
+        if (player == null || tutorialFinished) return;
 
         var s = steps[i];
 
@@ -167,15 +177,18 @@ public class TutorialManager : MonoBehaviour
 
     void Next()
     {
+        if (tutorialFinished) return;
+
         waiting = false;
         DisableStepMarkers(i);
+
         i++;
         RunCurrentStep();
     }
 
     void OnPlayerReachedPoint(Transform point)
     {
-        if (!waiting) return;
+        if (!waiting || tutorialFinished) return;
 
         var s = steps[i];
         if (s.type != StepType.GoToPoint) return;
@@ -186,19 +199,23 @@ public class TutorialManager : MonoBehaviour
 
     void OnClientReceivedRecipe(MoveClientTutorial client, int recipeId)
     {
-        if (!waiting) return;
+        if (!waiting || tutorialFinished) return;
 
         var s = steps[i];
         if (s.type != StepType.GiveRecipeToClient) return;
 
-        // Si asignas client en inspector lo valida, si lo dejas null acepta cualquiera:
+        // ✅ Si asignas client en inspector lo valida, si lo dejas null acepta cualquiera:
         if (s.client != null && s.client != client) return;
 
-        // Si recipeId >= 0 lo valida, si pones -1 acepta cualquiera:
+        // ✅ Si recipeId >= 0 lo valida, si pones -1 acepta cualquiera:
         if (s.recipeId >= 0 && s.recipeId != recipeId) return;
 
         Next();
     }
+
+    // =========================
+    // Helpers
+    // =========================
 
     void DisableStepMarkers(int stepIndex)
     {
@@ -218,9 +235,9 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
-    IEnumerator LoadNextSceneAfterDelay()
+    public void cambiarEscena()
     {
-        yield return new WaitForSeconds(loadNextSceneDelay);
-        SceneManager.LoadScene(nextSceneName);
+        SceneManager.LoadScene("MainMenu");
+        
     }
 }
