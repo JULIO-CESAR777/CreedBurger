@@ -19,8 +19,12 @@ public class PlayerInteractionHandler : MonoBehaviour
     private IInteractable interactableComponent;
 
     //[SerializeField] public Image cooldownFillImage;
+    
+    
+    [Header("Traps")]
     public float trapCooldown;
     public bool canPutTraps;
+    [SerializeField] private Transform ShootingPoint;
     
     private void Start()
     {
@@ -52,11 +56,40 @@ public class PlayerInteractionHandler : MonoBehaviour
     {
         if (!canPutTraps) return;
         if (controller.isPaused) return;
-        
-        Instantiate(controller.trapPrefab, controller.transform.position, Quaternion.Euler(0, 90, 90));
-        canPutTraps = false;
-        StartCoroutine(ChangeTrapCooldown());
+
+        if (isGrabingSomething == false)
+        {
+            Instantiate(controller.trapPrefab, controller.transform.position, Quaternion.Euler(0, 90, 90));
+            canPutTraps = false;
+            StartCoroutine(ChangeTrapCooldown());
+        }
+        else if (GrabbedObject.GetComponent<ITrap>() != null)
+        {
+            /* TODO: Checar que cuando un objeto se agarre sea una trampa o no (para las animaciones)
+                
+            */
+            
+            /*
+             Usar esta funcion en la animacion de disparar dardos... sirve para hacer la trampa, no importa si es de 
+             dardos o no pero es para llamarla desde una animacion
+             TODO: Mandar a llamar a la funcion UseTrap desde el fin de la animacion
+            */
+            UseTrap();
+        }
     }
+
+    public void UseTrap()
+    {
+        GrabbedObject.GetComponent<ITrap>().Use(ShootingPoint);
+        
+        //TODO: Esto se debe hacer dps de toda la animacion de uso de la trampa
+        //controller.animationHandler?.PlayDard();
+        
+        controller.animationHandler?.PlayIdle();
+        Destroy(GrabbedObject);
+        ResetGrabState();
+    }
+
 
     IEnumerator ChangeTrapCooldown(float duration = 1f)
     {

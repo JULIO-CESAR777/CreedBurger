@@ -14,7 +14,6 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     public void SetMovementSpeed(float speed)
     {
-        
         animator.SetFloat("Movement", Mathf.Clamp01(speed));
     }
 
@@ -22,6 +21,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         animator.SetTrigger("Drop");
     }
+    
 
     public void PlayDash(bool condition)
     {
@@ -49,6 +49,18 @@ public class PlayerAnimationHandler : MonoBehaviour
     {
         animator.SetTrigger("Cut");
     }
+    
+    #region Animations of traps
+
+    public void PlayDard()
+    {
+        animator.SetTrigger("DardTrap");
+    }
+
+    #endregion 
+    
+    
+    
     
     // Llamar esto desde un Animation Event al final de la animación de tomar/interactuar
     public void CanMove()
