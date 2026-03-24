@@ -10,6 +10,6 @@ public class Dardo : MonoBehaviour
         {
             
         }
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 }

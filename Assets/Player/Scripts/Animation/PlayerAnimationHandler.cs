@@ -52,9 +52,14 @@ public class PlayerAnimationHandler : MonoBehaviour
     
     #region Animations of traps
 
-    public void PlayDard()
+    public void PlayShootDard()
     {
         animator.SetTrigger("DardTrap");
+    }
+
+    public void PlayTakeDard()
+    {
+        animator.SetTrigger("TakeDardTrap");
     }
 
     #endregion 

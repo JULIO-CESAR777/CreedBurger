@@ -192,10 +192,25 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             case InteractType.Grab:
                 if (interactableObject.name == "Meat Machine" && isGrabingSomething) return;
+                // Revisar si agarra una trampa
+                if (GrabbedObject.GetComponent<ITrap>() != null)
+                {
+                    // Que tipo de trampa agarra
+                    // 1. Trampa de dardo
+                    if (GrabbedObject.GetComponent<DardTrap>() != null)
+                    {
+                        controller.animationHandler.PlayTakeDard();
+                    }
+                }
+                // Si no es una trampa
+                else
+                {
+                    controller.animationHandler?.PlayTake();  
+                }
                 controller.playerMovement.canMove = false;
                 grabbedInteractableComponent = interactableComponent;
-                controller.animationHandler?.PlayTake();
                 break;
+            
             case InteractType.Kill:
                 controller.playerMovement.canMove = false;
                 controller.suspect = true;

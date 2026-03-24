@@ -57,5 +57,11 @@ public class PlayerController : MonoBehaviour
         if(isPaused) return;
         playerInteractionHandler.OnCleanAnimationEvent();
     }
+
+    public void UseTrap()
+    {
+        if (isPaused) return;
+        playerInteractionHandler.UseTrap();
+    }
     
 }

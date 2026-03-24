@@ -19,15 +19,4 @@ public class DardTrap : MonoBehaviour, ITrap
         print("dardo");
     }
     
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Client"))
-        {
-            var cliente = other.GetComponent<MoveClient>();
-            if (cliente == null) return;
-            cliente.Morir();
-            Destroy(gameObject);
-
-        }
-    }
 }
