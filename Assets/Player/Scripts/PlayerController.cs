@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
         playerInteractionHandler.OnGrabAnimationEvent();
     }
 
+    // Reproducir un asesinato
     public void KillTrigger()
     {
         if(isPaused) return;
@@ -52,11 +53,13 @@ public class PlayerController : MonoBehaviour
         playerInteractionHandler.OnKillAnimationEvent();
     }
 
+    // Limpiar sangre
     public void CleanTrigger()
     {
         if(isPaused) return;
         playerInteractionHandler.OnCleanAnimationEvent();
     }
+    
 
     public void UseTrap()
     {

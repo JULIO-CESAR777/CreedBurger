@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
     [SerializeField] public PlayerController controller;
     [SerializeField] public GameObject Hands;
+    [SerializeField] private Transform DardPosition;
+    public bool isGrabbingDardTrap = false;
     
     public bool isGrabingSomething;
     
@@ -20,7 +21,6 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     //[SerializeField] public Image cooldownFillImage;
     
-    
     [Header("Traps")]
     public float trapCooldown;
     public bool canPutTraps;
@@ -29,6 +29,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void Start()
     {
         isGrabingSomething = false;
+        isGrabbingDardTrap = false;
         canPutTraps = true;
         if (controller != null && controller.inputReader != null)
         {
@@ -41,6 +42,18 @@ public class PlayerInteractionHandler : MonoBehaviour
         
         interactableObject = null;
         interactableComponent = null;
+    }
+
+    private Vector3 rotationCorrection = new Vector3(0, -180f, 0);
+    
+    private void Update()
+    {
+        if (controller.isPaused) return;
+        if (!isGrabbingDardTrap) return;
+        
+        GrabbedObject.transform.position = DardPosition.position;
+        GrabbedObject.transform.rotation = controller.transform.rotation * Quaternion.Euler(rotationCorrection);
+
     }
 
     private void OnDestroy()
@@ -65,19 +78,16 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
         else if (GrabbedObject.GetComponent<ITrap>() != null)
         {
-            /* TODO: Checar que cuando un objeto se agarre sea una trampa o no (para las animaciones)
-                
-            */
-            
-            /*
-             Usar esta funcion en la animacion de disparar dardos... sirve para hacer la trampa, no importa si es de 
-             dardos o no pero es para llamarla desde una animacion
-             TODO: Mandar a llamar a la funcion UseTrap desde el fin de la animacion
-            */
-            UseTrap();
+            // Es trampa de dardo entonces dispara
+            if (GrabbedObject.GetComponent<DardTrap>() != null)
+            {
+                controller.animationHandler?.PlayShootDard();
+            }
+
         }
     }
 
+    // Se manda a llamar desde un evento en la animacion
     public void UseTrap()
     {
         GrabbedObject.GetComponent<ITrap>().Use(ShootingPoint);
@@ -87,6 +97,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         
         controller.animationHandler?.PlayIdle();
         Destroy(GrabbedObject);
+        isGrabbingDardTrap = false;
         ResetGrabState();
     }
 
@@ -192,23 +203,10 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             case InteractType.Grab:
                 if (interactableObject.name == "Meat Machine" && isGrabingSomething) return;
-                // Revisar si agarra una trampa
-                if (GrabbedObject.GetComponent<ITrap>() != null)
-                {
-                    // Que tipo de trampa agarra
-                    // 1. Trampa de dardo
-                    if (GrabbedObject.GetComponent<DardTrap>() != null)
-                    {
-                        controller.animationHandler.PlayTakeDard();
-                    }
-                }
-                // Si no es una trampa
-                else
-                {
-                    controller.animationHandler?.PlayTake();  
-                }
-                controller.playerMovement.canMove = false;
+                // Toma el item
+                controller.animationHandler?.PlayTake();  
                 grabbedInteractableComponent = interactableComponent;
+                controller.playerMovement.canMove = false;
                 break;
             
             case InteractType.Kill:
@@ -229,8 +227,32 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
    }
 
-    
-    private void ResetGrabState()
+   public void GrabTrap()
+   {
+       print("Entra en la trap");
+       // Revisar si agarra una trampa
+       if (GrabbedObject.GetComponent<ITrap>() == null)
+       {
+           controller.animationHandler?.KeepTheObject();
+       }
+       // Que tipo de trampa agarra
+       // 1. Trampa de dardo
+       else if (GrabbedObject.GetComponent<DardTrap>() != null)
+       {
+           isGrabbingDardTrap = true;
+           print("reproduce la animacion");
+           
+           //GrabbedObject.transform.position = new Vector3(-0.011f, -0.006f, -0.036f);
+           //GrabbedObject.transform.rotation = Quaternion.Euler(1.066f, 121.197f, -91.579f);
+           controller.animationHandler.PlayTakeDard();
+           
+       }
+       
+   }
+
+
+
+   private void ResetGrabState()
     {
         isGrabingSomething = false;
         GrabbedObject = null;

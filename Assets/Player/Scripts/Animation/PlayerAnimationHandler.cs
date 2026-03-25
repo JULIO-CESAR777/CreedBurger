@@ -35,6 +35,12 @@ public class PlayerAnimationHandler : MonoBehaviour
         animator.SetTrigger("Take");
     }
 
+    public void KeepTheObject()
+    {
+        animator.SetTrigger("Keep");
+    }
+
+
     public void PlayKill()
     {
         animator.SetTrigger("Kill");

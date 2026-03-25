@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class GrabObject : MonoBehaviour, IInteractable
 {
@@ -58,15 +59,23 @@ public class GrabObject : MonoBehaviour, IInteractable
             }
             else
             {
-                transform.SetParent(handTransform, true);
+                if (gameObject.GetComponent<DardTrap>() == null)
+                {
+                    transform.SetParent(handTransform, true);
+                }
+                else
+                {
+                    gameObject.GetComponent<BoxCollider>().isTrigger = true;
+                }
+
                 var rb = GetComponent<Rigidbody>();
                 if (rb != null) rb.isKinematic = true;
-
                 transform.localPosition = Vector3.zero;
                 isGrabbed = true;
-
                 interactionHandler.isGrabingSomething = true;
-                interactionHandler.GrabbedObject = gameObject;
+                interactionHandler.GrabbedObject = gameObject;  
+                interactionHandler.GrabTrap();
+                
                 return;
             }
         }
@@ -95,6 +104,9 @@ public class GrabObject : MonoBehaviour, IInteractable
             rb.isKinematic = false;
             rb.AddForce(interactor.transform.forward * 2f, ForceMode.Impulse);
         }
+        
+        var collider = GetComponent<Collider>();
+        collider.isTrigger = false;
 
         handler.controller.suspect = false;
         isGrabbed = false;
