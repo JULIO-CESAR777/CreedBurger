@@ -37,6 +37,12 @@ public class AudioManager : MonoBehaviour
     Coroutine duckRoutine;
     float cachedMusicDb = 0f;   // valor actual del mixer para música
 
+
+    [Header("Mixer Params")]
+    public string mixerMasterParam = "MasterVolume";
+    public string mixerSfxParam = "SFXVolume";
+
+
     void Awake()
     {
         if (I && I != this) { Destroy(gameObject); return; }
@@ -455,6 +461,43 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void SetSFXVolume01(float v01)
+    {
+        v01 = Mathf.Clamp01(v01);
+
+        if (mixer && !string.IsNullOrEmpty(mixerSfxParam))
+        {
+            float db = (v01 <= 0.0001f) ? -80f : Mathf.Log10(v01) * 20f;
+            mixer.SetFloat(mixerSfxParam, db);
+        }
+    }
+
+    public void SetMasterVolume01(float v01)
+    {
+        v01 = Mathf.Clamp01(v01);
+
+        if (mixer && !string.IsNullOrEmpty(mixerMasterParam))
+        {
+            float db = (v01 <= 0.0001f) ? -80f : Mathf.Log10(v01) * 20f;
+            mixer.SetFloat(mixerMasterParam, db);
+        }
+    }
+
+
+    public float GetVolume01FromMixer(string paramName, float defaultValue = 1f)
+    {
+        if (mixer && mixer.GetFloat(paramName, out float db))
+        {
+            if (db <= -80f) return 0f;
+            return Mathf.Pow(10f, db / 20f);
+        }
+
+        return defaultValue;
+    }
+
+    public float GetMusicVolume01() => GetVolume01FromMixer(mixerMusicParam);
+    public float GetSFXVolume01() => GetVolume01FromMixer(mixerSfxParam);
+    public float GetMasterVolume01() => GetVolume01FromMixer(mixerMasterParam);
     /// <summary>
     /// Recarga el banco y reconstruye diccionarios (por si cambiaste el ScriptableObject en runtime).
     /// </summary>
