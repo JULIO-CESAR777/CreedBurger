@@ -48,8 +48,10 @@ public class PlayerInteractionHandler : MonoBehaviour
     
     private void Update()
     {
-        if (controller.isPaused) return;
+        if (controller == null || controller.isPaused) return;
         if (!isGrabbingDardTrap) return;
+        if (GrabbedObject == null) return;
+        if (DardPosition == null) return;
         
         GrabbedObject.transform.position = DardPosition.position;
         GrabbedObject.transform.rotation = controller.transform.rotation * Quaternion.Euler(rotationCorrection);
@@ -229,32 +231,27 @@ public class PlayerInteractionHandler : MonoBehaviour
 
    public void GrabTrap()
    {
-       print("Entra en la trap");
-       // Revisar si agarra una trampa
+       // Revisar si es un objeto normal
        if (GrabbedObject.GetComponent<ITrap>() == null)
        {
            controller.animationHandler?.KeepTheObject();
        }
+       
        // Que tipo de trampa agarra
        // 1. Trampa de dardo
        else if (GrabbedObject.GetComponent<DardTrap>() != null)
        {
            isGrabbingDardTrap = true;
-           print("reproduce la animacion");
-           
-           //GrabbedObject.transform.position = new Vector3(-0.011f, -0.006f, -0.036f);
-           //GrabbedObject.transform.rotation = Quaternion.Euler(1.066f, 121.197f, -91.579f);
            controller.animationHandler.PlayTakeDard();
            
        }
        
    }
-
-
-
+   
    private void ResetGrabState()
     {
         isGrabingSomething = false;
+        isGrabbingDardTrap = false;
         GrabbedObject = null;
         grabbedInteractableComponent = null;
     }

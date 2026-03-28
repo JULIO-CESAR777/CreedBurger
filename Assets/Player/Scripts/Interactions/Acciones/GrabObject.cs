@@ -86,15 +86,19 @@ public class GrabObject : MonoBehaviour, IInteractable
 
     private void DropNormally(GameObject interactor, PlayerInteractionHandler handler)
     {
+        // Si era una cerbatana, dejar de seguirla manualmente
+        handler.isGrabbingDardTrap = false;
+
         transform.SetParent(null, true);
 
         foreach (Transform child in handler.Hands.transform)
         {
             child.SetParent(null, true);
-            var rb_ = child.GetComponent<Rigidbody>();
-            if (rb_ != null)
+
+            var rbChild = child.GetComponent<Rigidbody>();
+            if (rbChild != null)
             {
-                rb_.isKinematic = false;
+                rbChild.isKinematic = false;
             }
         }
 
@@ -104,9 +108,12 @@ public class GrabObject : MonoBehaviour, IInteractable
             rb.isKinematic = false;
             rb.AddForce(interactor.transform.forward * 2f, ForceMode.Impulse);
         }
-        
+
         var collider = GetComponent<Collider>();
-        collider.isTrigger = false;
+        if (collider != null)
+        {
+            collider.isTrigger = false;
+        }
 
         handler.controller.suspect = false;
         isGrabbed = false;
