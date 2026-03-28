@@ -17,7 +17,14 @@ public class PlayerAnimationHandler : MonoBehaviour
         animator.SetFloat("Movement", Mathf.Clamp01(speed));
     }
 
+    
     public void PlayIdle()
+    {
+        animator.SetTrigger("Idle");
+    }
+    
+    
+    public void PlayDrop()
     {
         animator.SetTrigger("Drop");
     }

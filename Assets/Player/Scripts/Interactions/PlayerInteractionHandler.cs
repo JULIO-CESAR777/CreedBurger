@@ -90,12 +90,11 @@ public class PlayerInteractionHandler : MonoBehaviour
     }
 
     // Se manda a llamar desde un evento en la animacion
+    // Esta es para cuando se activa la trampa
     public void UseTrap()
     {
+        // Se mete al codigo de la trampa y utiliza lo que tenga cada una
         GrabbedObject.GetComponent<ITrap>().Use(ShootingPoint);
-        
-        //TODO: Esto se debe hacer dps de toda la animacion de uso de la trampa
-        //controller.animationHandler?.PlayDard();
         
         controller.animationHandler?.PlayIdle();
         Destroy(GrabbedObject);
@@ -138,7 +137,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                         spawner.SpawnMeat();
                         Destroy(GrabbedObject);
                         ResetGrabState();
-                        controller.animationHandler?.PlayIdle();
+                        controller.animationHandler?.PlayDrop();
                         return;
                     }
                 }
@@ -158,7 +157,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                     GrabbedObject.transform.position = cookMeat.pinPoint.transform.position;
 
                     ResetGrabState();
-                    controller.animationHandler?.PlayIdle();
+                    controller.animationHandler?.PlayDrop();
                     return;
                 }
 
@@ -183,7 +182,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                         controller.suspect = false;
                         Destroy(GrabbedObject);
                         ResetGrabState();
-                        controller.animationHandler?.PlayIdle();
+                        controller.animationHandler?.PlayDrop();
                         return;
                     }
                 }
@@ -192,7 +191,7 @@ public class PlayerInteractionHandler : MonoBehaviour
             // Drop normal si no hay nada especial que hacer
             grabbedInteractableComponent.Interact(gameObject);
             ResetGrabState();
-            controller.animationHandler?.PlayIdle();
+            controller.animationHandler?.PlayDrop();
             return;
         }
 
