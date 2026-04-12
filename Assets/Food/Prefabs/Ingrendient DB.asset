@@ -117,7 +117,7 @@ MonoBehaviour:
     title: Pan jitomate y queso
     prefab: {fileID: 1104786654169366880, guid: 473d05e7a12411d49a1e2f780a37ff79, type: 3}
     image: {fileID: 700649280, guid: 3a82e3606086dee47861f2ab8ae34756, type: 3}
-    imageResultado: {fileID: 0}
+    imageResultado: {fileID: -1427218489, guid: e7d8687ba34433542aa994dcb0099249, type: 3}
   - id: 22
     title: Carne-Queso-Tomate
     prefab: {fileID: 4963601530871475664, guid: 5a3da35d8cd318e499b4289a3b416bbf, type: 3}
