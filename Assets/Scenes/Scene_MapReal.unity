@@ -7201,11 +7201,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3558486201974651330, guid: 81480d7d4f9971d4993bd5a9eae5e570, type: 3}
   m_PrefabInstance: {fileID: 316295874}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &316666360 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3681940456687667927, guid: f5d100d08f4241f448499489d16072fa, type: 3}
-  m_PrefabInstance: {fileID: 419155390}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &318111749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8285,6 +8280,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3558486201974651330, guid: 81480d7d4f9971d4993bd5a9eae5e570, type: 3}
   m_PrefabInstance: {fileID: 375965331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &380488532 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3681940456687667927, guid: f5d100d08f4241f448499489d16072fa, type: 3}
+  m_PrefabInstance: {fileID: 419155390}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &381496888
 PrefabInstance:
@@ -9767,6 +9767,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CLIENT
       objectReference: {fileID: 0}
+    - target: {fileID: 7536952246768591290, guid: f5d100d08f4241f448499489d16072fa, type: 3}
+      propertyPath: worldTarget
+      value: 
+      objectReference: {fileID: 1862829662}
     - target: {fileID: 8347478203092181530, guid: f5d100d08f4241f448499489d16072fa, type: 3}
       propertyPath: puntoSalida
       value: 
@@ -47481,7 +47485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87335e39d720468469cb7d705eaa46f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientPrefab: {fileID: 316666360}
+  clientPrefab: {fileID: 380488532}
   spawnPoints: []
   spawnInterval: 6
   maxClients: 7
@@ -49997,7 +50001,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 20, y: 472}
+  m_AnchoredPosition: {x: 856, y: 493}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1855452274
@@ -58067,7 +58071,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 637.9, y: 504}
+  m_AnchoredPosition: {x: 958, y: 459}
   m_SizeDelta: {x: 68.9848, y: 42.26}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &2143003492
@@ -58389,6 +58393,14 @@ PrefabInstance:
       propertyPath: SubstractMoneyPanel
       value: 
       objectReference: {fileID: 2141768276}
+    - target: {fileID: 1939023565688790452, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 852
+      objectReference: {fileID: 0}
+    - target: {fileID: 1939023565688790452, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 353
+      objectReference: {fileID: 0}
     - target: {fileID: 5336442274084273521, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
       propertyPath: m_text
       value: ScoreText
@@ -58475,11 +58487,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5907448127808968638, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 526
+      value: 859
       objectReference: {fileID: 0}
     - target: {fileID: 5907448127808968638, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 358
+      value: 282
       objectReference: {fileID: 0}
     - target: {fileID: 6276090668864553128, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
       propertyPath: m_Name
@@ -58492,6 +58504,14 @@ PrefabInstance:
     - target: {fileID: 7260917381090261666, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
       propertyPath: m_text
       value: MaxScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 7347755713871070012, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 847
+      objectReference: {fileID: 0}
+    - target: {fileID: 7347755713871070012, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 418
       objectReference: {fileID: 0}
     - target: {fileID: 7795545733034987792, guid: 73c739a7c66da3542878d22cffe95866, type: 3}
       propertyPath: m_text

@@ -16,124 +16,155 @@ MonoBehaviour:
   - id: 1
     title: Pan
     prefab: {fileID: 6168913736434040648, guid: 55728d66e58a6fc408edb6478431a346, type: 3}
-    image: {fileID: 0}
+    image: {fileID: 1896861619, guid: 443a2f84cc31c714888d3d6efeca8971, type: 3}
+    imageResultado: {fileID: 1858051777, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 2
     title: Carne
     prefab: {fileID: 5312991149285066982, guid: 8674f355027bd3b4e82c43411ba5594b, type: 3}
-    image: {fileID: -1537903691, guid: 42e46c5c063d27c4c8d3e94eb296b893, type: 3}
+    image: {fileID: 2037637440, guid: 3898eb6db75be4c4cb76c44303b0cde8, type: 3}
+    imageResultado: {fileID: 1156590567, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 3
     title: Pan y Carne
     prefab: {fileID: 8168205731805838248, guid: 9f6d2f4c2ebb51d499d6323ade35c906, type: 3}
-    image: {fileID: -797244243, guid: cf1a42f23a30d3b4ba574700c8fb881a, type: 3}
+    image: {fileID: -2041220756, guid: ced56cb9f1f09d343bb84253c6019ed4, type: 3}
+    imageResultado: {fileID: -1023595770, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 4
     title: Jitomate
     prefab: {fileID: 7243099547030024798, guid: 4ec67dd1fa89e4f49ae0464e3472b807, type: 3}
-    image: {fileID: -1053744354, guid: a5834305cf2c4eb418d24e3fa4370d1b, type: 3}
+    image: {fileID: -1415751915, guid: bec2502a9391c354c8a732ea50f35572, type: 3}
+    imageResultado: {fileID: 253656624, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 5
     title: Pan y jitomate
     prefab: {fileID: 4107321171544864329, guid: b9cfba5b3a6540a4e8011a6dce8b9b7e, type: 3}
-    image: {fileID: -1218539882, guid: bbb6d67ef0e4eb448a2529c7bf0e63fd, type: 3}
+    image: {fileID: 1414793987, guid: ab0f759e397664e4e8e8905cf345ad86, type: 3}
+    imageResultado: {fileID: -239144112, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 6
     title: Carne y jitomate
     prefab: {fileID: 1008761947794574467, guid: 33bbaefbe2c15f9478675e4ea535d00a, type: 3}
-    image: {fileID: -831693691, guid: e74327103d2d69c4c8d2f46271d34a9d, type: 3}
+    image: {fileID: -1012375002, guid: 2654efd0b4f1c3e429fdddae414b1c69, type: 3}
+    imageResultado: {fileID: -697437425, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 7
     title: 'Pan, Carne y Jitomate '
     prefab: {fileID: 8384464487914783705, guid: 3b161b9b98bf6cc41803eaf454e9f3b1, type: 3}
-    image: {fileID: -1321369349, guid: bf146bad38706b640a4eff4e5b76470c, type: 3}
+    image: {fileID: 629681641, guid: eaaa63b712608a1408f22ecbe2ca6b4e, type: 3}
+    imageResultado: {fileID: -1992117580, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 8
     title: Lechuga
     prefab: {fileID: 2228267061463373086, guid: e9e8106f50f8350439cd27ac62aa1e4a, type: 3}
-    image: {fileID: 1810202334, guid: 8ba2daf9e2c5d6341899059b4ae1c2b5, type: 3}
+    image: {fileID: -1861294758, guid: fca15198c68b8844b8aa651a59f9f379, type: 3}
+    imageResultado: {fileID: 1724441294, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 9
     title: Pan y lechuga
     prefab: {fileID: 3480810118159300848, guid: 988e3ba852ae08e4cb73148a72907008, type: 3}
-    image: {fileID: 1310155765, guid: b324e1ce476c1e24c8228e452ac8608a, type: 3}
+    image: {fileID: -1196654424, guid: 041370bb086084d40bb892c7ce0a5648, type: 3}
+    imageResultado: {fileID: -1819367136, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 10
     title: Carne y Lechuga
     prefab: {fileID: 91294392592181043, guid: f856c03dad8b0384bb915104089833c4, type: 3}
-    image: {fileID: -4981583, guid: 7430a15ec9342d246afa042183b175a5, type: 3}
+    image: {fileID: 270091421, guid: 4263e21fdab640f47be317f4b73a992d, type: 3}
+    imageResultado: {fileID: 591473441, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 11
     title: Pan, carne y lechuga
     prefab: {fileID: 3100590782944504498, guid: f5843e027b93fbe4a94b8bc75ccc99a9, type: 3}
-    image: {fileID: -1432167357, guid: 9df7fa31f45afa642b5291424a75f1d3, type: 3}
+    image: {fileID: 880884383, guid: 5501d16287fa9bb4f82282eb7d7d7bb1, type: 3}
+    imageResultado: {fileID: 1580991933, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 12
     title: Jitomate y lechuga
     prefab: {fileID: 6803060054770741208, guid: 462f56e15bd045f47b1fa7b06e8912cc, type: 3}
-    image: {fileID: 1936085907, guid: e03c5e198b1d67f45b334b2188afdb94, type: 3}
+    image: {fileID: 942120199, guid: e1ef064bebfaaa8438c37981dcbaaa8f, type: 3}
+    imageResultado: {fileID: -1824421216, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 13
     title: Pan jitomate y lechuga
     prefab: {fileID: 8252670136588057289, guid: ec2cd7e3440f4794a971535d9b46c8e0, type: 3}
-    image: {fileID: 929144767, guid: 2179f1ae45e0fa94e8e97c476f28629f, type: 3}
+    image: {fileID: -1269848678, guid: b68b5073f70f22b4cbbebe4ce148f8df, type: 3}
+    imageResultado: {fileID: 1017343880, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 14
     title: Carne-Lechuga-Tomate
     prefab: {fileID: 8505627028194527967, guid: e432172a8e0c5854b973cf32e084598f, type: 3}
-    image: {fileID: 1754062980, guid: 66cc03f5c9db9534fb274553fedc4fed, type: 3}
+    image: {fileID: 1026955034, guid: 023230481788fe0488907049b0fcfb3d, type: 3}
+    imageResultado: {fileID: 229471719, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 15
     title: Pan carne jitomate lechuga
     prefab: {fileID: 5860445420571652695, guid: 27641ac7164b1114ea17f4a06d43f37d, type: 3}
-    image: {fileID: 596194370, guid: 76da9e3b2ff3c384eaa9fee4fd27042a, type: 3}
+    image: {fileID: 647865977, guid: 6f0e9ac49368b734abbc1aa31a127906, type: 3}
+    imageResultado: {fileID: -601928299, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 16
     title: Queso
     prefab: {fileID: 8247878870281709708, guid: 8ef099d5ffc67e34abd687ab1fdf06d2, type: 3}
-    image: {fileID: -1229076752, guid: b37e25924e8fef24a9be1945cb60ae48, type: 3}
+    image: {fileID: 1151507172, guid: 5e60c66382f856e42a4eb2fb4483e91a, type: 3}
+    imageResultado: {fileID: -1070031015, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 17
     title: Pan y Queso
     prefab: {fileID: 5435951480562690489, guid: ee4744355a0c29140bc9b40f3dbd953f, type: 3}
-    image: {fileID: 825525815, guid: 1d786b80070593f4ebb05989dcb24eaf, type: 3}
+    image: {fileID: -1291953804, guid: 74a3649d47a5cce498a89e096accf5d1, type: 3}
+    imageResultado: {fileID: 1778443845, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 18
     title: Carne-Queso
     prefab: {fileID: 4044520237515660008, guid: babeff4bd7299dc44a993c1a77a75f33, type: 3}
-    image: {fileID: -1970444679, guid: 4963b75c91235f040b817e4179260b68, type: 3}
+    image: {fileID: -1456472380, guid: 04a0e11545523ad448b0bfff10489fc2, type: 3}
+    imageResultado: {fileID: 2143263639, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 19
     title: Pan carne y Queso
     prefab: {fileID: 467813502158183078, guid: 1ef84902a1be28549871b84f8f2844c9, type: 3}
-    image: {fileID: 2083558816, guid: acff1100e90099547ad6fa847e54da3d, type: 3}
+    image: {fileID: -2060713987, guid: fc2cd284619de4d49b8ee6dc7eaf6015, type: 3}
+    imageResultado: {fileID: 294909051, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 20
     title: Jitomate y queso
     prefab: {fileID: 2719173468196109253, guid: e68b24c12a2885b49ac4124e98ac71a6, type: 3}
-    image: {fileID: 232403600, guid: 774f50bc1f56af04d9f67da4e9e30db5, type: 3}
+    image: {fileID: 948133378, guid: 980fea0e864bc364cbe0a1edab2fcae1, type: 3}
+    imageResultado: {fileID: 920964684, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 21
     title: Pan jitomate y queso
     prefab: {fileID: 1104786654169366880, guid: 473d05e7a12411d49a1e2f780a37ff79, type: 3}
-    image: {fileID: -2143004419, guid: 86989403ce9b1b243b26927d545de1c7, type: 3}
+    image: {fileID: 700649280, guid: 3a82e3606086dee47861f2ab8ae34756, type: 3}
+    imageResultado: {fileID: 0}
   - id: 22
     title: Carne-Queso-Tomate
     prefab: {fileID: 4963601530871475664, guid: 5a3da35d8cd318e499b4289a3b416bbf, type: 3}
-    image: {fileID: 396985634, guid: 6fec323b4ce628341921d081d8d96fbb, type: 3}
+    image: {fileID: -1015431317, guid: 169c022f32ea3d04fa52fd79876a5788, type: 3}
+    imageResultado: {fileID: 3330291, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 23
     title: Pan carne jitomate y queso
     prefab: {fileID: 7125335562567451451, guid: 1d81e774afa1754479047cc7a5550019, type: 3}
-    image: {fileID: -2083542307, guid: e7c6ae8a15a4bd94c9990556d76bc63f, type: 3}
+    image: {fileID: -1994051421, guid: 23a66650975576b4eb6610ed2c2c920b, type: 3}
+    imageResultado: {fileID: -1615733666, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 24
     title: Lechuga y queso
     prefab: {fileID: 6308898793917917901, guid: 0de0ee3a7a0709544b20aaa172d3dc15, type: 3}
-    image: {fileID: -826337230, guid: 4d660167bdb79794daa7581aa001072f, type: 3}
+    image: {fileID: 1601384211, guid: 0c425033cbc178241b7964f858d5ca06, type: 3}
+    imageResultado: {fileID: 1573423295, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 25
     title: 'Pan, Lechuga y Queso '
     prefab: {fileID: 190860711520465340, guid: 99234c84da9918e459f444bb76770f47, type: 3}
-    image: {fileID: 1200257444, guid: d388cfc3f7964d14e874ebdc07314bc1, type: 3}
+    image: {fileID: -647638635, guid: 48742580bbe68e54e96d5090c225ab17, type: 3}
+    imageResultado: {fileID: -73817913, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 26
     title: Carne lechuga y queso
     prefab: {fileID: 761626030717822832, guid: 6e0c4721f1730ec469ba9a76d06e2395, type: 3}
-    image: {fileID: -2083542307, guid: e7c6ae8a15a4bd94c9990556d76bc63f, type: 3}
+    image: {fileID: 1308869008, guid: 85cb7e84b3e518e488f8bf39fce58095, type: 3}
+    imageResultado: {fileID: 2045443250, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 27
     title: Pan, Carne, Lechuga y Queso
     prefab: {fileID: 310554787429995794, guid: 2e00af437ea47c741abaf2566636f651, type: 3}
-    image: {fileID: 526258208, guid: 744436e6612704d4a850021d24a675a7, type: 3}
+    image: {fileID: 1306865458, guid: 4552d79dadbe66d4aa0d45e428ab063c, type: 3}
+    imageResultado: {fileID: 205242395, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 28
     title: 'Jitomate, Lechuga y Queso '
     prefab: {fileID: 323333145970587065, guid: 860d5bc8fe4e3c84da5c3a4d09a12b0a, type: 3}
-    image: {fileID: -311372141, guid: 3797cf65e0267e8438e0e555ef223198, type: 3}
+    image: {fileID: -849131535, guid: c64307b9eceb26c4f80deb407d97a063, type: 3}
+    imageResultado: {fileID: -1281173127, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 29
     title: Pan, Jitomate, Lechuga y Queso
     prefab: {fileID: 7968068154844056265, guid: 9a2fb41bfe0aeb54bab8d3bff66209ef, type: 3}
-    image: {fileID: -1913600246, guid: 7eacd4b94a8b32d4cb5d490285efe522, type: 3}
+    image: {fileID: -46043986, guid: cecffb0e8e4752c47967e41bd0a66d59, type: 3}
+    imageResultado: {fileID: 380619305, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 30
     title: Carne, Jitomate, Lechuga y Queso
     prefab: {fileID: 6089225866846711488, guid: 14ba1a16c61fb0647ad1811cfcc2b614, type: 3}
-    image: {fileID: 4044190, guid: 9ef274d1a3bf0584dadcaae9c12c0eae, type: 3}
+    image: {fileID: 1348597070, guid: 3649954892e472e419562aa7c4967498, type: 3}
+    imageResultado: {fileID: -2025075677, guid: b64638822deac9e44b17d732ebbb975f, type: 3}
   - id: 31
     title: Pan, Carne, Jitomate, Lechuga y Queso
     prefab: {fileID: 5670968680112172217, guid: f845c278be551104cba86e727efbfed6, type: 3}
-    image: {fileID: 612467084, guid: 6766f5c14f9209248906782a65a38973, type: 3}
+    image: {fileID: 1102161610, guid: 7b3fdd7ec54fba9489beb839106e3b38, type: 3}
+    imageResultado: {fileID: 205242395, guid: b64638822deac9e44b17d732ebbb975f, type: 3}

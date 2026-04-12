@@ -114,10 +114,14 @@ public class StatusMood : MonoBehaviour
         switch (s)
         {
             case MoveClient.Estado.IrMesa:
-            case MoveClient.Estado.EsperaPedido:
+           
             case MoveClient.Estado.IrAleatorio:
             case MoveClient.Estado.EsperaAleatorio:
             case MoveClient.Estado.IrSalida:   return Mood.Feliz;
+            
+            case MoveClient.Estado.EsperaPedido:
+                return Mood.None;
+            
             case MoveClient.Estado.Quieto:     return Mood.Triste;
             case MoveClient.Estado.Aturdido:
             case MoveClient.Estado.Asustado:   return Mood.Alerta;

@@ -423,8 +423,8 @@ public class MoveClient : MonoBehaviour
         Debug.Log($"[MoveClient] Pedido en mesa ID={pedido.id} (cliente {name})");
 
         // ✅ mostrar el icono porque está esperando
-        if (indicator != null && pedido.image != null)
-            indicator.Show(pedido.image);
+        if (indicator != null && pedido.imageResultado != null)
+            indicator.Show(pedido.imageResultado);
     }
 
     public void RecibirPedido(int idDelChef)

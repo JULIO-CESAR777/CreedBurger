@@ -8,7 +8,12 @@ public class Dardo : MonoBehaviour
         
         if (other.gameObject.tag == "Cliente")
         {
-            //Comportamiento del cliente    
+            MoveClient cliente = other.gameObject.GetComponentInParent<MoveClient>();
+
+            if (cliente != null)
+            {
+                cliente.Aturdir(2f); 
+            }
         }
         Destroy(gameObject);
     }

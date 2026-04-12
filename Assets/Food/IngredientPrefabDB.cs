@@ -12,6 +12,7 @@ public class IngredientPrefabDB : ScriptableObject
         public string title;        // (no usaremos en UI, opcional)
         public GameObject prefab;   // opcional
         public Sprite image;        // Sprite a mostrar en UI
+        public Sprite imageResultado;
     }
 
     public List<Entry> entries = new List<Entry>();
