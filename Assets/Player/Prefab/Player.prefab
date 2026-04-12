@@ -293,6 +293,7 @@ MonoBehaviour:
   playerInteractionHandler: {fileID: 1408283986150703199}
   inputReader: {fileID: 0}
   playerMesh: {fileID: 0}
+  gameManager: {fileID: 0}
   suspect: 0
   trapPrefab: {fileID: 5291124005924114379, guid: a8c9cfd2ca736b04aac97c95ddb86257, type: 3}
   isPaused: 0
@@ -603,6 +604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 2984894439883153385}
   Hands: {fileID: 3930719454485938882}
+  HoldPoint: {fileID: 2507663038478840257}
   DardPosition: {fileID: 2507663038478840257}
   isGrabbingDardTrap: 0
   isGrabingSomething: 0

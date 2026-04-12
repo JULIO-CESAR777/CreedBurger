@@ -5,11 +5,11 @@ public class Dardo : MonoBehaviour
 {
     private void OnCollisionEnter(Collision other)
     {
-        print("Choco con algo");
+        
         if (other.gameObject.tag == "Cliente")
         {
-            
+            //Comportamiento del cliente    
         }
-        //Destroy(gameObject);
+        Destroy(gameObject);
     }
 }

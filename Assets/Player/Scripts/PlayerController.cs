@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     public PlayerInputReader inputReader;
     public GameObject playerMesh;
 
+    public GameManager gameManager;
+    
     [Header("Sospechoso")] 
     public bool suspect;
     
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        gameManager = GameManager.GetInstance();
         // Sistema de pausa
         GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
         if(GameManager.GetInstance().gameState ==  GameState.Pause) isPaused = true;

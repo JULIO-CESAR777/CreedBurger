@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 
@@ -6,56 +5,69 @@ public class PlayerInteractionHandler : MonoBehaviour
 {
     [SerializeField] public PlayerController controller;
     [SerializeField] public GameObject Hands;
+    [SerializeField] private Transform HoldPoint;
     [SerializeField] private Transform DardPosition;
+
     public bool isGrabbingDardTrap = false;
-    
     public bool isGrabingSomething;
-    
+
     // Objeto agarrado
     public GameObject GrabbedObject;
     private IInteractable grabbedInteractableComponent;
-    
+
     // Posible objeto a interactuar
     public GameObject interactableObject;
     private IInteractable interactableComponent;
 
-    //[SerializeField] public Image cooldownFillImage;
-    
     [Header("Traps")]
     public float trapCooldown;
     public bool canPutTraps;
     [SerializeField] private Transform ShootingPoint;
-    
+
+    private Vector3 rotationCorrection = new Vector3(0, -180f, 0);
+
     private void Start()
     {
         isGrabingSomething = false;
         isGrabbingDardTrap = false;
         canPutTraps = true;
+
         if (controller != null && controller.inputReader != null)
         {
             controller.inputReader.OnInteract += Interact;
             controller.inputReader.OnTraps += SetTraps;
         }
-        
-        //cooldownFillImage = GameObject.FindWithTag("TrapCoolDown").GetComponent<Image>();
-        //cooldownFillImage.fillAmount = 1f;
-        
+
         interactableObject = null;
         interactableComponent = null;
     }
 
-    private Vector3 rotationCorrection = new Vector3(0, -180f, 0);
-    
     private void Update()
     {
         if (controller == null || controller.isPaused) return;
-        if (!isGrabbingDardTrap) return;
+        if (!isGrabingSomething) return;
         if (GrabbedObject == null) return;
-        if (DardPosition == null) return;
-        
-        GrabbedObject.transform.position = DardPosition.position;
-        GrabbedObject.transform.rotation = controller.transform.rotation * Quaternion.Euler(rotationCorrection);
 
+        Transform targetPoint = HoldPoint;
+
+        if (GrabbedObject.GetComponent<DardTrap>() != null && DardPosition != null)
+        {
+            targetPoint = DardPosition;
+        }
+
+        if (targetPoint == null) return;
+
+        GrabbedObject.transform.position = targetPoint.position;
+
+        if (GrabbedObject.GetComponent<DardTrap>() != null)
+        {
+            GrabbedObject.transform.rotation =
+                controller.transform.rotation * Quaternion.Euler(rotationCorrection);
+        }
+        else
+        {
+            GrabbedObject.transform.rotation = targetPoint.rotation;
+        }
     }
 
     private void OnDestroy()
@@ -63,7 +75,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         if (controller != null && controller.inputReader != null)
         {
             controller.inputReader.OnInteract -= Interact;
-            controller.inputReader.OnTraps   -= SetTraps;
+            controller.inputReader.OnTraps -= SetTraps;
         }
     }
 
@@ -72,58 +84,58 @@ public class PlayerInteractionHandler : MonoBehaviour
         if (!canPutTraps) return;
         if (controller.isPaused) return;
 
-        if (isGrabingSomething == false)
+        if (!isGrabingSomething)
         {
             Instantiate(controller.trapPrefab, controller.transform.position, Quaternion.Euler(0, 90, 90));
             canPutTraps = false;
             StartCoroutine(ChangeTrapCooldown());
+            return;
         }
-        else if (GrabbedObject.GetComponent<ITrap>() != null)
-        {
-            // Es trampa de dardo entonces dispara
-            if (GrabbedObject.GetComponent<DardTrap>() != null)
-            {
-                controller.animationHandler?.PlayShootDard();
-            }
 
+        if (GrabbedObject == null) return;
+
+        var trap = GrabbedObject.GetComponent<ITrap>();
+        if (trap == null) return;
+
+        if (GrabbedObject.GetComponent<DardTrap>() != null)
+        {
+            controller.animationHandler?.PlayShootDard();
         }
     }
 
-    // Se manda a llamar desde un evento en la animacion
-    // Esta es para cuando se activa la trampa
+    // Se manda a llamar desde un evento en la animación
     public void UseTrap()
     {
-        // Se mete al codigo de la trampa y utiliza lo que tenga cada una
-        GrabbedObject.GetComponent<ITrap>().Use(ShootingPoint);
-        
+        if (GrabbedObject == null) return;
+
+        var trap = GrabbedObject.GetComponent<ITrap>();
+        if (trap == null) return;
+
+        trap.Use(ShootingPoint);
+
         controller.animationHandler?.PlayIdle();
         Destroy(GrabbedObject);
-        isGrabbingDardTrap = false;
         ResetGrabState();
     }
-
 
     IEnumerator ChangeTrapCooldown(float duration = 1f)
     {
         float time = 0f;
-        //cooldownFillImage.fillAmount = 0f;
 
         while (time < duration)
         {
             time += Time.deltaTime;
-            //cooldownFillImage.fillAmount = 1f - (time / duration);
             yield return null;
         }
 
-        //cooldownFillImage.fillAmount = 1f;
         canPutTraps = true;
     }
-    
-   public void Interact()
-   {
-        if (controller.isPaused) return;
 
-        // Si estoy agarrando algo
+    public void Interact()
+    {
+        if (controller == null || controller.isPaused) return;
+
+        // Si ya tengo algo en la mano
         if (isGrabingSomething && GrabbedObject != null && grabbedInteractableComponent != null)
         {
             if (interactableObject != null)
@@ -146,14 +158,13 @@ public class PlayerInteractionHandler : MonoBehaviour
                 var cookMeat = interactableObject.GetComponent<CookMeat>();
                 if (cookMeat != null && GrabbedObject.name == "Carne")
                 {
-                    GrabbedObject.transform.SetParent(null, true);
-                    var rb = GrabbedObject.GetComponent<Rigidbody>();
-                    if (rb != null) rb.isKinematic = false;
+                    var grab = GrabbedObject.GetComponent<GrabObject>();
+                    if (grab != null)
+                    {
+                        grab.SetHeldState(false);
+                    }
 
                     controller.suspect = false;
-                    var grab = GrabbedObject.GetComponent<GrabObject>();
-                    if (grab != null) grab.isGrabbed = false;
-
                     GrabbedObject.transform.position = cookMeat.pinPoint.transform.position;
 
                     ResetGrabState();
@@ -167,6 +178,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 if (targetCook != null && thisCook != null)
                 {
                     bool fused = false;
+
                     foreach (var ingredient in thisCook.ingredientIDs)
                     {
                         if (targetCook.checkForRepeatedIngredients(ingredient))
@@ -188,14 +200,14 @@ public class PlayerInteractionHandler : MonoBehaviour
                 }
             }
 
-            // Drop normal si no hay nada especial que hacer
+            // Drop normal
             grabbedInteractableComponent.Interact(gameObject);
             ResetGrabState();
             controller.animationHandler?.PlayDrop();
             return;
         }
 
-        // Si no tengo nada en la mano, y hay un objeto válido
+        // Si no tengo nada en la mano
         if (interactableComponent == null) return;
 
         InteractType type = interactableComponent.GetInteractType();
@@ -203,62 +215,82 @@ public class PlayerInteractionHandler : MonoBehaviour
         switch (type)
         {
             case InteractType.Grab:
+            {
+                if (interactableObject == null) return;
                 if (interactableObject.name == "Meat Machine" && isGrabingSomething) return;
-                // Toma el item
-                controller.animationHandler?.PlayTake();  
+
+                var grabObject = interactableObject.GetComponent<GrabObject>();
+
+                if (grabObject != null && !grabObject.CanBeGrabbed())
+                {
+                    controller.gameManager.hudScoreUI.ShowNoMoneyPanel();
+                    return;
+                }
+
+                // Solo mostrar costo si realmente es un spawner con precio
+                if (grabObject != null && grabObject.CompareTag("Spawner") && grabObject.price > 0)
+                {
+                    controller.gameManager.hudScoreUI.ShowSubstractMoneyPanel(grabObject.price);
+                }
+
+                controller.animationHandler?.PlayTake();
                 grabbedInteractableComponent = interactableComponent;
                 controller.playerMovement.canMove = false;
                 break;
-            
+            }
+
             case InteractType.Kill:
                 controller.playerMovement.canMove = false;
                 controller.suspect = true;
                 controller.animationHandler?.PlayKill();
                 break;
+
             case InteractType.Clean:
-                // "Esta haciendo algo" -> Para que no pueda interactuar hasta que acabe
                 controller.inputReader.isDoingSomething = true;
-                // "Sospechoso" -> Detectable por los clientes
                 controller.suspect = true;
                 controller.playerMovement.canMove = false;
                 controller.animationHandler?.PlayClean();
                 break;
+
             case InteractType.SetTraps:
                 break;
         }
-   }
+    }
 
-   public void GrabTrap()
-   {
-       // Revisar si es un objeto normal
-       if (GrabbedObject.GetComponent<ITrap>() == null)
-       {
-           controller.animationHandler?.KeepTheObject();
-       }
-       
-       // Que tipo de trampa agarra
-       // 1. Trampa de dardo
-       else if (GrabbedObject.GetComponent<DardTrap>() != null)
-       {
-           isGrabbingDardTrap = true;
-           controller.animationHandler.PlayTakeDard();
-           
-       }
-       
-   }
-   
-   private void ResetGrabState()
+    public void GrabTrap()
+    {
+        if (GrabbedObject == null) return;
+
+        if (GrabbedObject.GetComponent<ITrap>() == null)
+        {
+            isGrabbingDardTrap = false;
+            controller.animationHandler?.KeepTheObject();
+        }
+        else if (GrabbedObject.GetComponent<DardTrap>() != null)
+        {
+            isGrabbingDardTrap = true;
+            controller.animationHandler?.PlayTakeDard();
+        }
+    }
+    
+    public void SetGrabbedInteractable(IInteractable interactable)
+    {
+        grabbedInteractableComponent = interactable;
+    }
+
+    private void ResetGrabState()
     {
         isGrabingSomething = false;
         isGrabbingDardTrap = false;
         GrabbedObject = null;
         grabbedInteractableComponent = null;
     }
-    
+
     // Funciones para interactuar desde las animaciones
     public void OnGrabAnimationEvent()
     {
-        if (controller.isPaused) return;
+        if (controller == null || controller.isPaused) return;
+
         if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Grab)
         {
             interactableComponent.Interact(gameObject);
@@ -267,8 +299,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void OnKillAnimationEvent()
     {
-        if (controller.isPaused) return;
-        if (GrabbedObject == null && interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Kill)
+        if (controller == null || controller.isPaused) return;
+
+        if (GrabbedObject == null &&
+            interactableComponent != null &&
+            interactableComponent.GetInteractType() == InteractType.Kill)
         {
             interactableComponent.Interact(gameObject);
         }
@@ -276,15 +311,16 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     public void OnCleanAnimationEvent()
     {
-        if (controller.isPaused) return;
-        if (GrabbedObject == null && interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Clean)
+        if (controller == null || controller.isPaused) return;
+
+        if (GrabbedObject == null &&
+            interactableComponent != null &&
+            interactableComponent.GetInteractType() == InteractType.Clean)
         {
             interactableComponent.Interact(gameObject);
         }
     }
-    
 
-    // Se obtienen y se limpian referencias de los objetos interactuables
     private void OnTriggerEnter(Collider other)
     {
         interactableComponent = other.GetComponent<IInteractable>();

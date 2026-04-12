@@ -49,7 +49,9 @@ public class GameManager : MonoBehaviour
     
     [Header("Ingredient DB")]
     public IngredientPrefabDB ingredientePrefabDB;
-
+    
+    [SerializeField] public HUDScoreUI hudScoreUI;
+    
     private int cantidad;
 
     void Start()

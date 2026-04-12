@@ -5,7 +5,7 @@ public class ScoreSystem : MonoBehaviour
 {
     public static ScoreSystem Instance { get; private set; }
 
-    public int Coins { get; private set; }
+    public int Coins;
     public int Score { get; private set; }
 
     public int MaxScore { get; private set; }
@@ -56,6 +56,21 @@ public class ScoreSystem : MonoBehaviour
         }
 
         OnScoreChanged?.Invoke();
+    }
+    
+    public bool HasEnoughCoins(int amount)
+    {
+        return Coins >= amount;
+    }
+
+    public bool TrySpendCoins(int amount)
+    {
+        if (amount <= 0) return true;
+        if (Coins < amount) return false;
+
+        Coins -= amount;
+        OnScoreChanged?.Invoke();
+        return true;
     }
 
     private void UpdateMaxScoreIfNeeded()
