@@ -18,6 +18,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     // Posible objeto a interactuar
     public GameObject interactableObject;
     private IInteractable interactableComponent;
+    private float blockKillUntil = 0f;
 
     [Header("Traps")]
     public float trapCooldown;
@@ -240,6 +241,9 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
 
             case InteractType.Kill:
+                if (isGrabingSomething || GrabbedObject != null || IsKillBlocked())
+                    return;
+                
                 controller.playerMovement.canMove = false;
                 controller.suspect = true;
                 controller.animationHandler?.PlayKill();
@@ -286,6 +290,32 @@ public class PlayerInteractionHandler : MonoBehaviour
         grabbedInteractableComponent = null;
     }
 
+    public void ClearHeldObjectAfterDelivery(GameObject deliveredObject)
+    {
+        if (GrabbedObject != deliveredObject) return;
+
+        isGrabingSomething = false;
+        isGrabbingDardTrap = false;
+        GrabbedObject = null;
+        grabbedInteractableComponent = null;
+
+        controller.suspect = false;
+        controller.playerMovement.canMove = true;
+        controller.animationHandler?.PlayDrop();
+    }
+    
+    // CD para permitir el asesinato
+    public void BlockKillForSeconds(float seconds)
+    {
+        blockKillUntil = Time.time + seconds;
+    }
+
+    public bool IsKillBlocked()
+    {
+        return Time.time < blockKillUntil;
+    }
+    
+    
     // Funciones para interactuar desde las animaciones
     public void OnGrabAnimationEvent()
     {
@@ -300,9 +330,9 @@ public class PlayerInteractionHandler : MonoBehaviour
     public void OnKillAnimationEvent()
     {
         if (controller == null || controller.isPaused) return;
+        if (isGrabingSomething || GrabbedObject != null || IsKillBlocked()) return;
 
-        if (GrabbedObject == null &&
-            interactableComponent != null &&
+        if (interactableComponent != null &&
             interactableComponent.GetInteractType() == InteractType.Kill)
         {
             interactableComponent.Interact(gameObject);

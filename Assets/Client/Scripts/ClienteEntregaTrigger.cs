@@ -12,7 +12,6 @@ public class ClienteEntregaTrigger : MonoBehaviour
     public KeyCode interactKey = KeyCode.E;
     public bool destroyIngredientOnSuccess = true;
 
-    // Evitar múltiples llamadas con el mismo objeto al permanecer dentro
     private readonly HashSet<Object> attempted = new HashSet<Object>();
 
     void Start()
@@ -37,7 +36,6 @@ public class ClienteEntregaTrigger : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        // Limpia “attempted” al salir para permitir reintentos con el mismo objeto
         attempted.Remove(other);
         var ing = other.GetComponentInParent<Ingredient>();
         if (ing) attempted.Remove(ing);
@@ -51,16 +49,13 @@ public class ClienteEntregaTrigger : MonoBehaviour
 
         if (client.estadoActual != MoveClient.Estado.EsperaPedido)
         {
-            // Útil para ver por qué no avanza
-            Debug.Log($"[EntregaTrigger] Cliente aún no está esperando pedido (estado={client.estadoActual}).");
+            //Debug.Log($"[EntregaTrigger] Cliente aún no está esperando pedido (estado={client.estadoActual}).");
             return;
         }
 
-        // 1) ¿Trae un Ingredient en este collider, en su padre o en sus hijos?
         Ingredient ing = other.GetComponentInParent<Ingredient>();
         if (!ing) ing = other.GetComponentInChildren<Ingredient>(true);
 
-        // 2) ¿O es un CookIngredients (combo)?
         CookIngredients cook = null;
         if (!ing)
         {
@@ -68,33 +63,41 @@ public class ClienteEntregaTrigger : MonoBehaviour
             if (!cook) cook = other.GetComponentInChildren<CookIngredients>(true);
         }
 
-        if (!ing && !cook) return; // no trae nada “comible”
+        if (!ing && !cook) return;
 
-        // Evitar spam con el mismo objeto mientras está dentro
         Object key = (Object)ing ?? (Object)cook;
         if (!attempted.Add(key)) return;
 
         int deliveredId = ing ? ing.id : cook.currentComboID;
-        Debug.Log($"[EntregaTrigger] Intentando entregar ID={deliveredId} al cliente {client.name}");
-
-        var prevState = client.estadoActual;
+        //Debug.Log($"[EntregaTrigger] Intentando entregar ID={deliveredId} al cliente {client.name}");
 
         client.RecibirPedido(deliveredId);
 
-        // Si cambió a Comer, fue correcto
         if (destroyIngredientOnSuccess && client.estadoActual == MoveClient.Estado.Comer)
         {
-            
             ScoreSystem.Instance?.AwardDeliverySuccess();
-            
-            if (ing) Destroy(ing.gameObject);
-            else if (cook) Destroy(cook.gameObject);
+
+            GameObject deliveredObject = null;
+
+            if (ing) deliveredObject = ing.gameObject;
+            else if (cook) deliveredObject = cook.gameObject;
+
+            if (deliveredObject != null)
+            {
+                var grab = deliveredObject.GetComponent<GrabObject>();
+                if (grab != null && grab.CurrentHolder != null)
+                {
+                    grab.CurrentHolder.ClearHeldObjectAfterDelivery(deliveredObject);
+                    grab.CurrentHolder.BlockKillForSeconds(0.25f);
+                }
+
+                Destroy(deliveredObject);
+            }
         }
         else
         {
-            // Permite reintentos con el mismo objeto si fue incorrecto
             attempted.Remove(key);
-            Debug.Log($"[EntregaTrigger] Pedido incorrecto. Esperado != {deliveredId}");
+            //Debug.Log($"[EntregaTrigger] Pedido incorrecto. Esperado != {deliveredId}");
         }
     }
 }

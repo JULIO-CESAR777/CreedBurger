@@ -9,6 +9,8 @@ public class GrabObject : MonoBehaviour, IInteractable
     public int price;
     private bool isSpawner = false;
 
+    public PlayerInteractionHandler CurrentHolder { get; private set; }
+
     private void Start()
     {
         if (CompareTag("Spawner"))
@@ -21,6 +23,10 @@ public class GrabObject : MonoBehaviour, IInteractable
     IEnumerator ReenableCollisionAfterDelay(Collider a, Collider b, float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        if (a == null || b == null) yield break;
+        if (a.gameObject == null || b.gameObject == null) yield break;
+
         Physics.IgnoreCollision(a, b, false);
     }
 
@@ -44,6 +50,9 @@ public class GrabObject : MonoBehaviour, IInteractable
             col.isTrigger = held;
 
         isGrabbed = held;
+
+        if (!held)
+            CurrentHolder = null;
     }
 
     public void Interact(GameObject interactor)
@@ -76,6 +85,7 @@ public class GrabObject : MonoBehaviour, IInteractable
                 if (spawnedGrab != null)
                 {
                     spawnedGrab.SetHeldState(true);
+                    spawnedGrab.CurrentHolder = interactionHandler;
                     interactionHandler.SetGrabbedInteractable(spawnedGrab);
                 }
 
@@ -87,6 +97,7 @@ public class GrabObject : MonoBehaviour, IInteractable
             else
             {
                 SetHeldState(true);
+                CurrentHolder = interactionHandler;
 
                 interactionHandler.isGrabingSomething = true;
                 interactionHandler.GrabbedObject = gameObject;
