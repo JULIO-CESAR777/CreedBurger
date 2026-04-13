@@ -319,16 +319,28 @@ public class MoveClient : MonoBehaviour
     // ====== Planner ======
     private void BuildPlan()
     {
+        // Si NO randomiza al aparecer:
+        // Pasea -> busca/comer en mesa -> salir
+        if (!randomizePlanOnSpawn)
+        {
+            steps = new StepType[] { StepType.Aleatorio, StepType.Comer, StepType.Salir };
+            stepIndex = 0;
+            return;
+        }
+
+        // Si sí randomiza, conserva tu lógica actual
         switch (plan)
         {
             case Plan.PaseoComerPaseoSalir:
                 steps = new StepType[] { StepType.Aleatorio, StepType.Comer, StepType.Aleatorio, StepType.Salir };
                 break;
+
             case Plan.ComerPaseoSalir:
             default:
                 steps = new StepType[] { StepType.Comer, StepType.Aleatorio, StepType.Salir };
                 break;
         }
+
         stepIndex = 0;
     }
 

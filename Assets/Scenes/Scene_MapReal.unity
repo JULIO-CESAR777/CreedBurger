@@ -8049,7 +8049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1737e1559e7f20044a3acacfb5c7a320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 240
+  duration: 180
   isPaused: 0
 --- !u!4 &361507028
 Transform:
@@ -58328,6 +58328,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spawner_C
       objectReference: {fileID: 0}
+    - target: {fileID: 9217776141132548787, guid: 2bffb47d085330445a6312feaff8fbcb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -58822,7 +58826,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1155879248127078078, guid: a60c980c55281364397fc6a21f2cdc34, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.9247017
+      value: 4.28
       objectReference: {fileID: 0}
     - target: {fileID: 1155879248127078078, guid: a60c980c55281364397fc6a21f2cdc34, type: 3}
       propertyPath: m_LocalPosition.y
@@ -58830,7 +58834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1155879248127078078, guid: a60c980c55281364397fc6a21f2cdc34, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.409411
+      value: 11.91
       objectReference: {fileID: 0}
     - target: {fileID: 1155879248127078078, guid: a60c980c55281364397fc6a21f2cdc34, type: 3}
       propertyPath: m_LocalRotation.w

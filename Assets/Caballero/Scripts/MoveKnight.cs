@@ -20,14 +20,13 @@ public class MoveKnight : MonoBehaviour
     [Header("Detección de Player")]
     public float playerDetectRadius = 10f;
     [Range(0f, 360f)] public float playerFOV = 140f;
-    public float catchDistance = 1.2f;      // distancia para “atrapar”
-    public float loseSightTime = 2f;        // tiempo sin ver al player para desistir
-     
-    public string playerTag = "Player";     // o usa LayerMask solamente
-    
+    public float catchDistance = 1.2f;
+    public float loseSightTime = 2f;
+
+    public string playerTag = "Player";
+
     public bool isPaused = false;
 
-    // patrulla limitada
     private int puntosVisitados = 0;
     public int maxPuntos = 5;
 
@@ -39,21 +38,19 @@ public class MoveKnight : MonoBehaviour
         IrSalida,
         Aturdido,
         Sospechando,
-        Perseguir,      // 👈 nuevo
+        Perseguir,
         Terminado
     }
+
     public Estado estadoActual = Estado.IrAleatorio;
 
     private Estado estadoPrevio;
     private Vector3 destinoPrevio;
     private Transform aleatorioSeleccionado;
 
-
-
-    // persecución
-    private Transform player;          // referencia viva al player detectado
-    private float lostTimer = 0f;      // contador cuando se pierde de vista
-    private Vector3 lastSeenPos;       // última posición vista
+    private Transform player;
+    private float lostTimer = 0f;
+    private Vector3 lastSeenPos;
 
     void Start()
     {
@@ -61,21 +58,57 @@ public class MoveKnight : MonoBehaviour
         agent.speed = velocityKnight;
 
         GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
-        if(GameManager.GetInstance().gameState ==  GameState.Pause) isPaused = true;
-        // arranque patrulla
+        if (GameManager.GetInstance().gameState == GameState.Pause) isPaused = true;
+
         puntoaleatorio();
         IrAPunto(aleatorioSeleccionado);
+
+        AplicarPausa(isPaused);
     }
-    
+
     public void OnChangeGameStateCallback(GameState newState)
     {
         isPaused = newState != GameState.Play;
+        AplicarPausa(isPaused);
+    }
+
+    void AplicarPausa(bool pausado)
+    {
+        if (agent == null) return;
+
+        if (pausado)
+        {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+        }
+        else
+        {
+            agent.isStopped = false;
+
+            switch (estadoActual)
+            {
+                case Estado.IrAleatorio:
+                    if (aleatorioSeleccionado != null)
+                        agent.SetDestination(aleatorioSeleccionado.position);
+                    break;
+
+                case Estado.Perseguir:
+                    if (player != null)
+                        agent.SetDestination(player.position);
+                    break;
+
+                case Estado.IrSalida:
+                    if (puntoSalida != null)
+                        agent.SetDestination(puntoSalida.position);
+                    break;
+            }
+        }
     }
 
     void Update()
     {
-        if(isPaused) return;
-        // 1) intentar detectar player (si lo ves, saltas a Perseguir)
+        if (isPaused) return;
+
         DetectarPlayer();
 
         switch (estadoActual)
@@ -116,13 +149,11 @@ public class MoveKnight : MonoBehaviour
 
             if (ang <= playerFOV * 0.5f)
             {
-                // ⬇️ Aquí añadimos un Raycast para comprobar línea de visión
                 RaycastHit hitInfo;
                 if (Physics.Raycast(transform.position + Vector3.up * 1.5f, dirToTarget, out hitInfo, playerDetectRadius))
                 {
                     if (hitInfo.collider.CompareTag(playerTag))
                     {
-                        // Player visible
                         player = h.transform;
                         lastSeenPos = player.position;
                         lostTimer = 0f;
@@ -138,31 +169,27 @@ public class MoveKnight : MonoBehaviour
         }
     }
 
-
     public void Initialize(Transform[] waypoints, Transform salida, int maxPuntosPatrulla)
     {
         puntosAleatorios = waypoints;
         puntoSalida = salida;
         maxPuntos = maxPuntosPatrulla;
 
-        // Arranca patrulla
         puntoaleatorio();
         IrAPunto(aleatorioSeleccionado);
     }
+
     void TickPerseguir()
     {
         if (player == null)
         {
-            // perdió referencia del player por destrucción/cambio
             AbortChase();
             return;
         }
 
-        // actualizar destino al player cada frame
         agent.isStopped = false;
         agent.SetDestination(player.position);
 
-        // ¿lo alcanzó?
         float dist = Vector3.Distance(transform.position, player.position);
         if (dist <= catchDistance)
         {
@@ -170,24 +197,21 @@ public class MoveKnight : MonoBehaviour
             return;
         }
 
-        // ¿sigue en cono de visión?
         Vector3 toTarget = (player.position - transform.position);
         float ang = Vector3.Angle(transform.forward, toTarget);
 
         bool inRadius = toTarget.sqrMagnitude <= playerDetectRadius * playerDetectRadius;
         bool inFov = ang <= playerFOV * 0.5f;
 
-        if (inRadius && inFov /* && (opcional) HayLineaDeVision() */)
+        if (inRadius && inFov)
         {
             lastSeenPos = player.position;
             lostTimer = 0f;
         }
         else
         {
-            // no lo vemos: contamos tiempo perdido
             lostTimer += Time.deltaTime;
 
-            // mientras tanto, vamos a la última posición vista
             if (!agent.pathPending)
                 agent.SetDestination(lastSeenPos);
 
@@ -200,7 +224,6 @@ public class MoveKnight : MonoBehaviour
 
     void AbortChase()
     {
-        // volver a patrullar (o manda a salida, si prefieres)
         estadoActual = (puntosVisitados < maxPuntos) ? Estado.IrAleatorio : Estado.IrSalida;
         agent.speed = velocityKnight;
 
@@ -217,17 +240,21 @@ public class MoveKnight : MonoBehaviour
 
     void OnCatchPlayer(Transform target)
     {
-     
         Debug.Log($"{name} atrapó a {target.name}");
-      
-        
         AbortChase();
     }
 
-    // ---------- PATRULLA ----------
     IEnumerator EsperaEnPunto(float segundos, Estado siguiente)
     {
-        yield return new WaitForSeconds(segundos);
+        float timer = 0f;
+
+        while (timer < segundos)
+        {
+            if (!isPaused)
+                timer += Time.deltaTime;
+
+            yield return null;
+        }
 
         puntosVisitados++;
 
@@ -260,19 +287,18 @@ public class MoveKnight : MonoBehaviour
     void IrAPunto(Transform punto)
     {
         if (punto != null && agent != null)
+        {
             agent.SetDestination(punto.position);
+            agent.isStopped = isPaused;
+        }
     }
-    
+
     void OnDestroy()
     {
-        // Cuenta incluye a este mismo, así que <=1 => soy el último que queda
         int remaining = GameObject.FindGameObjectsWithTag("Knight").Length;
         if (remaining <= 1)
         {
             AudioManager.I.PlayMusic("music_background");
         }
     }
-
-
-    // (Aturdir y otros métodos pueden quedarse igual)
 }

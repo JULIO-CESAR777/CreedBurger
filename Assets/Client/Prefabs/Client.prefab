@@ -411,11 +411,11 @@ MonoBehaviour:
   idPedidoForzado: -1
   pedirAlEntrar: 0
   plan: 0
-  randomizePlanOnSpawn: 1
+  randomizePlanOnSpawn: 0
   probPaseoComerPaseoSalir: 0.5
   estadoActual: 0
   isPaused: 0
-  carneAparecer: 1
+  carneAparecer: 0
 --- !u!195 &2678133660206657410
 NavMeshAgent:
   m_ObjectHideFlags: 0

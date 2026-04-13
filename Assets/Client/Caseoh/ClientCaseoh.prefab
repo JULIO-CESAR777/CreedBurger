@@ -263,7 +263,7 @@ MonoBehaviour:
   idPedidoForzado: -1
   pedirAlEntrar: 0
   plan: 0
-  randomizePlanOnSpawn: 1
+  randomizePlanOnSpawn: 0
   probPaseoComerPaseoSalir: 0.5
   estadoActual: 0
   isPaused: 0
