@@ -40,7 +40,7 @@ public class HUDScoreUI : MonoBehaviour
     {
         coinsText.text = $"Coins: {scoreSystem.Coins}";
         scoreText.text = $"Score: {scoreSystem.Score}";
-        maxScoreText.text = $"Max: {scoreSystem.MaxScore}";
+        maxScoreText.text = $"Max Score: {scoreSystem.MaxScore}";
     }
 
     private void Update()

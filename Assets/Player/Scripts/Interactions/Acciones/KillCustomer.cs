@@ -12,8 +12,8 @@ public class KillCustomer : MonoBehaviour, IInteractable
         if (moveClient == null) return;
 
         // No matar si ya recibió el pedido y pasó a otro estado
-        if (moveClient.estadoActual != MoveClient.Estado.EsperaPedido)
-            return;
+        //if (moveClient.estadoActual == MoveClient.Estado.EsperaPedido)
+            //return;
 
         moveClient.Alto();
         moveClient.Morir();

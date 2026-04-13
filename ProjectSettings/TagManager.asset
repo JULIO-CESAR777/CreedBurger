@@ -12,6 +12,7 @@ TagManager:
   - TrapCoolDown
   - Carne
   - Spawner
+  - OrderLookTarget
   layers:
   - Default
   - TransparentFX

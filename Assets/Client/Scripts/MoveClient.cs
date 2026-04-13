@@ -20,6 +20,10 @@ public class MoveClient : MonoBehaviour
     [SerializeField] private float retryMesaSeconds = 1.0f; 
     private Coroutine esperarMesaCR;
     private Transform mesaAsignada;
+    
+    private Coroutine esperaAleatorioCR;
+    
+    private bool esperandoMesaMientrasPasea = false;
 
     [Header("Velocidades")]
     public int miedoaaa = 4;
@@ -47,6 +51,8 @@ public class MoveClient : MonoBehaviour
     private IngredientPrefabDB.Entry pedido;
     private bool pedidoEnviado = false;
     private bool pedidoListo = false;
+
+    private bool pedidoCorrecto = false;
 
     // ====== Plan de comportamiento ======
     public enum Plan { ComerPaseoSalir, PaseoComerPaseoSalir }
@@ -79,29 +85,38 @@ public class MoveClient : MonoBehaviour
     private Vector3 _prevDestination;
     private bool _prevHadPath;
     private bool _prevStopped;
-    private bool _pauseCached;      // <- solo restauramos si esto es true
-    private float _baseSpeed;       // <- speed de arranque (por si acaso)
+    private bool _pauseCached;
+    private float _baseSpeed;
     private Animator _anim;
+    
+    // cosas para el CASEOH
+    private float speedanim = 0f;
+
+    public int carneAparecer = 0;
+
+    // ====== Nombres de bools del Animator ======
+    private const string ANIM_IDLE = "Idle";
+    private const string ANIM_CAMINAR = "Caminar";
 
     void Awake()
     {
         if (agent == null) agent = GetComponent<NavMeshAgent>();
         _anim = GetComponentInChildren<Animator>();
-        _baseSpeed = (agent != null) ? agent.speed : 3.5f; // valor típico por defecto
-        indicator = GetComponent<ClientOrderIndicator>();
+        _baseSpeed = (agent != null) ? agent.speed : 3.5f;
+        indicator = GetComponentInChildren<ClientOrderIndicator>(true);
     }
 
     void Start()
     {
         GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
 
-        // Estado inicial según tu manager:
+        if (_anim != null)
+            speedanim = _anim.speed;
+
         isPaused = (GameManager.GetInstance().gameState == GameState.Pause);
 
-        // No alteramos speed si no hay pausa cacheada aún:
         ApplyPauseState();
 
-        // Elegir plan al aparecer
         if (randomizePlanOnSpawn)
         {
             plan = (Random.value < probPaseoComerPaseoSalir)
@@ -129,38 +144,32 @@ public class MoveClient : MonoBehaviour
 
         if (isPaused)
         {
-            // Cachear estado SOLO cuando entramos a pausa
             _prevStopped = agent.isStopped;
             _prevHadPath = agent.hasPath;
             _prevDestination = _prevHadPath ? agent.destination : transform.position;
             _pauseCached = true;
 
-            // Congelar
             agent.isStopped = true;
             agent.velocity = Vector3.zero;
 
-            if (_anim) _anim.speed = 0f;
+            if (_anim != null) _anim.speed = 0f;
         }
         else
         {
-            // Reanudar
-            if (_anim) _anim.speed = 1f;
+            if (_anim != null) _anim.speed = speedanim;
 
             if (_pauseCached)
             {
                 agent.isStopped = _prevStopped;
 
-                // Si teníamos destino y no estábamos parados, retomar
                 if (!_prevStopped && _prevHadPath)
                     agent.SetDestination(_prevDestination);
             }
             else
             {
-                // No había estado cacheado (por ejemplo, arranque en Play): solo asegurar que no esté parado
                 agent.isStopped = false;
             }
 
-            // Si por algún motivo el speed quedó en 0 (ediciones en runtime, etc.), recuperarlo
             if (agent.speed <= 0.001f)
                 agent.speed = _baseSpeed;
         }
@@ -175,6 +184,7 @@ public class MoveClient : MonoBehaviour
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
 
         CancelarEsperaMesa();
+
         if (mesaSeat != null)
         {
             mesaSeat.Release(GetInstanceID());
@@ -206,7 +216,14 @@ public class MoveClient : MonoBehaviour
                 if (HaLlegadoDestino())
                 {
                     estadoActual = Estado.EsperaAleatorio;
-                    StartCoroutine(EsperaEnPunto(esperaAleatorio, StepComplete));
+                    StopForWait(true);
+
+                    CancelarEsperaAleatoria();
+
+                    if (esperandoMesaMientrasPasea)
+                        esperaAleatorioCR = StartCoroutine(EsperaEnPunto(esperaAleatorio, OnEsperaAleatoriaMientrasBuscaMesa));
+                    else
+                        esperaAleatorioCR = StartCoroutine(EsperaEnPunto(esperaAleatorio, OnEsperaAleatoriaNormal));
                 }
                 break;
 
@@ -214,6 +231,10 @@ public class MoveClient : MonoBehaviour
                 if (HaLlegadoDestino())
                 {
                     estadoActual = Estado.Terminado;
+                    if (pedidoCorrecto)
+                    {
+                        ScoreSystem.Instance?.AwardDeliverySuccess();
+                    }
                     Destroy(gameObject);
                 }
                 break;
@@ -224,6 +245,73 @@ public class MoveClient : MonoBehaviour
                     estadoActual = Estado.Terminado;
                     Destroy(gameObject);
                 }
+                break;
+        }
+
+        RefreshAnimFromState();
+    }
+
+    // ====== Anim helpers con BOOLS ======
+    private void PlayIdle()
+    {
+        if (_anim == null) return;
+
+        _anim.SetBool(ANIM_IDLE, true);
+        _anim.SetBool(ANIM_CAMINAR, false);
+    }
+
+    private void PlayWalk()
+    {
+        if (_anim == null) return;
+
+        _anim.SetBool(ANIM_IDLE, false);
+        _anim.SetBool(ANIM_CAMINAR, true);
+    }
+
+    private void StopForWait(bool clearPath = true)
+    {
+        if (agent == null) return;
+
+        agent.isStopped = true;
+
+        if (clearPath)
+            agent.ResetPath();
+
+        agent.velocity = Vector3.zero;
+        PlayIdle();
+    }
+
+    private void MoveToTarget(Transform punto)
+    {
+        if (punto == null || agent == null) return;
+
+        agent.isStopped = false;
+        agent.SetDestination(punto.position);
+        PlayWalk();
+    }
+
+    private void RefreshAnimFromState()
+    {
+        if (_anim == null || isPaused) return;
+
+        switch (estadoActual)
+        {
+            case Estado.IrMesa:
+            case Estado.IrAleatorio:
+            case Estado.IrSalida:
+            case Estado.Asustado:
+                PlayWalk();
+                break;
+
+            case Estado.EsperaPedido:
+            case Estado.Comer:
+            case Estado.EsperaAleatorio:
+            case Estado.Aturdido:
+            case Estado.Sospechando:
+            case Estado.Quieto:
+            case Estado.Terminado:
+            default:
+                PlayIdle();
                 break;
         }
     }
@@ -246,7 +334,11 @@ public class MoveClient : MonoBehaviour
 
     private void BeginCurrentStep()
     {
-        if (steps == null || steps.Length == 0) { SalirDelLugar(); return; }
+        if (steps == null || steps.Length == 0)
+        {
+            SalirDelLugar();
+            return;
+        }
 
         switch (CurrentStep)
         {
@@ -266,14 +358,20 @@ public class MoveClient : MonoBehaviour
                 mesaSeat = GetReservableMesa();
                 if (mesaSeat == null)
                 {
+                    esperandoMesaMientrasPasea = true;
+
                     if (esperarMesaCR == null)
                         esperarMesaCR = StartCoroutine(EsperarMesaDisponible());
-                    estadoActual = Estado.Quieto;
+
+                    IrAOtroPuntoAleatorioMientrasEsperaMesa();
                     return;
                 }
 
+                esperandoMesaMientrasPasea = false;
                 mesaAsignada = mesaSeat.transform;
+
                 if (agent != null) agent.isStopped = false;
+
                 IrAPunto(mesaAsignada);
                 estadoActual = Estado.IrMesa;
                 break;
@@ -293,31 +391,36 @@ public class MoveClient : MonoBehaviour
             SalirDelLugar();
             return;
         }
+
         BeginCurrentStep();
     }
 
     // --- LÓGICA ---
     private void SentarseYOrdenar()
     {
-        if (agent != null) agent.isStopped = true;
+        StopForWait(true);
 
         if (mesaSeat != null)
         {
             bool ok = mesaSeat.Sit(GetInstanceID());
             if (!ok)
             {
-                Debug.Log("[MoveClient] La mesa reservada fue ocupada por otro. Reintentando...");
                 mesaSeat = null;
                 mesaAsignada = null;
+                esperandoMesaMientrasPasea = true;
+
                 if (esperarMesaCR == null)
                     esperarMesaCR = StartCoroutine(EsperarMesaDisponible());
-                estadoActual = Estado.Quieto;
+
+                IrAOtroPuntoAleatorioMientrasEsperaMesa();
                 return;
             }
         }
 
         if (!pedirAlEntrar || !pedidoEnviado)
             HacerPedido();
+        else
+            PlayIdle();
 
         estadoActual = Estado.EsperaPedido;
     }
@@ -328,14 +431,11 @@ public class MoveClient : MonoBehaviour
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
 
         estadoActual = Estado.Comer;
+        StopForWait(true);
 
-        if (agent != null)
-        {
-            agent.isStopped = true;
-            agent.ResetPath();
-        }
         if (indicator != null)
             indicator.Hide();
+
         AudioManager.I.Play("vfx_comiendo");
 
         StartCoroutine(EsperaEnPunto(esperaComer, OnComerFinished));
@@ -349,6 +449,7 @@ public class MoveClient : MonoBehaviour
             mesaSeat = null;
             mesaAsignada = null;
         }
+
         StepComplete();
     }
 
@@ -363,8 +464,20 @@ public class MoveClient : MonoBehaviour
 
         aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
         estadoActual = Estado.IrAleatorio;
+        IrAPunto(aleatorioSeleccionado);
+    }
 
-        if (agent != null) agent.isStopped = false;
+    private void IrAOtroPuntoAleatorioMientrasEsperaMesa()
+    {
+        if (puntosAleatorios == null || puntosAleatorios.Length == 0)
+        {
+            estadoActual = Estado.Quieto;
+            StopForWait(true);
+            return;
+        }
+
+        aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
+        estadoActual = Estado.IrAleatorio;
         IrAPunto(aleatorioSeleccionado);
     }
 
@@ -380,7 +493,6 @@ public class MoveClient : MonoBehaviour
         }
 
         estadoActual = Estado.IrSalida;
-        if (agent != null) agent.isStopped = false;
         IrAPunto(puntoSalida);
     }
 
@@ -422,9 +534,10 @@ public class MoveClient : MonoBehaviour
 
         Debug.Log($"[MoveClient] Pedido en mesa ID={pedido.id} (cliente {name})");
 
-        // ✅ mostrar el icono porque está esperando
         if (indicator != null && pedido.imageResultado != null)
             indicator.Show(pedido.imageResultado);
+
+        PlayIdle();
     }
 
     public void RecibirPedido(int idDelChef)
@@ -434,8 +547,8 @@ public class MoveClient : MonoBehaviour
         if (pedido.id == idDelChef)
         {
             pedidoListo = true;
+            pedidoCorrecto = true;
 
-            // ✅ ya no está esperando => ocultar
             if (indicator != null)
                 indicator.Hide();
 
@@ -474,17 +587,20 @@ public class MoveClient : MonoBehaviour
 
     void IrAPunto(Transform punto)
     {
-        if (punto != null && agent != null)
-            agent.SetDestination(punto.position);
+        MoveToTarget(punto);
     }
 
     private void CancelarEsperaMesa()
     {
+        esperandoMesaMientrasPasea = false;
+
         if (esperarMesaCR != null)
         {
             StopCoroutine(esperarMesaCR);
             esperarMesaCR = null;
         }
+
+        CancelarEsperaAleatoria();
     }
 
     // --- REACCIONES ---
@@ -518,7 +634,9 @@ public class MoveClient : MonoBehaviour
             {
                 isFocusingBlood = true;
                 if (agent != null) agent.isStopped = true;
+                PlayIdle();
             }
+
             estadoActual = Estado.Sospechando;
 
             Vector3 lookDir = (targetBlood.position - transform.position).normalized;
@@ -553,10 +671,18 @@ public class MoveClient : MonoBehaviour
         }
 
         estadoActual = Estado.Asustado;
-        agent.ResetPath();
-        agent.speed = miedoaaa;
-        if (puntoSalida != null)
-            agent.SetDestination(puntoSalida.position);
+
+        if (agent != null)
+        {
+            agent.ResetPath();
+            agent.speed = miedoaaa;
+            agent.isStopped = false;
+
+            if (puntoSalida != null)
+                agent.SetDestination(puntoSalida.position);
+        }
+
+        PlayWalk();
     }
 
     public void Aturdir(float duracion)
@@ -567,7 +693,7 @@ public class MoveClient : MonoBehaviour
         destinoPrevio = agent.destination;
         estadoActual = Estado.Aturdido;
 
-        agent.ResetPath();
+        StopForWait(true);
         StartCoroutine(RecuperarDeAturdimiento(duracion));
     }
 
@@ -576,30 +702,36 @@ public class MoveClient : MonoBehaviour
         yield return PausableWait(segundos);
         estadoActual = estadoPrevio;
 
-        if (estadoActual == Estado.EsperaPedido || estadoActual == Estado.Comer)
+        if (estadoActual == Estado.EsperaPedido || estadoActual == Estado.Comer || estadoActual == Estado.EsperaAleatorio || estadoActual == Estado.Quieto)
         {
-            if (agent != null) agent.isStopped = true;
+            StopForWait(true);
         }
         else
         {
-            if (agent != null) agent.SetDestination(destinoPrevio);
+            if (agent != null)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(destinoPrevio);
+            }
+
+            PlayWalk();
         }
     }
 
     public void Alto()
     {
         estadoActual = Estado.Quieto;
-        if (agent != null)
-        {
-            agent.ResetPath();
-            agent.velocity = Vector3.zero;
-        }
+        StopForWait(true);
     }
 
     public void Morir()
     {
         Vector3 spawnCosas = transform.position + Vector3.up * 2;
-        if (prefabCarne) Instantiate(prefabCarne, spawnCosas, transform.rotation);
+
+        for (int i = 0; i <= carneAparecer; i++)
+        {
+            if (prefabCarne) Instantiate(prefabCarne, spawnCosas, transform.rotation);
+        }
         if (prefabSangre) Instantiate(prefabSangre, transform.position, Quaternion.Euler(90, 0, 0));
         Destroy(gameObject);
     }
@@ -624,12 +756,14 @@ public class MoveClient : MonoBehaviour
         {
             var t = mesas[(start + i) % mesas.Length];
             if (t == null) continue;
+
             var seat = t.GetComponent<MesaSeat>();
             if (seat == null) continue;
 
             if (seat.TryReserve(GetInstanceID()))
                 return seat;
         }
+
         return null;
     }
 
@@ -640,15 +774,49 @@ public class MoveClient : MonoBehaviour
             var seat = GetReservableMesa();
             if (seat != null)
             {
+                esperandoMesaMientrasPasea = false;
+                CancelarEsperaAleatoria();
+
                 mesaSeat = seat;
                 mesaAsignada = seat.transform;
+
                 if (agent != null) agent.isStopped = false;
+
                 IrAPunto(mesaAsignada);
                 estadoActual = Estado.IrMesa;
                 esperarMesaCR = null;
                 yield break;
             }
+
             yield return PausableWait(retryMesaSeconds);
         }
+    }
+    
+    private void CancelarEsperaAleatoria()
+    {
+        if (esperaAleatorioCR != null)
+        {
+            StopCoroutine(esperaAleatorioCR);
+            esperaAleatorioCR = null;
+        }
+    }
+    
+    private void OnEsperaAleatoriaMientrasBuscaMesa()
+    {
+        esperaAleatorioCR = null;
+
+        if (estadoActual != Estado.EsperaAleatorio) return;
+        if (!esperandoMesaMientrasPasea) return;
+
+        IrAOtroPuntoAleatorioMientrasEsperaMesa();
+    }
+
+    private void OnEsperaAleatoriaNormal()
+    {
+        esperaAleatorioCR = null;
+
+        if (estadoActual != Estado.EsperaAleatorio) return;
+
+        StepComplete();
     }
 }

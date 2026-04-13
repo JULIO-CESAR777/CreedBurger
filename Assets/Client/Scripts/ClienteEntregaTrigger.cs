@@ -75,7 +75,7 @@ public class ClienteEntregaTrigger : MonoBehaviour
 
         if (destroyIngredientOnSuccess && client.estadoActual == MoveClient.Estado.Comer)
         {
-            ScoreSystem.Instance?.AwardDeliverySuccess();
+            //ScoreSystem.Instance?.AwardDeliverySuccess();
 
             GameObject deliveredObject = null;
 

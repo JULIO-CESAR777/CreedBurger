@@ -88,3 +88,18 @@ MonoBehaviour:
     priority: 100
     musicDuckAmount: 0
     musicDuckSeconds: 0
+  - id: vfx_pasosCaseoh
+    clips:
+    - {fileID: 8300000, guid: 18c0b943dbafd9a478d0362571ea9eb6, type: 3}
+    outputGroup: {fileID: 6073045706362552643, guid: da27cfc65450f0c458edac9d9243f5ca, type: 2}
+    loop: 0
+    spatialBlend: 0
+    minDistance: 1
+    maxDistance: 25
+    volume: 1
+    pitchRandom: {x: 0.95, y: 1.05}
+    maxSimultaneous: 5
+    cooldown: 0.5
+    priority: 9
+    musicDuckAmount: 0
+    musicDuckSeconds: 0
