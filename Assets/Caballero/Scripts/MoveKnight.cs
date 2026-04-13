@@ -21,10 +21,15 @@ public class MoveKnight : MonoBehaviour
     [Header("Detección de Player")]
     public float playerDetectRadius = 10f;
     [Range(0f, 360f)] public float playerFOV = 140f;
-    public float catchDistance = 1.2f;
     public float loseSightTime = 2f;
-
     public string playerTag = "Player";
+
+    [Header("Vision")]
+    [SerializeField] private float eyeHeight = 1.5f;
+    [SerializeField] private float repathDistanceThreshold = 0.15f;
+
+    [Header("Cooldown tras colisión con player")]
+    [SerializeField] private float ignorePlayerAfterCollisionTime = 3f;
 
     public bool isPaused = false;
 
@@ -50,8 +55,11 @@ public class MoveKnight : MonoBehaviour
 
     private float lostTimer = 0f;
     private Vector3 lastSeenPos;
+    private Vector3 lastChaseDestination;
 
     private Coroutine esperaRoutine;
+    private Coroutine ignoreDetectionRoutine;
+    private bool canDetectPlayer = true;
 
     void Start()
     {
@@ -59,7 +67,10 @@ public class MoveKnight : MonoBehaviour
             agent = GetComponent<NavMeshAgent>();
 
         if (agent != null)
+        {
             agent.speed = velocityKnight;
+            agent.stoppingDistance = 0f;
+        }
 
         var gm = GameManager.GetInstance();
         if (gm != null)
@@ -127,7 +138,8 @@ public class MoveKnight : MonoBehaviour
     {
         if (isPaused || agent == null) return;
 
-        DetectarPlayer();
+        if (estadoActual != Estado.Perseguir && canDetectPlayer)
+            DetectarPlayer();
 
         switch (estadoActual)
         {
@@ -176,83 +188,112 @@ public class MoveKnight : MonoBehaviour
 
     void DetectarPlayer()
     {
-        if (estadoActual == Estado.Perseguir) return;
+        if (!canDetectPlayer) return;
 
+        Transform visiblePlayer = BuscarPlayerVisible();
+        if (visiblePlayer == null) return;
+
+        if (esperaRoutine != null)
+        {
+            StopCoroutine(esperaRoutine);
+            esperaRoutine = null;
+        }
+
+        player = visiblePlayer;
+        lastSeenPos = player.position;
+        lostTimer = 0f;
+
+        estadoActual = Estado.Perseguir;
+        agent.speed = chaseSpeed;
+        agent.stoppingDistance = 0f;
+        agent.isStopped = false;
+
+        lastChaseDestination = player.position;
+        agent.SetDestination(lastChaseDestination);
+    }
+
+    Transform BuscarPlayerVisible()
+    {
         Collider[] hits = Physics.OverlapSphere(transform.position, playerDetectRadius);
+        Transform bestTarget = null;
+        float bestSqrDist = float.MaxValue;
 
         foreach (var h in hits)
         {
-            if (!h.CompareTag(playerTag)) continue;
+            Transform targetRoot = ObtenerPlayerRoot(h);
+            if (targetRoot == null) continue;
 
-            Vector3 origin = transform.position + Vector3.up * 1.5f;
-            Vector3 dirToTarget = (h.transform.position - origin).normalized;
-            float ang = Vector3.Angle(transform.forward, dirToTarget);
+            Vector3 origin = transform.position + Vector3.up * eyeHeight;
+            Vector3 targetPoint = ObtenerPuntoVision(targetRoot);
+            Vector3 toTarget = targetPoint - origin;
 
+            float sqrDist = toTarget.sqrMagnitude;
+            if (sqrDist > playerDetectRadius * playerDetectRadius) continue;
+
+            float ang = Vector3.Angle(transform.forward, toTarget.normalized);
             if (ang > playerFOV * 0.5f) continue;
 
-            if (Physics.Raycast(origin, dirToTarget, out RaycastHit hitInfo, playerDetectRadius))
+            if (!TieneLineaDeVision(targetRoot, origin, targetPoint)) continue;
+
+            if (sqrDist < bestSqrDist)
             {
-                if (!hitInfo.collider.CompareTag(playerTag)) continue;
-
-                if (esperaRoutine != null)
-                {
-                    StopCoroutine(esperaRoutine);
-                    esperaRoutine = null;
-                }
-
-                player = h.transform;
-                lastSeenPos = player.position;
-                lostTimer = 0f;
-
-                estadoActual = Estado.Perseguir;
-                agent.speed = chaseSpeed;
-                agent.isStopped = false;
-                agent.SetDestination(player.position);
-                return;
+                bestSqrDist = sqrDist;
+                bestTarget = targetRoot;
             }
         }
+
+        return bestTarget;
     }
 
     void TickPerseguir()
     {
+        if (!canDetectPlayer)
+        {
+            AbortChase();
+            return;
+        }
+
         if (player == null)
         {
             AbortChase();
             return;
         }
 
-        Vector3 origin = transform.position + Vector3.up * 1.5f;
-        Vector3 toTarget = player.position - origin;
-        float dist = Vector3.Distance(transform.position, player.position);
-        float ang = Vector3.Angle(transform.forward, toTarget);
+        Vector3 origin = transform.position + Vector3.up * eyeHeight;
+        Vector3 targetPoint = ObtenerPuntoVision(player);
+        Vector3 toTarget = targetPoint - origin;
 
         bool inRadius = toTarget.sqrMagnitude <= playerDetectRadius * playerDetectRadius;
+        float ang = Vector3.Angle(transform.forward, toTarget.normalized);
         bool inFov = ang <= playerFOV * 0.5f;
 
         bool hasLineOfSight = false;
+
         if (inRadius && inFov)
-        {
-            if (Physics.Raycast(origin, toTarget.normalized, out RaycastHit hitInfo, playerDetectRadius))
-            {
-                hasLineOfSight = hitInfo.collider.CompareTag(playerTag);
-            }
-        }
+            hasLineOfSight = TieneLineaDeVision(player, origin, targetPoint);
 
         if (hasLineOfSight)
         {
             lastSeenPos = player.position;
             lostTimer = 0f;
             agent.isStopped = false;
-            agent.SetDestination(player.position);
+
+            if ((lastChaseDestination - player.position).sqrMagnitude > repathDistanceThreshold * repathDistanceThreshold)
+            {
+                lastChaseDestination = player.position;
+                agent.SetDestination(lastChaseDestination);
+            }
         }
         else
         {
             lostTimer += Time.deltaTime;
 
-            if (!agent.pathPending)
+            if (!agent.pathPending &&
+                (lastChaseDestination - lastSeenPos).sqrMagnitude > repathDistanceThreshold * repathDistanceThreshold)
             {
+                lastChaseDestination = lastSeenPos;
                 agent.isStopped = false;
-                agent.SetDestination(lastSeenPos);
+                agent.SetDestination(lastChaseDestination);
             }
 
             if (lostTimer >= loseSightTime)
@@ -261,11 +302,90 @@ public class MoveKnight : MonoBehaviour
                 return;
             }
         }
+    }
 
-        if (dist <= catchDistance)
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!EsPlayer(collision.gameObject)) return;
+
+        EmpezarIgnorarDeteccionPorColision();
+    }
+
+    void EmpezarIgnorarDeteccionPorColision()
+    {
+        if (ignoreDetectionRoutine != null)
+            StopCoroutine(ignoreDetectionRoutine);
+
+        canDetectPlayer = false;
+        AbortChase();
+
+        ignoreDetectionRoutine = StartCoroutine(IgnorarDeteccionPorTiempo(ignorePlayerAfterCollisionTime));
+    }
+
+    IEnumerator IgnorarDeteccionPorTiempo(float segundos)
+    {
+        float timer = 0f;
+
+        while (timer < segundos)
         {
-            OnCatchPlayer(player);
+            if (!isPaused)
+                timer += Time.deltaTime;
+
+            yield return null;
         }
+
+        canDetectPlayer = true;
+        ignoreDetectionRoutine = null;
+    }
+
+    bool EsPlayer(GameObject obj)
+    {
+        if (obj == null) return false;
+
+        if (obj.CompareTag(playerTag))
+            return true;
+
+        Transform root = obj.transform.root;
+        return root != null && root.CompareTag(playerTag);
+    }
+
+    bool TieneLineaDeVision(Transform targetRoot, Vector3 origin, Vector3 targetPoint)
+    {
+        Vector3 dir = targetPoint - origin;
+        float dist = dir.magnitude;
+
+        if (dist <= 0.001f) return true;
+
+        if (Physics.Raycast(origin, dir.normalized, out RaycastHit hitInfo, dist))
+        {
+            Transform hitRoot = hitInfo.collider.transform.root;
+            return hitRoot == targetRoot || hitInfo.collider.CompareTag(playerTag) || hitRoot.CompareTag(playerTag);
+        }
+
+        return false;
+    }
+
+    Vector3 ObtenerPuntoVision(Transform target)
+    {
+        Collider c = target.GetComponentInChildren<Collider>();
+        if (c != null)
+            return c.bounds.center;
+
+        return target.position + Vector3.up;
+    }
+
+    Transform ObtenerPlayerRoot(Collider col)
+    {
+        if (col == null) return null;
+
+        if (col.CompareTag(playerTag))
+            return col.transform.root;
+
+        Transform root = col.transform.root;
+        if (root != null && root.CompareTag(playerTag))
+            return root;
+
+        return null;
     }
 
     void AbortChase()
@@ -276,6 +396,7 @@ public class MoveKnight : MonoBehaviour
         if (agent == null) return;
 
         agent.speed = velocityKnight;
+        agent.stoppingDistance = 0f;
         agent.isStopped = false;
         agent.ResetPath();
 
@@ -288,12 +409,6 @@ public class MoveKnight : MonoBehaviour
             estadoActual = Estado.IrSalida;
             IrAPunto(puntoSalida);
         }
-    }
-
-    void OnCatchPlayer(Transform target)
-    {
-        Debug.Log($"{name} atrapó a {target.name}");
-        AbortChase();
     }
 
     IEnumerator EsperaEnPunto(float segundos)
@@ -327,7 +442,7 @@ public class MoveKnight : MonoBehaviour
         if (agent == null) return false;
 
         return !agent.pathPending &&
-               agent.remainingDistance <= agent.stoppingDistance &&
+               agent.remainingDistance <= agent.stoppingDistance + 0.05f &&
                (!agent.hasPath || agent.velocity.sqrMagnitude <= 0.05f);
     }
 
@@ -349,6 +464,8 @@ public class MoveKnight : MonoBehaviour
 
             aleatorioSeleccionado = candidato;
             estadoActual = Estado.IrAleatorio;
+            agent.speed = velocityKnight;
+            agent.stoppingDistance = 0f;
             IrAPunto(aleatorioSeleccionado);
             return true;
         }
@@ -397,7 +514,7 @@ public class MoveKnight : MonoBehaviour
         Vector3 right = Quaternion.Euler(0, playerFOV * 0.5f, 0) * transform.forward;
 
         Gizmos.color = Color.cyan;
-        Gizmos.DrawRay(transform.position + Vector3.up, left * playerDetectRadius);
-        Gizmos.DrawRay(transform.position + Vector3.up, right * playerDetectRadius);
+        Gizmos.DrawRay(transform.position + Vector3.up * eyeHeight, left * playerDetectRadius);
+        Gizmos.DrawRay(transform.position + Vector3.up * eyeHeight, right * playerDetectRadius);
     }
 }

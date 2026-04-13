@@ -137,9 +137,11 @@ MonoBehaviour:
   esperaSangreVer: 2
   playerDetectRadius: 10
   playerFOV: 140
-  catchDistance: 1.2
   loseSightTime: 4
   playerTag: Player
+  eyeHeight: 1.5
+  repathDistanceThreshold: 0.15
+  ignorePlayerAfterCollisionTime: 4
   isPaused: 0
   maxPuntos: 1
   estadoActual: 1
