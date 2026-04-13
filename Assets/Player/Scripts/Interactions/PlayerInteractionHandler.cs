@@ -141,6 +141,13 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             if (interactableObject != null)
             {
+                // ENTREGAR A CLIENTE SI EL INTERACTUABLE ACTUAL ES KillCustomer
+                if (interactableComponent != null && interactableComponent.GetInteractType() == InteractType.Kill)
+                {
+                    interactableComponent.Interact(gameObject);
+                    return;
+                }
+
                 // USAR MEAT MACHINE
                 if (interactableObject.name.Contains("Meat Machine") && GrabbedObject.CompareTag("Carne"))
                 {

@@ -8,7 +8,8 @@ public enum InteractType
     Cook,
     Clean,
     Cut,
-    CookMeat
+    CookMeat,
+    Deliver
     
 }
 public interface IInteractable
