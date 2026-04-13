@@ -6,6 +6,7 @@ public class MoveKnight : MonoBehaviour
 {
     public NavMeshAgent agent;
 
+    [Header("Puntos")]
     public Transform[] puntosAleatorios;
     public Transform puntoSalida;
 
@@ -14,8 +15,8 @@ public class MoveKnight : MonoBehaviour
     public int chaseSpeed = 7;
 
     [Header("Tiempos de espera")]
-    public float esperaAleatorio = 2;
-    public float esperaSangreVer = 2;
+    public float esperaAleatorio = 2f;
+    public float esperaSangreVer = 2f;
 
     [Header("Detección de Player")]
     public float playerDetectRadius = 10f;
@@ -44,26 +45,44 @@ public class MoveKnight : MonoBehaviour
 
     public Estado estadoActual = Estado.IrAleatorio;
 
-    private Estado estadoPrevio;
-    private Vector3 destinoPrevio;
     private Transform aleatorioSeleccionado;
-
     private Transform player;
+
     private float lostTimer = 0f;
     private Vector3 lastSeenPos;
 
+    private Coroutine esperaRoutine;
+
     void Start()
     {
-        if (agent == null) agent = GetComponent<NavMeshAgent>();
-        agent.speed = velocityKnight;
+        if (agent == null)
+            agent = GetComponent<NavMeshAgent>();
 
-        GameManager.GetInstance().onChangeGameState += OnChangeGameStateCallback;
-        if (GameManager.GetInstance().gameState == GameState.Pause) isPaused = true;
+        if (agent != null)
+            agent.speed = velocityKnight;
 
-        puntoaleatorio();
-        IrAPunto(aleatorioSeleccionado);
+        var gm = GameManager.GetInstance();
+        if (gm != null)
+        {
+            gm.onChangeGameState += OnChangeGameStateCallback;
+
+            if (gm.gameState == GameState.Pause)
+                isPaused = true;
+        }
+
+        if (aleatorioSeleccionado == null && estadoActual != Estado.IrSalida)
+            IrANuevoPuntoAleatorio();
 
         AplicarPausa(isPaused);
+    }
+
+    public void Initialize(Transform[] waypoints, Transform salida, int maxPuntosPatrulla)
+    {
+        puntosAleatorios = waypoints;
+        puntoSalida = salida;
+        maxPuntos = maxPuntosPatrulla;
+
+        IrANuevoPuntoAleatorio();
     }
 
     public void OnChangeGameStateCallback(GameState newState)
@@ -80,34 +99,33 @@ public class MoveKnight : MonoBehaviour
         {
             agent.isStopped = true;
             agent.velocity = Vector3.zero;
+            return;
         }
-        else
+
+        agent.isStopped = false;
+
+        switch (estadoActual)
         {
-            agent.isStopped = false;
+            case Estado.IrAleatorio:
+                if (aleatorioSeleccionado != null)
+                    agent.SetDestination(aleatorioSeleccionado.position);
+                break;
 
-            switch (estadoActual)
-            {
-                case Estado.IrAleatorio:
-                    if (aleatorioSeleccionado != null)
-                        agent.SetDestination(aleatorioSeleccionado.position);
-                    break;
+            case Estado.Perseguir:
+                if (player != null)
+                    agent.SetDestination(player.position);
+                break;
 
-                case Estado.Perseguir:
-                    if (player != null)
-                        agent.SetDestination(player.position);
-                    break;
-
-                case Estado.IrSalida:
-                    if (puntoSalida != null)
-                        agent.SetDestination(puntoSalida.position);
-                    break;
-            }
+            case Estado.IrSalida:
+                if (puntoSalida != null)
+                    agent.SetDestination(puntoSalida.position);
+                break;
         }
     }
 
     void Update()
     {
-        if (isPaused) return;
+        if (isPaused || agent == null) return;
 
         DetectarPlayer();
 
@@ -117,7 +135,15 @@ public class MoveKnight : MonoBehaviour
                 if (HaLlegadoDestino())
                 {
                     estadoActual = Estado.EsperaAleatorio;
-                    StartCoroutine(EsperaEnPunto(esperaAleatorio, Estado.IrAleatorio));
+
+                    if (esperaRoutine != null)
+                        StopCoroutine(esperaRoutine);
+
+                    esperaRoutine = StartCoroutine(EsperaEnPunto(esperaAleatorio));
+                }
+                else if (!agent.pathPending && (!agent.hasPath || agent.pathStatus != NavMeshPathStatus.PathComplete))
+                {
+                    IrANuevoPuntoAleatorio();
                 }
                 break;
 
@@ -132,6 +158,19 @@ public class MoveKnight : MonoBehaviour
                     Destroy(gameObject);
                 }
                 break;
+
+            case Estado.Quieto:
+                if (!agent.pathPending && !agent.hasPath)
+                {
+                    if (puntosVisitados < maxPuntos)
+                        IrANuevoPuntoAleatorio();
+                    else if (puntoSalida != null)
+                    {
+                        estadoActual = Estado.IrSalida;
+                        IrAPunto(puntoSalida);
+                    }
+                }
+                break;
         }
     }
 
@@ -140,43 +179,38 @@ public class MoveKnight : MonoBehaviour
         if (estadoActual == Estado.Perseguir) return;
 
         Collider[] hits = Physics.OverlapSphere(transform.position, playerDetectRadius);
+
         foreach (var h in hits)
         {
             if (!h.CompareTag(playerTag)) continue;
 
-            Vector3 dirToTarget = (h.transform.position - transform.position).normalized;
+            Vector3 origin = transform.position + Vector3.up * 1.5f;
+            Vector3 dirToTarget = (h.transform.position - origin).normalized;
             float ang = Vector3.Angle(transform.forward, dirToTarget);
 
-            if (ang <= playerFOV * 0.5f)
-            {
-                RaycastHit hitInfo;
-                if (Physics.Raycast(transform.position + Vector3.up * 1.5f, dirToTarget, out hitInfo, playerDetectRadius))
-                {
-                    if (hitInfo.collider.CompareTag(playerTag))
-                    {
-                        player = h.transform;
-                        lastSeenPos = player.position;
-                        lostTimer = 0f;
+            if (ang > playerFOV * 0.5f) continue;
 
-                        estadoActual = Estado.Perseguir;
-                        agent.speed = chaseSpeed;
-                        agent.isStopped = false;
-                        agent.SetDestination(player.position);
-                        return;
-                    }
+            if (Physics.Raycast(origin, dirToTarget, out RaycastHit hitInfo, playerDetectRadius))
+            {
+                if (!hitInfo.collider.CompareTag(playerTag)) continue;
+
+                if (esperaRoutine != null)
+                {
+                    StopCoroutine(esperaRoutine);
+                    esperaRoutine = null;
                 }
+
+                player = h.transform;
+                lastSeenPos = player.position;
+                lostTimer = 0f;
+
+                estadoActual = Estado.Perseguir;
+                agent.speed = chaseSpeed;
+                agent.isStopped = false;
+                agent.SetDestination(player.position);
+                return;
             }
         }
-    }
-
-    public void Initialize(Transform[] waypoints, Transform salida, int maxPuntosPatrulla)
-    {
-        puntosAleatorios = waypoints;
-        puntoSalida = salida;
-        maxPuntos = maxPuntosPatrulla;
-
-        puntoaleatorio();
-        IrAPunto(aleatorioSeleccionado);
     }
 
     void TickPerseguir()
@@ -187,53 +221,71 @@ public class MoveKnight : MonoBehaviour
             return;
         }
 
-        agent.isStopped = false;
-        agent.SetDestination(player.position);
-
+        Vector3 origin = transform.position + Vector3.up * 1.5f;
+        Vector3 toTarget = player.position - origin;
         float dist = Vector3.Distance(transform.position, player.position);
-        if (dist <= catchDistance)
-        {
-            OnCatchPlayer(player);
-            return;
-        }
-
-        Vector3 toTarget = (player.position - transform.position);
         float ang = Vector3.Angle(transform.forward, toTarget);
 
         bool inRadius = toTarget.sqrMagnitude <= playerDetectRadius * playerDetectRadius;
         bool inFov = ang <= playerFOV * 0.5f;
 
+        bool hasLineOfSight = false;
         if (inRadius && inFov)
+        {
+            if (Physics.Raycast(origin, toTarget.normalized, out RaycastHit hitInfo, playerDetectRadius))
+            {
+                hasLineOfSight = hitInfo.collider.CompareTag(playerTag);
+            }
+        }
+
+        if (hasLineOfSight)
         {
             lastSeenPos = player.position;
             lostTimer = 0f;
+            agent.isStopped = false;
+            agent.SetDestination(player.position);
         }
         else
         {
             lostTimer += Time.deltaTime;
 
             if (!agent.pathPending)
+            {
+                agent.isStopped = false;
                 agent.SetDestination(lastSeenPos);
+            }
 
             if (lostTimer >= loseSightTime)
             {
                 AbortChase();
+                return;
             }
+        }
+
+        if (dist <= catchDistance)
+        {
+            OnCatchPlayer(player);
         }
     }
 
     void AbortChase()
     {
-        estadoActual = (puntosVisitados < maxPuntos) ? Estado.IrAleatorio : Estado.IrSalida;
-        agent.speed = velocityKnight;
+        player = null;
+        lostTimer = 0f;
 
-        if (estadoActual == Estado.IrAleatorio)
+        if (agent == null) return;
+
+        agent.speed = velocityKnight;
+        agent.isStopped = false;
+        agent.ResetPath();
+
+        if (puntosVisitados < maxPuntos)
         {
-            puntoaleatorio();
-            IrAPunto(aleatorioSeleccionado);
+            IrANuevoPuntoAleatorio();
         }
         else
         {
+            estadoActual = Estado.IrSalida;
             IrAPunto(puntoSalida);
         }
     }
@@ -244,7 +296,7 @@ public class MoveKnight : MonoBehaviour
         AbortChase();
     }
 
-    IEnumerator EsperaEnPunto(float segundos, Estado siguiente)
+    IEnumerator EsperaEnPunto(float segundos)
     {
         float timer = 0f;
 
@@ -256,13 +308,12 @@ public class MoveKnight : MonoBehaviour
             yield return null;
         }
 
+        esperaRoutine = null;
         puntosVisitados++;
 
         if (puntosVisitados < maxPuntos)
         {
-            puntoaleatorio();
-            estadoActual = Estado.IrAleatorio;
-            IrAPunto(aleatorioSeleccionado);
+            IrANuevoPuntoAleatorio();
         }
         else
         {
@@ -273,9 +324,38 @@ public class MoveKnight : MonoBehaviour
 
     bool HaLlegadoDestino()
     {
+        if (agent == null) return false;
+
         return !agent.pathPending &&
                agent.remainingDistance <= agent.stoppingDistance &&
-               (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);
+               (!agent.hasPath || agent.velocity.sqrMagnitude <= 0.05f);
+    }
+
+    bool IrANuevoPuntoAleatorio()
+    {
+        if (puntosAleatorios == null || puntosAleatorios.Length == 0 || agent == null)
+            return false;
+
+        for (int i = 0; i < puntosAleatorios.Length * 2; i++)
+        {
+            Transform candidato = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
+            if (candidato == null) continue;
+
+            NavMeshPath path = new NavMeshPath();
+            bool pathValido = agent.CalculatePath(candidato.position, path) &&
+                              path.status == NavMeshPathStatus.PathComplete;
+
+            if (!pathValido) continue;
+
+            aleatorioSeleccionado = candidato;
+            estadoActual = Estado.IrAleatorio;
+            IrAPunto(aleatorioSeleccionado);
+            return true;
+        }
+
+        agent.ResetPath();
+        estadoActual = Estado.Quieto;
+        return false;
     }
 
     public void puntoaleatorio()
@@ -286,19 +366,38 @@ public class MoveKnight : MonoBehaviour
 
     void IrAPunto(Transform punto)
     {
-        if (punto != null && agent != null)
-        {
-            agent.SetDestination(punto.position);
-            agent.isStopped = isPaused;
-        }
+        if (punto == null || agent == null) return;
+
+        agent.isStopped = false;
+        agent.SetDestination(punto.position);
+
+        if (isPaused)
+            agent.isStopped = true;
     }
 
     void OnDestroy()
     {
+        var gm = GameManager.GetInstance();
+        if (gm != null)
+            gm.onChangeGameState -= OnChangeGameStateCallback;
+
         int remaining = GameObject.FindGameObjectsWithTag("Knight").Length;
         if (remaining <= 1)
         {
-            AudioManager.I.PlayMusic("music_background");
+            AudioManager.I?.PlayMusic("music_background");
         }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, playerDetectRadius);
+
+        Vector3 left = Quaternion.Euler(0, -playerFOV * 0.5f, 0) * transform.forward;
+        Vector3 right = Quaternion.Euler(0, playerFOV * 0.5f, 0) * transform.forward;
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawRay(transform.position + Vector3.up, left * playerDetectRadius);
+        Gizmos.DrawRay(transform.position + Vector3.up, right * playerDetectRadius);
     }
 }

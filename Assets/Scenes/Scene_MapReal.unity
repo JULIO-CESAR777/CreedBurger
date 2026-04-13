@@ -47487,7 +47487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalClientPrefab: {fileID: 3681940456687667927, guid: f5d100d08f4241f448499489d16072fa, type: 3}
   rareClientPrefab: {fileID: 1975843820748176974, guid: 44911caa8dc2e604da551cae8d54c501, type: 3}
-  rareSpawnChance: 0.2
+  rareSpawnChance: 0.912
   spawnPoints: []
   spawnInterval: 6
   maxClients: 7

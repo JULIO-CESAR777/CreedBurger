@@ -93,6 +93,8 @@ public class MoveClient : MonoBehaviour
     private float speedanim = 0f;
 
     public int carneAparecer = 0;
+    
+    public CaseOhSounds caseOhSounds;
 
     // ====== Nombres de bools del Animator ======
     private const string ANIM_IDLE = "Idle";
@@ -100,6 +102,9 @@ public class MoveClient : MonoBehaviour
 
     void Awake()
     {
+        
+        if (caseOhSounds == null) caseOhSounds = GetComponent<CaseOhSounds>();
+       
         if (agent == null) agent = GetComponent<NavMeshAgent>();
         _anim = GetComponentInChildren<Animator>();
         _baseSpeed = (agent != null) ? agent.speed : 3.5f;
@@ -435,6 +440,12 @@ public class MoveClient : MonoBehaviour
             PlayIdle();
 
         estadoActual = Estado.EsperaPedido;
+        if (caseOhSounds != null)
+        {
+            caseOhSounds.sonidossentarseCaseOh();
+
+
+        }
     }
 
     private void EmpezarAComer()

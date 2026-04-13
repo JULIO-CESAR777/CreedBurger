@@ -10,6 +10,10 @@ public class KillCustomer : MonoBehaviour, IInteractable
         MoveClient moveClient = GetComponent<MoveClient>();
         if (moveClient == null) return;
 
+        
+        CaseOhSounds caseohSounds = GetComponent<CaseOhSounds>();
+      
+
         // =========================
         // SI TRAE ALGO EN LA MANO -> INTENTAR ENTREGAR
         // =========================
@@ -57,6 +61,12 @@ public class KillCustomer : MonoBehaviour, IInteractable
 
         moveClient.Alto();
         moveClient.Morir();
+
+        if (caseohSounds != null)
+        {
+            caseohSounds.sonidosmorirCaseOh();
+            
+        }
 
         ScoreSystem.Instance?.AwardKillCustomer();
     }

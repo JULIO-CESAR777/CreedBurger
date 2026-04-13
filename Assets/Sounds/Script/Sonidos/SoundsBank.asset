@@ -103,3 +103,49 @@ MonoBehaviour:
     priority: 9
     musicDuckAmount: 0
     musicDuckSeconds: 0
+  - id: vfx_muerteCaseoh
+    clips:
+    - {fileID: 8300000, guid: 1257618733419dc4d8fc630caf578ed1, type: 3}
+    - {fileID: 8300000, guid: b62af7a290e257a478925fb4bed4cbf0, type: 3}
+    outputGroup: {fileID: 6073045706362552643, guid: da27cfc65450f0c458edac9d9243f5ca, type: 2}
+    loop: 0
+    spatialBlend: 0
+    minDistance: 1
+    maxDistance: 25
+    volume: 0.5
+    pitchRandom: {x: 0.95, y: 1.05}
+    maxSimultaneous: 5
+    cooldown: 0.5
+    priority: 100
+    musicDuckAmount: 0
+    musicDuckSeconds: 0
+  - id: vfx_inicioCaseoh
+    clips:
+    - {fileID: 8300000, guid: eee0ceeb9600bb2448a496f3325eae6f, type: 3}
+    outputGroup: {fileID: 6073045706362552643, guid: da27cfc65450f0c458edac9d9243f5ca, type: 2}
+    loop: 0
+    spatialBlend: 0
+    minDistance: 1
+    maxDistance: 25
+    volume: 0.5
+    pitchRandom: {x: 0.95, y: 1.05}
+    maxSimultaneous: 5
+    cooldown: 0.5
+    priority: 100
+    musicDuckAmount: 0
+    musicDuckSeconds: 0
+  - id: vfx_sentarseCaseoh
+    clips:
+    - {fileID: 8300000, guid: e75412090b2bf8d4aa51d82c548406ac, type: 3}
+    outputGroup: {fileID: 6073045706362552643, guid: da27cfc65450f0c458edac9d9243f5ca, type: 2}
+    loop: 0
+    spatialBlend: 0
+    minDistance: 1
+    maxDistance: 25
+    volume: 0.5
+    pitchRandom: {x: 0.95, y: 1.05}
+    maxSimultaneous: 5
+    cooldown: 0.5
+    priority: 100
+    musicDuckAmount: 0
+    musicDuckSeconds: 0
