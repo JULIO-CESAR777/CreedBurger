@@ -47589,7 +47589,7 @@ PrefabInstance:
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: jugadorPrefab
       value: 
-      objectReference: {fileID: 2849773209135737600, guid: 593484c6b3f267b48ac49b96f8c6038f, type: 3}
+      objectReference: {fileID: 2849773209135737600, guid: 1f225232fffff4f48b6025e2597e366e, type: 3}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: cantidadJugadores
       value: 1
@@ -56503,6 +56503,8 @@ MonoBehaviour:
   probPaseoComerPaseoSalir: 0.5
   estadoActual: 0
   isPaused: 0
+  carneAparecer: 0
+  caseOhSounds: {fileID: 0}
 --- !u!4 &7426176338074400815
 Transform:
   m_ObjectHideFlags: 0
