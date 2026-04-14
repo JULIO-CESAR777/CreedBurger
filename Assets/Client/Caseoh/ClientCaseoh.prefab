@@ -268,6 +268,7 @@ MonoBehaviour:
   estadoActual: 0
   isPaused: 0
   carneAparecer: 10
+  caseOhSounds: {fileID: 0}
 --- !u!195 &5399982062856230296
 NavMeshAgent:
   m_ObjectHideFlags: 0
