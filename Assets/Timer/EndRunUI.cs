@@ -55,9 +55,9 @@ public class EndRunUI : MonoBehaviour
         var s = ScoreSystem.Instance;
         int score = s?.Score ?? 0;
 
-        if (scoreText) scoreText.text = $"Score: {score}";
-        if (maxText)   maxText.text   = $"Max: {s?.MaxScore ?? 0}";
-        if (coinsText) coinsText.text = $"Coins: {s?.Coins ?? 0}";
+        if (scoreText) scoreText.text = $"{score}";
+        if (maxText)   maxText.text   = $"{s?.MaxScore ?? 0}";
+        if (coinsText) coinsText.text = $"{s?.Coins ?? 0}";
 
         if (panel)
         {

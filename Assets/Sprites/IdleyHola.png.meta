@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: cae3cc12987f70e4cb4c61efb16890b3
+guid: d9a4a8d035bac134eab733bc50eaa129
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,101 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ui_2_0
+      name: IdleyHola_0
       rect:
         serializedVersion: 2
-        x: 737
-        y: 425
-        width: 96
-        height: 698
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 94c4208bec79219488020ce70a99532a
-      internalID: 718307179
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ui_2_1
-      rect:
-        serializedVersion: 2
-        x: 278
-        y: 782
-        width: 172
-        height: 323
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1029cac18be231c4898b1253fd6bf51d
-      internalID: -1480473654
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ui_2_2
-      rect:
-        serializedVersion: 2
-        x: 663
-        y: 293
-        width: 84
-        height: 86
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c1c79cf8d78e49c40b00ab2ce95352a1
-      internalID: 2000129303
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ui_2_3
-      rect:
-        serializedVersion: 2
-        x: 785
-        y: 290
-        width: 90
-        height: 89
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bb254d44490960f41b044e0ad0c1674a
-      internalID: 1807669707
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ui_2_4
-      rect:
-        serializedVersion: 2
-        x: 119
-        y: 19
-        width: 489
-        height: 729
+        x: 75
+        y: 69
+        width: 758
+        height: 961
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -213,8 +125,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e3de5335d160e9f4f83155e5ec48fdea
-      internalID: -444171778
+      spriteID: 3c96c6819b75d704ea252cf6a98883df
+      internalID: 1788761426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IdleyHola_1
+      rect:
+        serializedVersion: 2
+        x: 1076
+        y: 73
+        width: 756
+        height: 953
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3ce2a00e0315664888786b07f9a6292
+      internalID: 1915461190
       vertices: []
       indices: 
       edges: []
@@ -223,7 +157,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 884141b77cb42614f96eb9c97016eb9e
+    spriteID: d768131323d8aa04da1558b8bfe756a6
     internalID: 0
     vertices: []
     indices: 
@@ -233,11 +167,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ui_2_0: 718307179
-      Ui_2_1: -1480473654
-      Ui_2_2: 2000129303
-      Ui_2_3: 1807669707
-      Ui_2_4: -444171778
+      IdleyHola_0: 1788761426
+      IdleyHola_1: 1915461190
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

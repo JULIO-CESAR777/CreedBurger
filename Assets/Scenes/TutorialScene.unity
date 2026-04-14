@@ -11823,7 +11823,7 @@ MonoBehaviour:
   steps:
   - type: 2
     text: Hola Bienvenido a Creed Burger
-    icon: {fileID: 2024147453, guid: 9a792d7ca067bca4da88c40fb043b210, type: 3}
+    icon: {fileID: 1915461190, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11834,7 +11834,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 2
     text: "Yo te ense\xF1are lo basico"
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    icon: {fileID: 1788761426, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11844,7 +11844,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 0
     text: Primero acercate al cliente que tienes a tu derecha
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    icon: {fileID: 1915461190, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 3544261478713977963}
     client: {fileID: 0}
     recipeId: 0
@@ -11855,7 +11855,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 2
     text: Apreta la tecla E y asesinalo
-    icon: {fileID: 2024147453, guid: 9a792d7ca067bca4da88c40fb043b210, type: 3}
+    icon: {fileID: 642877294, guid: 8b63a904cd5184d4d90c1d1b0f55db80, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11865,7 +11865,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 2
     text: Igualmente con Q pones trampa que te ayudaran a cazarlos
-    icon: {fileID: 2024147453, guid: 9a792d7ca067bca4da88c40fb043b210, type: 3}
+    icon: {fileID: 1915461190, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11875,7 +11875,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 2
     text: E igual puedes limpiar la sangre con la E
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    icon: {fileID: 1788761426, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11886,7 +11886,7 @@ MonoBehaviour:
   - type: 0
     text: Ocupa con E su carne que solto y llevalo a la maquina trituradora  que
       esta a tu izquierda
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    icon: {fileID: 1915461190, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 1464491342}
     client: {fileID: 0}
     recipeId: 0
@@ -11897,7 +11897,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 2
     text: 'Apreta la E y procesa la carne para tener una que podras usar '
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    icon: {fileID: 1915461190, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11907,7 +11907,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 0
     text: 'Asi mismo agarra la cubeta de panes que tienes a tu derecha '
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    icon: {fileID: 1788761426, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 872951995}
     client: {fileID: 0}
     recipeId: 0
@@ -11918,7 +11918,7 @@ MonoBehaviour:
     autoDisablePreviousMarkers: 1
   - type: 2
     text: Acercate a la carne, sueltala y haras una hamburguesa basica
-    icon: {fileID: 2024147453, guid: 9a792d7ca067bca4da88c40fb043b210, type: 3}
+    icon: {fileID: 1788761426, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 0}
     recipeId: 0
@@ -11928,8 +11928,9 @@ MonoBehaviour:
     disableOnEnter: []
     autoDisablePreviousMarkers: 1
   - type: 1
-    text: Ahora ve y entregasela a tu cliente que esta esperando enfrente
-    icon: {fileID: 663148727, guid: ec8585ec98280d34981beb20065fad4a, type: 3}
+    text: Ahora ve y apreta E para  entregarsela a tu cliente que esta esperando
+      enfrente
+    icon: {fileID: 1915461190, guid: d9a4a8d035bac134eab733bc50eaa129, type: 3}
     point: {fileID: 0}
     client: {fileID: 383877184}
     recipeId: 3
