@@ -50963,6 +50963,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3863150983513876738, guid: 34e5df1d67ce68b49967f40725f84d2d, type: 3}
     - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
+      propertyPath: jugadorPrefab
+      value: 
+      objectReference: {fileID: 2849773209135737600, guid: abf8dbb5002b9254b9510bef5b6992cf, type: 3}
+    - target: {fileID: 6301437365091882099, guid: a11b78f003ccf814d90566c5c2856d59, type: 3}
       propertyPath: cantidadJugadores
       value: 1
       objectReference: {fileID: 0}
