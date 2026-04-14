@@ -1084,8 +1084,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5.0000076, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: -51.053978, y: 0}
+  m_SizeDelta: {x: -112.1079, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &320839440
 GameObject:
@@ -1697,8 +1697,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 4.1, y: -20.6}
-  m_SizeDelta: {x: 46.2676, y: 9.0066}
+  m_AnchoredPosition: {x: 0.5, y: -30.1874}
+  m_SizeDelta: {x: 72.1065, y: 28.1814}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &541255621
 MonoBehaviour:
@@ -1883,7 +1883,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -198, y: 87}
+  m_AnchoredPosition: {x: -198, y: 139}
   m_SizeDelta: {x: 200, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &607743343
@@ -2033,8 +2033,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -3.7951965, y: -5.7}
+  m_SizeDelta: {x: 7.5903, y: 12.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &652876294
 MonoBehaviour:
@@ -2110,7 +2110,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -64, y: 188}
+  m_AnchoredPosition: {x: -64, y: 240}
   m_SizeDelta: {x: 226.6, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &656631745
@@ -3017,8 +3017,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: -3.4372, y: 0}
+  m_SizeDelta: {x: -16.8744, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &893956675
 GameObject:
