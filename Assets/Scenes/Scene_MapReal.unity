@@ -18630,7 +18630,7 @@ MonoBehaviour:
   punchElasticity: 0.9
   popEase: 27
   starShines: []
-  thresholds: 02000000050000000a000000
+  thresholds: 0f0000001e0000003c000000
 --- !u!114 &723827951
 MonoBehaviour:
   m_ObjectHideFlags: 0

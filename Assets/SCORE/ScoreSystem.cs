@@ -58,6 +58,15 @@ public class ScoreSystem : MonoBehaviour
         OnScoreChanged?.Invoke();
     }
     
+    public void AddCScore(int amount)
+    {
+        if (amount <= 0) return;
+
+        Score += amount;
+       
+
+        OnScoreChanged?.Invoke();
+    }
     public bool HasEnoughCoins(int amount)
     {
         return Coins >= amount;
