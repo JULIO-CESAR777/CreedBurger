@@ -8,6 +8,8 @@ public class GrabObject : MonoBehaviour, IInteractable
     private IngredientSpawner ingredientSpawner;
     public int price;
     private bool isSpawner = false;
+    
+    public bool canBeGrabbed = false;
 
     public PlayerInteractionHandler CurrentHolder { get; private set; }
 
@@ -32,6 +34,7 @@ public class GrabObject : MonoBehaviour, IInteractable
 
     public bool CanBeGrabbed()
     {
+        if (!canBeGrabbed) return false;
         if (!isSpawner) return true;
         if (ingredientSpawner == null) return false;
         if (ScoreSystem.Instance == null) return false;
@@ -59,7 +62,7 @@ public class GrabObject : MonoBehaviour, IInteractable
     {
         var interactionHandler = interactor.GetComponent<PlayerInteractionHandler>();
         if (interactionHandler == null) return;
-
+        
         if (!isGrabbed)
         {
             if (isSpawner)

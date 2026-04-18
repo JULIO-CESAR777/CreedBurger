@@ -4,38 +4,48 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     private PlayerController controller;
+    public bool isDead;
+    
     
     [Header("Visual Effects")]
     public GameObject splashEffectPrefab;
     private void Start()
     {
         controller = gameObject.GetComponent<PlayerController>();
+        isDead = false;
     }
 
     public void Die()
     {
-        if(controller.isPaused) return;
-        // Restringir movimiento - Listo
+        if (isDead) return; // 🔥 ESTA ES LA CLAVE
+        if (controller.isPaused) return;
+
+        isDead = true;
+
+        print("murio");
+
         controller.playerMovement.canMove = false;
-        
-        // Dropear objetos si es que carga algo - Listo
+
+        // Dropear objetos
         if (controller.playerInteractionHandler.isGrabingSomething)
         {
             Destroy(controller.playerInteractionHandler.GrabbedObject);
             controller.playerInteractionHandler.GrabbedObject = null;
         }
-        
+
         controller.playerMesh.SetActive(false);
-        
-        // 5. Instanciar splash effect
+
+        // Splash
         if (splashEffectPrefab != null)
         {
-            Instantiate(splashEffectPrefab, transform.position, Quaternion.Euler(90,0,0));
+            Instantiate(splashEffectPrefab, transform.position, Quaternion.Euler(90, 0, 0));
         }
+
         AudioManager.I.Play("vfx_dieplayer");
 
-        // Reaparicion
-        Invoke("Respawn", 0.5f);
+        ScoreSystem.Instance.MinusScore(5);
+
+        Invoke(nameof(Respawn), 1.0f);
         
     }
 
@@ -58,22 +68,18 @@ public class Health : MonoBehaviour
         controller.playerMovement.canMove = true;
         
         controller.playerMesh.SetActive(true);
+        isDead = false;
         
     }
     
     private void OnCollisionEnter(Collision other)
     {
+        if (isDead) return;
+        
         if (other.gameObject.CompareTag("Knight"))
         {
             Die();
         }
     }
-
-    private void OnCollisionStay(Collision other)
-    {
-        if (other.gameObject.CompareTag("Knight"))
-        {
-            Die();
-        }
-    }
+    
 }

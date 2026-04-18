@@ -228,10 +228,14 @@ public class PlayerInteractionHandler : MonoBehaviour
                 if (interactableObject.name == "Meat Machine" && isGrabingSomething) return;
 
                 var grabObject = interactableObject.GetComponent<GrabObject>();
+                if (grabObject == null) return;
 
-                if (grabObject != null && !grabObject.CanBeGrabbed())
+                if (!grabObject.CanBeGrabbed())
                 {
-                    controller.gameManager.hudScoreUI.ShowNoMoneyPanel();
+                    if (interactableObject.CompareTag("Spawner"))
+                    {
+                        controller.gameManager.hudScoreUI.ShowNoMoneyPanel();
+                    }
                     return;
                 }
 

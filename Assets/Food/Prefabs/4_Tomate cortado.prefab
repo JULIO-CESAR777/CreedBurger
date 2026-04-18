@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGrabbed: 0
+  price: 0
+  canBeGrabbed: 1
 --- !u!114 &7839460017517718787
 MonoBehaviour:
   m_ObjectHideFlags: 0

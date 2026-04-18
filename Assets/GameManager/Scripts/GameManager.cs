@@ -56,6 +56,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        
+        ScoreSystem.Instance.ResetRun();
+        
         cantidad = GameSettings.Instance != null ? GameSettings.Instance.cantidadJugadores : cantidadJugadores;
 
         if (cantidad >= 1)
@@ -68,7 +71,7 @@ public class GameManager : MonoBehaviour
         canPause = true;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {

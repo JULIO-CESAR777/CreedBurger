@@ -246,7 +246,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d56e53ee37a3d164697a77aa4897b64b, type: 2}
@@ -417,6 +417,8 @@ MonoBehaviour:
   probPaseoComerPaseoSalir: 0.5
   estadoActual: 0
   isPaused: 0
+  carneAparecer: 0
+  caseOhSounds: {fileID: 0}
 --- !u!195 &2678133660206657410
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -511,8 +513,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconRenderer: {fileID: 7103603456953640286}
+  marcoComida: {fileID: 0}
+  target: {fileID: 0}
   offset: {x: 0, y: 2.2, z: 0}
-  billboardToCamera: 1
+  lookAtWorldTarget: 1
+  worldTarget: {fileID: 0}
+  worldTargetTag: OrderLookTarget
 --- !u!114 &-6780469669976057024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,7 +587,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d56e53ee37a3d164697a77aa4897b64b, type: 2}
@@ -820,7 +826,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d56e53ee37a3d164697a77aa4897b64b, type: 2}
@@ -942,7 +948,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: d56e53ee37a3d164697a77aa4897b64b, type: 2}
