@@ -385,6 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76f19d301f8499d419db92a67b04710c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
   splashEffectPrefab: {fileID: 1582062450047922138, guid: 9c171c9bfa66ae64b9dd7c1368936fb3, type: 3}
 --- !u!114 &130879185860505598
 MonoBehaviour:
@@ -482,7 +483,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 712fb673e88f0fa4da4816daa2b75257, type: 2}
@@ -805,7 +806,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 712fb673e88f0fa4da4816daa2b75257, type: 2}
@@ -931,7 +932,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 712fb673e88f0fa4da4816daa2b75257, type: 2}
@@ -1052,7 +1053,7 @@ SkinnedMeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 2
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 712fb673e88f0fa4da4816daa2b75257, type: 2}

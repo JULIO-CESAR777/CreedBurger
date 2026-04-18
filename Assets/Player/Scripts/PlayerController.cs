@@ -26,7 +26,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = GetComponent<Player_Movement>();
         animationHandler = GetComponent<PlayerAnimationHandler>();
         inputReader = GetComponent<PlayerInputReader>();
-        playerMesh = transform.GetChild(0).gameObject;
+        //playerMesh = transform.GetChild(0).gameObject;
     }
 
     private void Start()

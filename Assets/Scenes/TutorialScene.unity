@@ -8611,6 +8611,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 540036090}
     m_Modifications:
+    - target: {fileID: 3213359677268199153, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7353965388343400406, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -20759,6 +20763,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1895537092}
     m_Modifications:
+    - target: {fileID: 3213359677268199153, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7353965388343400406, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -38108,6 +38116,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 7261506162970182224, guid: a60c980c55281364397fc6a21f2cdc34, type: 3}
+      propertyPath: canBeGrabbed
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7805963167231582908, guid: a60c980c55281364397fc6a21f2cdc34, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -42957,6 +42969,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 191979912}
     m_Modifications:
+    - target: {fileID: 3213359677268199153, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7353965388343400406, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -50264,6 +50280,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1380011274}
     m_Modifications:
+    - target: {fileID: 3213359677268199153, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
+      propertyPath: m_RenderingLayerMask
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7353965388343400406, guid: ca26b29f0eb2d2c4587caa6b80dfaace, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
