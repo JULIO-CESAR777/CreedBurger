@@ -35,6 +35,8 @@ public class MoveKnight : MonoBehaviour
 
     private int puntosVisitados = 0;
     public int maxPuntos = 5;
+    
+    [SerializeField] private float arrivalDistance = 0.2f;
 
     public enum Estado
     {
@@ -52,6 +54,8 @@ public class MoveKnight : MonoBehaviour
 
     private Transform aleatorioSeleccionado;
     private Transform player;
+
+    private PaseoPointSeat paseoPointSeat;
 
     private float lostTimer = 0f;
     private Vector3 lastSeenPos;
@@ -146,16 +150,16 @@ public class MoveKnight : MonoBehaviour
             case Estado.IrAleatorio:
                 if (HaLlegadoDestino())
                 {
+                    agent.ResetPath();
+                    agent.velocity = Vector3.zero;
+                    agent.isStopped = true;
+
                     estadoActual = Estado.EsperaAleatorio;
 
                     if (esperaRoutine != null)
                         StopCoroutine(esperaRoutine);
 
                     esperaRoutine = StartCoroutine(EsperaEnPunto(esperaAleatorio));
-                }
-                else if (!agent.pathPending && (!agent.hasPath || agent.pathStatus != NavMeshPathStatus.PathComplete))
-                {
-                    IrANuevoPuntoAleatorio();
                 }
                 break;
 
@@ -169,6 +173,7 @@ public class MoveKnight : MonoBehaviour
                     estadoActual = Estado.Terminado;
                     Destroy(gameObject);
                 }
+               
                 break;
 
             case Estado.Quieto:
@@ -198,6 +203,8 @@ public class MoveKnight : MonoBehaviour
             StopCoroutine(esperaRoutine);
             esperaRoutine = null;
         }
+
+        ReleasePaseoPoint();
 
         player = visiblePlayer;
         lastSeenPos = player.position;
@@ -392,6 +399,7 @@ public class MoveKnight : MonoBehaviour
     {
         player = null;
         lostTimer = 0f;
+        ReleasePaseoPoint();
 
         if (agent == null) return;
 
@@ -424,7 +432,10 @@ public class MoveKnight : MonoBehaviour
         }
 
         esperaRoutine = null;
+        ReleasePaseoPoint();
         puntosVisitados++;
+
+        agent.isStopped = false;
 
         if (puntosVisitados < maxPuntos)
         {
@@ -440,10 +451,12 @@ public class MoveKnight : MonoBehaviour
     bool HaLlegadoDestino()
     {
         if (agent == null) return false;
+        if (agent.pathPending) return false;
 
-        return !agent.pathPending &&
-               agent.remainingDistance <= agent.stoppingDistance + 0.05f &&
-               (!agent.hasPath || agent.velocity.sqrMagnitude <= 0.05f);
+        if (!agent.hasPath)
+            return true;
+
+        return agent.remainingDistance <= arrivalDistance;
     }
 
     bool IrANuevoPuntoAleatorio()
@@ -451,34 +464,29 @@ public class MoveKnight : MonoBehaviour
         if (puntosAleatorios == null || puntosAleatorios.Length == 0 || agent == null)
             return false;
 
-        for (int i = 0; i < puntosAleatorios.Length * 2; i++)
+        ReleasePaseoPoint();
+
+        PaseoPointSeat point = GetReservablePaseoPoint();
+        if (point == null)
         {
-            Transform candidato = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
-            if (candidato == null) continue;
-
-            NavMeshPath path = new NavMeshPath();
-            bool pathValido = agent.CalculatePath(candidato.position, path) &&
-                              path.status == NavMeshPathStatus.PathComplete;
-
-            if (!pathValido) continue;
-
-            aleatorioSeleccionado = candidato;
-            estadoActual = Estado.IrAleatorio;
-            agent.speed = velocityKnight;
-            agent.stoppingDistance = 0f;
-            IrAPunto(aleatorioSeleccionado);
-            return true;
+            agent.ResetPath();
+            estadoActual = Estado.Quieto;
+            return false;
         }
 
-        agent.ResetPath();
-        estadoActual = Estado.Quieto;
-        return false;
+        paseoPointSeat = point;
+        aleatorioSeleccionado = point.transform;
+        estadoActual = Estado.IrAleatorio;
+        agent.speed = velocityKnight;
+        agent.stoppingDistance = 0f;
+        IrAPunto(aleatorioSeleccionado);
+        return true;
     }
 
     public void puntoaleatorio()
     {
         if (puntosAleatorios == null || puntosAleatorios.Length == 0) return;
-        aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
+        IrANuevoPuntoAleatorio();
     }
 
     void IrAPunto(Transform punto)
@@ -492,8 +500,54 @@ public class MoveKnight : MonoBehaviour
             agent.isStopped = true;
     }
 
+    private void ReleasePaseoPoint()
+    {
+        if (paseoPointSeat != null)
+        {
+            paseoPointSeat.Release(GetInstanceID());
+            paseoPointSeat = null;
+            aleatorioSeleccionado = null;
+        }
+    }
+
+    private PaseoPointSeat GetReservablePaseoPoint()
+    {
+        if (puntosAleatorios == null || puntosAleatorios.Length == 0 || agent == null)
+            return null;
+
+        int start = Random.Range(0, puntosAleatorios.Length);
+
+        for (int i = 0; i < puntosAleatorios.Length; i++)
+        {
+            Transform candidato = puntosAleatorios[(start + i) % puntosAleatorios.Length];
+            if (candidato == null) continue;
+
+            PaseoPointSeat point = candidato.GetComponent<PaseoPointSeat>();
+            if (point == null) continue;
+
+            if (!point.TryReserve(GetInstanceID()))
+                continue;
+
+            NavMeshPath path = new NavMeshPath();
+            bool pathValido = agent.CalculatePath(candidato.position, path) &&
+                              path.status == NavMeshPathStatus.PathComplete;
+
+            if (!pathValido)
+            {
+                point.Release(GetInstanceID());
+                continue;
+            }
+
+            return point;
+        }
+
+        return null;
+    }
+
     void OnDestroy()
     {
+        ReleasePaseoPoint();
+
         var gm = GameManager.GetInstance();
         if (gm != null)
             gm.onChangeGameState -= OnChangeGameStateCallback;

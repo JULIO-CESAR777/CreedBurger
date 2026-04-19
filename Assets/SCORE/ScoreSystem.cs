@@ -25,6 +25,12 @@ public class ScoreSystem : MonoBehaviour
 
         MaxScore = PlayerPrefs.GetInt(PREF_MAX_SCORE, 0);
     }
+    
+    private void Start()
+    {
+        ResetRun();
+        
+    }
 
     /// <summary>Reinicia monedas y score de la corrida actual (si lo necesitas al iniciar partida).</summary>
     public void ResetRun()

@@ -20,6 +20,9 @@ public class MoveClient : MonoBehaviour
     [SerializeField] private float retryMesaSeconds = 1.0f; 
     private Coroutine esperarMesaCR;
     private Transform mesaAsignada;
+
+    // --- Reserva de punto aleatorio ---
+    private PaseoPointSeat paseoPointSeat;
     
     private Coroutine esperaAleatorioCR;
     
@@ -102,7 +105,6 @@ public class MoveClient : MonoBehaviour
 
     void Awake()
     {
-        
         if (caseOhSounds == null) caseOhSounds = GetComponent<CaseOhSounds>();
        
         if (agent == null) agent = GetComponent<NavMeshAgent>();
@@ -189,6 +191,7 @@ public class MoveClient : MonoBehaviour
             OrderUIController.Instance.RemoveOrder(GetInstanceID());
 
         CancelarEsperaMesa();
+        ReleasePaseoPoint();
 
         if (mesaSeat != null)
         {
@@ -443,8 +446,6 @@ public class MoveClient : MonoBehaviour
         if (caseOhSounds != null)
         {
             caseOhSounds.sonidossentarseCaseOh();
-
-
         }
     }
 
@@ -485,9 +486,7 @@ public class MoveClient : MonoBehaviour
             return;
         }
 
-        aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
-        estadoActual = Estado.IrAleatorio;
-        IrAPunto(aleatorioSeleccionado);
+        IrAPuntoAleatorioReservado();
     }
 
     private void IrAOtroPuntoAleatorioMientrasEsperaMesa()
@@ -499,14 +498,13 @@ public class MoveClient : MonoBehaviour
             return;
         }
 
-        aleatorioSeleccionado = puntosAleatorios[Random.Range(0, puntosAleatorios.Length)];
-        estadoActual = Estado.IrAleatorio;
-        IrAPunto(aleatorioSeleccionado);
+        IrAPuntoAleatorioReservado();
     }
 
     private void SalirDelLugar()
     {
         CancelarEsperaMesa();
+        ReleasePaseoPoint();
 
         if (mesaSeat != null)
         {
@@ -685,6 +683,7 @@ public class MoveClient : MonoBehaviour
     private void EntrarEnMiedo()
     {
         CancelarEsperaMesa();
+        ReleasePaseoPoint();
 
         if (mesaSeat != null)
         {
@@ -749,6 +748,8 @@ public class MoveClient : MonoBehaviour
 
     public void Morir()
     {
+        ReleasePaseoPoint();
+
         Vector3 spawnCosas = transform.position + Vector3.up * 2;
 
         for (int i = 0; i <= carneAparecer; i++)
@@ -790,6 +791,57 @@ public class MoveClient : MonoBehaviour
         return null;
     }
 
+    // ====== PUNTOS ALEATORIOS: reserva, liberación y selección ======
+    private void ReleasePaseoPoint()
+    {
+        if (paseoPointSeat != null)
+        {
+            paseoPointSeat.Release(GetInstanceID());
+            paseoPointSeat = null;
+            aleatorioSeleccionado = null;
+        }
+    }
+
+    private PaseoPointSeat GetReservablePaseoPoint()
+    {
+        if (puntosAleatorios == null || puntosAleatorios.Length == 0) return null;
+
+        int start = Random.Range(0, puntosAleatorios.Length);
+
+        for (int i = 0; i < puntosAleatorios.Length; i++)
+        {
+            Transform t = puntosAleatorios[(start + i) % puntosAleatorios.Length];
+            if (t == null) continue;
+
+            PaseoPointSeat point = t.GetComponent<PaseoPointSeat>();
+            if (point == null) continue;
+
+            if (point.TryReserve(GetInstanceID()))
+                return point;
+        }
+
+        return null;
+    }
+
+    private bool IrAPuntoAleatorioReservado()
+    {
+        ReleasePaseoPoint();
+
+        PaseoPointSeat point = GetReservablePaseoPoint();
+        if (point == null)
+        {
+            estadoActual = Estado.Quieto;
+            StopForWait(true);
+            return false;
+        }
+
+        paseoPointSeat = point;
+        aleatorioSeleccionado = point.transform;
+        estadoActual = Estado.IrAleatorio;
+        IrAPunto(aleatorioSeleccionado);
+        return true;
+    }
+
     private IEnumerator EsperarMesaDisponible()
     {
         while (true)
@@ -799,6 +851,7 @@ public class MoveClient : MonoBehaviour
             {
                 esperandoMesaMientrasPasea = false;
                 CancelarEsperaAleatoria();
+                ReleasePaseoPoint();
 
                 mesaSeat = seat;
                 mesaAsignada = seat.transform;
@@ -831,6 +884,7 @@ public class MoveClient : MonoBehaviour
         if (estadoActual != Estado.EsperaAleatorio) return;
         if (!esperandoMesaMientrasPasea) return;
 
+        ReleasePaseoPoint();
         IrAOtroPuntoAleatorioMientrasEsperaMesa();
     }
 
@@ -840,6 +894,7 @@ public class MoveClient : MonoBehaviour
 
         if (estadoActual != Estado.EsperaAleatorio) return;
 
+        ReleasePaseoPoint();
         StepComplete();
     }
 }
