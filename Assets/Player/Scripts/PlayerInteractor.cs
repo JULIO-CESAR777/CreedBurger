@@ -22,7 +22,6 @@ namespace CreedBurger.Interaction
 
         private Collider[] overlapBuffer;
         private InputAction interactionAction;
-        private IHighlightable currentHighlightable;
 
         public IInteractable CurrentInteractable { get; private set; }
         public Ingredient HeldIngredient { get; private set; }
@@ -146,43 +145,14 @@ namespace CreedBurger.Interaction
             {
                 return;
             }
-
-            currentHighlightable?.SetHighlighted(false);
-
+            
             CurrentInteractable = nextInteractable;
-            currentHighlightable = FindHighlightable(nextBehaviour);
-
-            currentHighlightable?.SetHighlighted(true);
         }
 
-        private static IHighlightable FindHighlightable(
-            MonoBehaviour interactableBehaviour)
-        {
-            if (interactableBehaviour == null)
-            {
-                return null;
-            }
-
-            MonoBehaviour[] components =
-                interactableBehaviour.GetComponents<MonoBehaviour>();
-
-            foreach (MonoBehaviour component in components)
-            {
-                IHighlightable highlightable = component as IHighlightable;
-
-                if (highlightable != null)
-                {
-                    return highlightable;
-                }
-            }
-
-            return null;
-        }
+       
 
         private void OnDisable()
         {
-            currentHighlightable?.SetHighlighted(false);
-            currentHighlightable = null;
             CurrentInteractable = null;
         }
 
